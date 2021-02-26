@@ -1,0 +1,23 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "~pages": "./pages",
+          "~common": "./features/common",
+          "~components": "./features/components",
+          "~layout": "./features/layout",
+          "~root": ".",
+          "~styles": "./src/app/styles",
+          "~api": "./src/app/api",
+          "~models": "./src/app/models",
+          "~stores": "./src/app/stores",
+          "~utils": "./src/app/utils"
+        }
+      }
+    ]
+  ]
+}
