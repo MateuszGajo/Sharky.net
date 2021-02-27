@@ -16,9 +16,9 @@
     "baseUrl": ".",
     "paths": {
       "~page/*s": ["./pages/*"],
-      "~common/*": ["./features/common/*"],
-      "~components/*": ["./features/components/*"],
-      "~layout/*": ["./features/layout/*"],
+      "~common/*": ["./src/features/common/*"],
+      "~components/*": ["./src/features/components/*"],
+      "~layout/*": ["./src/features/layout/*"],
       "~root/*": ["./*"],
       "~styles/*": ["./src/app/styles/*"],
       "~api/*": ["./src/app/api/*"],

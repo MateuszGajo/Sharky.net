@@ -1,0 +1,39 @@
+@import "./variables.scss";
+
+.full-height {
+  height: 100vh;
+}
+
+.grid-column-clear-space.wide.column {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+@-moz-document url-prefix() {
+  .primary-scroll {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: white white;
+  }
+
+  .primary-scroll--active {
+    scrollbar-color: $primaryColor white;
+  }
+}
+
+.primary-scroll::-webkit-scrollbar {
+  width: 0px;
+  pointer-events: none !important;
+}
+
+.primary-scroll::-webkit-scrollbar-thumb {
+  background-color: none;
+  border-radius: 20px;
+}
+.primary-scroll--active::-webkit-scrollbar {
+  width: 5px;
+}
+.primary-scroll--active::-webkit-scrollbar-thumb {
+  background-color: $primaryColor;
+  border-radius: 20px;
+}
