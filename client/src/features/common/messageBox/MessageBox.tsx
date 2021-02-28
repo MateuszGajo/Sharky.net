@@ -1,15 +1,62 @@
-import React from "react";
-import { Divider, Grid, Container, TextArea, Form } from "semantic-ui-react";
+import React, { useCallback, useState } from "react";
+import {
+  Divider,
+  Grid,
+  Container,
+  Form,
+  Segment,
+  Button,
+} from "semantic-ui-react";
+import { useDropzone } from "react-dropzone";
+import style from "./MessageBox.module.scss";
+import Preview from "./components/preview/Preview";
+import Content from "./components/preview/content/Content";
 
 const MessageBox = () => {
+  const [file, setFile] = useState([]);
+  const [text, setText] = useState("");
+  const onDrop = useCallback((acceptedFiles) => {
+    setFile(
+      acceptedFiles.map((file: object) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(file[0]);
+    console.log(text);
+  };
+
   return (
     <Grid centered>
       <Grid.Column width={6}>
-        <Container textAlign="center">Create Post</Container>
-        <Divider />
-        <Form.Field width={6}>
-          <textarea placeholder="what's up?" rows={6} cols={6} />
-        </Form.Field>
+        <Form onSubmit={handleSubmit}>
+          <Segment>
+            <Container textAlign="center">Create Post</Container>
+            <Divider />
+            <Content
+              getRootProps={getRootProps}
+              getInputProps={getInputProps}
+              isDragActive={isDragActive}
+              setText={setText}
+            />
+            <Container className={`${style.toolbar} local`}>
+              <Preview
+                file={file}
+                setFile={setFile}
+                getRootProps={getRootProps}
+                getInputProps={getInputProps}
+              />
+              <Button content="send" positive floated="right" />
+            </Container>
+          </Segment>
+        </Form>
       </Grid.Column>
     </Grid>
   );

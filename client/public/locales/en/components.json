@@ -1,0 +1,14 @@
+{
+  "navbar": {
+    "home": "Home",
+    "world": "World",
+    "notifications": "Notifications",
+    "messages": "Messages",
+    "friends": "Friends",
+    "groups": "Groups",
+    "fanpages": "Fanpages",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "navbar": {
+    "home": "Główna",
+    "world": "Świat",
+    "notifications": "Powiadomienia",
+    "messages": "Wiaodmości",
+    "friends": "Znajomi",
+    "groups": "Grupy",
+    "fanpages": "Fanpage",
+    "profile": "Profil",
+    "settings": "Ustawienia",
+    "logout": "Wyloguj"
+  }
+}

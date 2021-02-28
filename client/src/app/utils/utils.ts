@@ -13,45 +13,45 @@ export const navItems = [
   },
   {
     id: 3,
-    name: "Notifications",
+    name: "notifications",
     icon: "bell",
     linkTo: "/notifications",
   },
   {
     id: 4,
-    name: "Messages",
+    name: "messages",
     icon: "facebook messenger",
     linkTo: "/messages",
   },
   {
     id: 5,
-    name: "Friends",
+    name: "friends",
     icon: "handshake",
     linkTo: "/friends",
   },
   {
     id: 6,
-    name: "Groups",
+    name: "groups",
     icon: "users",
   },
   {
     id: 7,
-    name: "Fanpages",
+    name: "fanpages",
     icon: "newspaper",
   },
   {
     id: 8,
-    name: "Profile",
+    name: "profile",
     icon: "user",
   },
   {
     id: 9,
-    name: "Settings",
+    name: "settings",
     icon: "cog",
   },
   {
     id: 10,
-    name: "Logout",
+    name: "logout",
     icon: "sign-out",
   },
 ];

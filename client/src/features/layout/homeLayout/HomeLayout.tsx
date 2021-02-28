@@ -8,7 +8,8 @@ const HomeLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
       <Grid.Column width={3} className="grid-column-clear-space">
         <Navbar />
       </Grid.Column>
-      <Grid.Column width={13}>{children}</Grid.Column>
+      <Grid.Column width={11}>{children}</Grid.Column>
+      <Grid.Column width={2}>Friends</Grid.Column>
     </Grid>
   );
 };

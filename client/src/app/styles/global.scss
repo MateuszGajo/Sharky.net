@@ -1,5 +1,13 @@
 @import "./variables.scss";
 
+body {
+  background-color: rgb(234, 234, 234);
+}
+
+.margin--small {
+  margin-top: 15px;
+}
+
 .full-height {
   height: 100vh;
 }

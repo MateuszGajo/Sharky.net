@@ -4,8 +4,10 @@ import cx from "classnames";
 import styles from "./Navbar.module.scss";
 import { navItems } from "~utils/utils";
 import { useRouter } from "next/router";
+import { useTranslation } from "next-i18next";
 
 const Navbar = () => {
+  const { t } = useTranslation("components");
   const [activeItem, setActiveItem] = useState("home");
   const router = useRouter();
   const handleItemClick = ({ name, linkTo }) => {
@@ -62,7 +64,7 @@ const Navbar = () => {
           >
             <Icon name={item.icon} />
             <span className={styles.navbar__container__item__text}>
-              {item.name}
+              {t(`components:navbar.${item.name}`)}
             </span>
           </div>
         ))}
