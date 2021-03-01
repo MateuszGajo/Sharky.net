@@ -4,7 +4,7 @@ import cx from "classnames";
 import styles from "./Navbar.module.scss";
 import { navItems } from "~utils/utils";
 import { useRouter } from "next/router";
-import { useTranslation } from "next-i18next";
+import useTranslation from "next-translate/useTranslation";
 
 const Navbar = () => {
   const { t } = useTranslation("components");

@@ -29,8 +29,6 @@ const MessageBox = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(file[0]);
-    console.log(text);
   };
 
   return (

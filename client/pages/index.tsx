@@ -1,22 +1,12 @@
-import React, { useEffect } from "react";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
+import React from "react";
 import Link from "next/link";
 
-const Home: React.FC = () => {
+const Home = () => {
   return (
     <div>
       <Link href="/home">Home</Link>
     </div>
   );
-};
-
-export const getStaticProps = async ({ locale }) => {
-  console.log(locale);
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ["components"])),
-    },
-  };
 };
 
 export default Home;
