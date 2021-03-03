@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Domain
 {
@@ -7,5 +8,6 @@ namespace Domain
         public Guid Id { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
+        public ICollection<Post> Posts { get; set; }
     }
 }
