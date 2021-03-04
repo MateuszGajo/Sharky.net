@@ -5,6 +5,9 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Domain;
+using System;
+using Persistence;
 
 namespace Application.Post
 {
@@ -13,36 +16,45 @@ namespace Application.Post
         public class Command : IRequest
         {
             public IFormFile File { get; set; }
-            public string Name { get; set; }
+            public string Content { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
         {
             private readonly IPhotoAccessor _photoAccessor;
-            public Handler(IPhotoAccessor photoAccessor)
+            private readonly DataBaseContext _context;
+            public Handler(DataBaseContext context, IPhotoAccessor photoAccessor)
             {
+                _context = context;
                 _photoAccessor = photoAccessor;
 
             }
-            public Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var PhotoUploadResult = _photoAccessor.AddPhoto(request.File);
-                throw new System.NotImplementedException();
+
+                var Post = new Domain.Post
+                {
+                    User = null,
+                    Content = request.Content,
+                    Photo = new Photo
+                    {
+                        Id = PhotoUploadResult.PublicId,
+                        Url = PhotoUploadResult.Url
+                    },
+                    CreateAt = DateTime.Now
+                };
+
+                _context.Posts.Add(Post);
+
+                var success = await _context.SaveChangesAsync() >0;
+
+                if(success) return Unit.Value;
+
+                    throw new Exception("Problem savings changes");
             }
         }
 
-        //   public class Handler : IRequestHandler<Command>
-        // {
-        //     // private readonly IPhotoAccessor _photoAccessor;
-        //     // public Handler(IPhotoAccessor photoAccessor)
-        //     // {
-        //     //     _photoAccessor = photoAccessor;
 
-        //     // }
-        //     public Task<Unit> Handle(Command request, CancellationToken cancellationToken)
-        //     {
-        //         throw new System.NotImplementedException();
-        //     }
-        // }
     }
 }
