@@ -35,5 +35,11 @@ namespace API.Controllers
          {
              return await _mediator.Send(command);
          }
+
+         [HttpPut("{id}/like")]
+         public async Task<ActionResult<Unit>> Like(Guid id)
+         {
+             return await _mediator.Send(new Application.Post.Like.Command{PostId =id});
+         }
     }
 }

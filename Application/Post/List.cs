@@ -22,7 +22,7 @@ namespace Application.Post
 
             public async Task<List<Domain.Post>> Handle(Query request, CancellationToken cancellationToken)
             {
-                 return await _context.Posts.Include(x => x.Photo).ToListAsync();
+                 return await _context.Posts.Include(x => x.Photo).Include(x => x.Likes).ToListAsync();
             }
         }
     }
