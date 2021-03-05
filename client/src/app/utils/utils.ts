@@ -1,3 +1,4 @@
+import setLanguage from "next-translate/setLanguage";
 export const navItems = [
   {
     id: 1,
@@ -56,9 +57,10 @@ export const navItems = [
   },
 ];
 
-export const setLanguage = (code: string) => {
+export const setLang = async (code: string) => {
   const date = new Date();
   const expireMs = 100 * 365 * 24 * 60 * 60 * 1000; // 100 days
   date.setTime(date.getTime() + expireMs);
   document.cookie = `NEXT_LOCALE=${code};expires=${date.toUTCString()};path=/`;
+  await setLanguage(code);
 };
