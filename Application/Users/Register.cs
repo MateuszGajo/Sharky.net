@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Interface;
@@ -41,19 +42,20 @@ namespace Application.Users
                     throw new System.Exception("Exception");
                 }
 
+               int userCount = await _context.Users.CountAsync(x =>x.UserName.StartsWith(request.FirstName+request.LastName)) + 1;
+
+
                 var user = new User
                 {
                     Email = request.Email,
                     Firstname = request.FirstName,
                     Lastname = request.LastName,
-                    UserName = "AAAA"
+                    UserName = $"{request.FirstName + request.LastName + userCount}"
                 };
 
                 var result = await _userManager.CreateAsync(user, request.Password);
 
                 if(result.Succeeded) return user;
-                System.Console.WriteLine("błąd");
-                System.Console.WriteLine(result);
 
                 throw new System.Exception("Problem creating user");
 

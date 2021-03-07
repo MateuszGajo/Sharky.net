@@ -11,7 +11,7 @@ namespace Application.Users
     {
         public class Query : IRequest<User>
         {
-            public Guid Id { get; set; }
+            public string Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, User>
@@ -24,7 +24,7 @@ namespace Application.Users
 
             public async Task<User> Handle(Query request, CancellationToken cancellationToken)
             {
-               return await _context.Users.FindAsync(Guid.Parse("4e1c3178-dd0d-4188-99e9-a295d386cc99"));
+               return await _context.Users.FindAsync("4e1c3178-dd0d-4188-99e9-a295d386cc99");
             }
         }
     }
