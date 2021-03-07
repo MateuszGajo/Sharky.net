@@ -4,11 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Application.Interface;
 using Application.Users;
+using Domain;
 using Infrastructure.Photos;
+using Infrastructure.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -40,10 +44,29 @@ namespace API
             services.AddMediatR(typeof(Details.Handler).Assembly);
             services.AddControllers();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
+
+            services.AddIdentityCore<User>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<DataBaseContext>()
+            .AddSignInManager<SignInManager<User>>();
+            // .AddDefaultTokenProviders();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, opt =>
+                {
+                    opt.SlidingExpiration = true;
+                    opt.ExpireTimeSpan = new TimeSpan(0, 1, 0);
+                });
+
             services.AddScoped<IPhotoAccessor,PhotoAccessor>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+                c.CustomSchemaIds(type => type.ToString());
             });
         }
 
@@ -60,6 +83,8 @@ namespace API
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
