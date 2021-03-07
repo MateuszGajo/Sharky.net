@@ -25,10 +25,10 @@ namespace API.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<User>> Details()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> Details(string id)
         {
-            return await _mediator.Send(new Details.Query { Id = Guid.NewGuid() });
+            return await _mediator.Send(new Details.Query { Id = id});
         }
 
         [HttpPost("register")]
@@ -38,6 +38,15 @@ namespace API.Controllers
 
             CreateToken(user);
 
+            return Unit.Value;
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<Unit>> Login (Login.Command command)
+        {
+            var user = await _mediator.Send(command);
+
+            CreateToken(user);
             return Unit.Value;
         }
 
