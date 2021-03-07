@@ -11,7 +11,8 @@ namespace Persistence
         {
             if(!context.Users.Any()){
                 var Users  = new List<User>{
-                    new User {Firstname="Bob",Lastname="smith", Posts = new List<Post>{new Post{Content="haha",Photo=new Photo{Id="1",Url=""},CreateAt= DateTime.Now}}}
+                    new User {Firstname="Bob",Lastname="smith", UserName="ruslavruslav1", Posts = new List<Post>{new Post{Content="haha",Photo=new Photo{Id="1",Url=""},CreateAt= DateTime.Now}}},
+                    new User {Firstname="Tom",Lastname="Musk", UserName="ruslavruslav15", Posts = new List<Post>{new Post{Content="haha",Photo=new Photo{Id="2",Url=""},CreateAt= DateTime.Now}}}
                 };
 
                 context.AddRange(Users);
