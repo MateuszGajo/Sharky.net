@@ -1,6 +1,8 @@
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Application.Interface;
 using Domain;
 using MediatR;
@@ -39,11 +41,10 @@ namespace Application.Users
             {
                 if (await _context.Users.AnyAsync(x => x.Email == request.Email))
                 {
-                    throw new System.Exception("Exception");
+                    throw new RestException(HttpStatusCode.Conflict, new {Error = "User already exists"});
                 }
 
                int userCount = await _context.Users.CountAsync(x =>x.UserName.StartsWith(request.FirstName+request.LastName)) + 1;
-
 
                 var user = new User
                 {
@@ -57,8 +58,7 @@ namespace Application.Users
 
                 if(result.Succeeded) return user;
 
-                throw new System.Exception("Problem creating user");
-
+                    throw new RestException(HttpStatusCode.BadRequest, new {Error = "Problem creating user"});
             }
         }
     }

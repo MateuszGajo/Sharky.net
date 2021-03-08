@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -30,14 +32,14 @@ namespace Application.Users
             {
                 var user = await _userManager.FindByEmailAsync(request.Email);
 
-                if (user == null) throw new Exception("user doesn't exist");
+                if (user == null) throw new RestException(HttpStatusCode.NotFound, new {Error = "User doesn't exist"});
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
                 if(result.Succeeded){
                     return user;
                 }
-                throw new Exception("Problem in logging user");
+                throw new RestException(HttpStatusCode.BadRequest, new {Error = "Problem logging user"});
             }
         }
     }
