@@ -1,6 +1,8 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using MediatR;
 using Persistence;
 
@@ -24,12 +26,12 @@ namespace Application.Post
             public async  Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var post = await _context.Posts.FindAsync(request.PostId);
+
+                if(post == null) throw new RestException(HttpStatusCode.BadRequest, new {Error = "Post doesn't exist"});
                 
                 var like = new Domain.Like{
                     UserId=Guid.NewGuid(),
                 };
-
-                if(post == null) throw new Exception("empty post");
 
                 post.Likes.Add(like);
 
@@ -37,9 +39,8 @@ namespace Application.Post
 
                 if(result) return Unit.Value;
 
-                throw new Exception("Problem liking post");
+                throw new RestException(HttpStatusCode.BadRequest, new{Errors= "Problem liking post" });
 
-                throw new NotImplementedException();
             }
         }
     }

@@ -8,6 +8,8 @@ using Microsoft.Extensions.Options;
 using Domain;
 using System;
 using Persistence;
+using Application.Errors;
+using System.Net;
 
 namespace Application.Post
 {
@@ -31,6 +33,9 @@ namespace Application.Post
             }
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                if(request.File == null  || String.IsNullOrEmpty(request.Content)){
+                    throw new RestException(HttpStatusCode.BadRequest, new {Error = "Content cannot be empty"});
+                }
                 var PhotoUploadResult = _photoAccessor.AddPhoto(request.File);
 
                 var Post = new Domain.Post
@@ -51,7 +56,7 @@ namespace Application.Post
 
                 if(success) return Unit.Value;
 
-                    throw new Exception("Problem savings changes");
+                   throw new RestException(HttpStatusCode.BadRequest, new {Error = "Problem creating post"});
             }
         }
 

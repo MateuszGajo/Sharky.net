@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -25,7 +27,11 @@ namespace Application.Post
 
             public async Task<Domain.Post> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Posts.Include(p=> p.Photo).FirstOrDefaultAsync(x=> x.Id == request.Id);
+                var post = await _context.Posts.Include(p=> p.Photo).FirstOrDefaultAsync(x=> x.Id == request.Id);
+
+                if(post == null) throw new RestException(HttpStatusCode.NotFound, new {Error = "Post doesn't exist"});
+
+                return post;
             }
         }
     }
