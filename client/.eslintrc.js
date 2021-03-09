@@ -86,7 +86,7 @@ module.exports = {
         mjs: "never",
       },
     ],
-    "react/prop-types": "off",
+    // "react/prop-types": "off",
   },
 
   globals: {

@@ -1,0 +1,11 @@
+{
+  "authentication": {
+    "signinTitle": "Sign In",
+    "signupTitle": "Fill in the form",
+    "welcomeTitle": "Welcome",
+    "welcomeSigninText": "If you don't have an account",
+    "welcomeSignUpText": "If you have an account",
+    "signinbuttonText": "Login",
+    "signupButtonText": "Register"
+  }
+}

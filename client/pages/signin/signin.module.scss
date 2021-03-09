@@ -1,0 +1,58 @@
+:global(#app) {
+  .container {
+    margin-top: 10px;
+    min-width: 45%;
+  }
+
+  .iconContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .icon {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .icon:hover {
+    transform: scale(1.15);
+  }
+
+  .alternativeText {
+    color: $primaryGrey;
+    margin-top: 10px;
+  }
+
+  .input + .input {
+    margin-top: 10px;
+  }
+
+  .helpersContainer {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .helpersText {
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .button {
+    display: block;
+    margin: 15px auto 0 auto;
+    width: 200px;
+    height: 50px;
+    background-color: $primaryColor;
+    color: #f2f2f2;
+    border-width: 0;
+    border-radius: 40px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $primaryHoverColor;
+    }
+  }
+}

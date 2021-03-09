@@ -1,0 +1,106 @@
+:global(#app) {
+  .underline {
+    position: relative;
+  }
+
+  .underline::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: -12px;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background-color: $primaryColor;
+  }
+
+  .wrapper {
+    background-color: #e1e1e1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .container {
+    width: 85%;
+    height: 85%;
+  }
+
+  .grid {
+    height: 100%;
+  }
+
+  .gridForm {
+    border-radius: 20px 0 0 20px;
+    background-color: white;
+  }
+
+  .brand {
+    color: $primaryColor;
+  }
+
+  .brandMix {
+    color: black;
+  }
+
+  .content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+  }
+
+  .formTitle {
+    text-align: center;
+    font-size: 2.5rem;
+    color: $primaryColor;
+  }
+
+  .gridWelcome {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0 20px 20px 0;
+    background-color: $primaryColor;
+  }
+
+  .welcomeTitle {
+    text-align: center;
+    font-size: 3.5rem;
+    color: white;
+  }
+
+  .welcomeTitle::after {
+    background-color: white;
+  }
+
+  .welcomeText {
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    margin-top: 40px;
+  }
+
+  .buttonWrapper {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .welcomeButton {
+    width: 150px;
+    height: 43px;
+    font-size: 1.1rem;
+    background-color: $primaryColor;
+    border: 1px solid white;
+    color: #f2f2f2;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $primaryHoverColor;
+    }
+  }
+}
