@@ -1,3 +1,7 @@
 {
-  "124": "witamy"
+  "validation": {
+    "requiredField": "{{name}} jest wymagane",
+    "email": "Niepoprawyn e-mail",
+    "phone": "Niepoprawny numer telefonu"
+  }
 }

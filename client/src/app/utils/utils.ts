@@ -1,4 +1,7 @@
+import useTranslate from "next-translate/useTranslation";
 import setLanguage from "next-translate/setLanguage";
+import * as Yup from "yup";
+
 export const navItems = [
   {
     id: 1,
@@ -63,4 +66,31 @@ export const setLang = async (code: string) => {
   date.setTime(date.getTime() + expireMs);
   document.cookie = `NEXT_LOCALE=${code};expires=${date.toUTCString()};path=/`;
   await setLanguage(code);
+};
+
+export const registerValidationSchema = () => {
+  const { t } = useTranslate("common");
+  console.log(t("validation.requiredField", { name: "field" }));
+  const firstNameRequired = t("validation.requiredField", {
+    name: "First name",
+  });
+  const lastNameRequired = t("validation.requiredField", { name: "Last name" });
+  const emaiRequired = t("validation.requiredField", { name: "Email" });
+  const passwordRequired = t("validation.requiredField", { name: "password" });
+  const confirmPasswordRequired = t("validation.requiredField", {
+    name: "Confirm Password",
+  });
+  const incorrectEmail = t("validation.email");
+  const incorrectPhone = t("validation.phone");
+  return Yup.object().shape({
+    email: Yup.string().required(emaiRequired).email(incorrectEmail),
+    password: Yup.string().required(passwordRequired),
+    confirmPassword: Yup.string().required(confirmPasswordRequired),
+    firstName: Yup.string().required(firstNameRequired),
+    lastName: Yup.string().required(lastNameRequired),
+    telephone: Yup.string().matches(
+      /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/,
+      incorrectPhone
+    ),
+  });
 };

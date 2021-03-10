@@ -4,10 +4,11 @@ import SecondaryInput from "~common/secondaryInput/SecondaryInput";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import styles from "./signin.module.scss";
 import useTranslation from "next-translate/useTranslation";
+import { Form, Formik } from "formik";
 
 const Signin = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [creds, setCreds] = useState({ email: "", password: "" });
+  const [isRemeberMeChecked, setRemeberMe] = useState(false);
 
   const { t } = useTranslation("signin");
 
@@ -16,6 +17,11 @@ const Signin = () => {
   const buttonText = t("button");
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
+
+  const handleSubmit = (creds) => {
+    console.log(creds);
+  };
+
   return (
     <Authentication>
       <div className={styles.container}>
@@ -30,24 +36,28 @@ const Signin = () => {
           <Icon name="google" size="large" circular className={styles.icon} />
         </div>
         <p className={styles.alternativeText}>{alternativeText}</p>
-        <form>
-          <SecondaryInput
-            placeholder="E-mail"
-            onChange={setEmail}
-            value={email}
-          />
-          <SecondaryInput
-            placeholder={PasswordText}
-            type="password"
-            value={password}
-            onChange={setPassword}
-          />
-          <div className={styles.helpersContainer}>
-            <Checkbox label={remeberMeText} className={styles.helpersText} />
-            <p className={styles.helpersText}>{forgotPasswordText}</p>
-          </div>
-          <button className={styles.button}>{buttonText}</button>
-        </form>
+        <Formik initialValues={creds} onSubmit={handleSubmit}>
+          {({ handleSubmit }) => (
+            <Form onSubmit={handleSubmit}>
+              <SecondaryInput placeholder="E-mail" name="email" fluid />
+              <SecondaryInput
+                placeholder={PasswordText}
+                type="password"
+                name="password"
+                fluid
+              />
+              <div className={styles.helpersContainer}>
+                <Checkbox
+                  label={remeberMeText}
+                  className={styles.helpersText}
+                  onChange={() => setRemeberMe(!remeberMeText)}
+                />
+                <p className={styles.helpersText}>{forgotPasswordText}</p>
+              </div>
+              <button className={styles.button}>{buttonText}</button>
+            </Form>
+          )}
+        </Formik>
       </div>
     </Authentication>
   );

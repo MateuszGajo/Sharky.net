@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 interface Props {
   type?: string;
   children: React.ReactNode;
+  DataKey?: string;
 }
 
 const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
