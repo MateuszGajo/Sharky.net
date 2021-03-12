@@ -1,0 +1,28 @@
+.container {
+  position: relative;
+}
+
+@mixin arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: $primaryColor;
+  transition: color 0.2s;
+}
+
+.arrowRight {
+  @include arrow;
+  right: -60px;
+  &:hover {
+    color: $primaryHoverColor;
+  }
+}
+
+.arrowLeft {
+  @include arrow;
+  left: -60px;
+  &:hover {
+    color: $primaryHoverColor;
+  }
+}

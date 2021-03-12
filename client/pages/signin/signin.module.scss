@@ -1,0 +1,72 @@
+:global(#app) {
+  .container {
+    margin-top: 10px;
+    min-width: 45%;
+  }
+
+  .iconContainer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .icon {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .icon:hover {
+    transform: scale(1.15);
+  }
+
+  .facebookIcon {
+    color: #1877f2;
+  }
+
+  .twitterIcon {
+    color: rgba(29, 161, 242, 1);
+  }
+
+  .googleIcon {
+    color: #fa543e;
+  }
+
+  .alternativeText {
+    color: $primaryGrey;
+    margin-top: 10px;
+  }
+
+  .input + .input {
+    margin-top: 10px;
+  }
+
+  .helpersContainer {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .helpersText {
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .button {
+    display: block;
+    width: 200px;
+    height: 50px;
+    font-size: 1.2rem;
+    color: $primaryColor;
+    border-radius: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: white;
+    border: 2px solid $primaryColor;
+    margin: 20px auto 0 auto;
+    &:hover {
+      background-color: #f2f2f2;
+      color: $primaryHoverColor;
+      border-color: $primaryHoverColor;
+    }
+  }
+}

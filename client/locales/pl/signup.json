@@ -1,0 +1,7 @@
+{
+  "password": "Hasło",
+  "confirmPassword": "Powtórz hasło",
+  "firstName": "Imię",
+  "lastName": "Nazwisko",
+  "phone": "Telefon"
+}

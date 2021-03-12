@@ -1,3 +1,7 @@
 {
-  "124": "welcome"
+  "validation": {
+    "requiredField": "{{name}} is required",
+    "email": "Incorrect email",
+    "phone": "Incorrect phone number"
+  }
 }

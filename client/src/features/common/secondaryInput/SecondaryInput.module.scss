@@ -1,0 +1,59 @@
+:global(#app) {
+  .container {
+    position: relative;
+    width: 350px;
+    height: 50px;
+  }
+
+  .fluid {
+    width: 100%;
+  }
+
+  .container + .container {
+    margin-top: 35px;
+  }
+
+  .input {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    padding-left: 5px;
+    font-size: 1.2rem;
+    border: 1px solid $primaryGrey;
+    &:focus + .placeholder {
+      transform: translateY(-100%);
+      margin-top: -15px;
+      font-size: 1rem;
+      color: $primaryColor;
+    }
+
+    &:focus {
+      border-color: $primaryColor;
+    }
+
+    &:valid + .placeholder {
+      transform: translateY(-100%);
+      margin-top: -15px;
+      font-size: 1rem;
+    }
+  }
+
+  .placeholder {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: normal;
+    font-size: 1.3rem;
+    margin-left: 5px;
+    color: $primaryGrey;
+    background-color: white;
+    margin-top: 0;
+    transition: transform 0.3s, margin 0.2s;
+  }
+
+  .error {
+    position: absolute;
+    left: 0;
+    top: 100%;
+  }
+}

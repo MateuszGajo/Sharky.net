@@ -1,0 +1,11 @@
+{
+  "authentication": {
+    "signinTitle": "Zaloguj się",
+    "signupTitle": "Uzupełnij formularz",
+    "welcomeTitle": "Witaj",
+    "welcomeSigninText": "Jeżeli nie masz konta",
+    "welcomeSignupText": "Jeżeli posiadasz konto",
+    "signinButtonText": "Zaloguj",
+    "signupButtonText": "Zarejstruj się"
+  }
+}
