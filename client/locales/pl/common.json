@@ -1,7 +1,7 @@
 {
   "validation": {
     "requiredField": "{{name}} jest wymagane",
-    "email": "Niepoprawyn e-mail",
+    "email": "Niepoprawny e-mail",
     "phone": "Niepoprawny numer telefonu"
   }
 }

@@ -1,12 +1,11 @@
 {
-  "abc": "abc1111",
   "authentication": {
     "signinTitle": "Zaloguj się",
     "signupTitle": "Uzupełnij formularz",
     "welcomeTitle": "Witaj",
     "welcomeSigninText": "Jeżeli nie masz konta",
-    "welcomeSignUpText": "Jeżeli posiadasz konto",
-    "signinbuttonText": "Zaloguj",
+    "welcomeSignupText": "Jeżeli posiadasz konto",
+    "signinButtonText": "Zaloguj",
     "signupButtonText": "Zarejstruj się"
   }
 }

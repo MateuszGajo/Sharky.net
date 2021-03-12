@@ -3,6 +3,7 @@ import { Grid } from "semantic-ui-react";
 import styles from "./Authentication.module.scss";
 import cx from "classnames";
 import useTranslation from "next-translate/useTranslation";
+import Link from "next/link";
 
 interface Props {
   type?: string;
@@ -47,7 +48,11 @@ const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
               </h3>
               <p className={styles.welcomeText}>{welcomeText}</p>
               <div className={styles.buttonWrapper}>
-                <button className={styles.welcomeButton}>{buttonText}</button>
+                <button className={styles.welcomeButton}>
+                  <Link href={type === "signin" ? "signup" : "signin"}>
+                    {buttonText}
+                  </Link>
+                </button>
               </div>
             </div>
           </Grid.Column>

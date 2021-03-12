@@ -8,11 +8,16 @@ const CredsForm = () => {
   const confirmPasswordText = t("confirmPassword");
   return (
     <>
-      <SecondaryInput placeholder="Email" name="email" />
-      <SecondaryInput placeholder={passwordText} name="password" />
+      <SecondaryInput placeholder="Email*" name="email" />
       <SecondaryInput
-        placeholder={confirmPasswordText}
+        placeholder={passwordText + "*"}
+        name="password"
+        type="password"
+      />
+      <SecondaryInput
+        placeholder={confirmPasswordText + "*"}
         name="confirmPassword"
+        type="password"
       />
     </>
   );

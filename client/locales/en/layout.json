@@ -4,8 +4,8 @@
     "signupTitle": "Fill in the form",
     "welcomeTitle": "Welcome",
     "welcomeSigninText": "If you don't have an account",
-    "welcomeSignUpText": "If you have an account",
-    "signinbuttonText": "Login",
+    "welcomeSignupText": "If you have an account",
+    "signinButtonText": "Login",
     "signupButtonText": "Register"
   }
 }

@@ -9,8 +9,8 @@ const PersonalForm = () => {
   const phoneText = t("phone");
   return (
     <>
-      <SecondaryInput placeholder={firstNameText} name="firstName" />
-      <SecondaryInput placeholder={lastNameText} name="lastName" />
+      <SecondaryInput placeholder={firstNameText + "*"} name="firstName" />
+      <SecondaryInput placeholder={lastNameText + "*"} name="lastName" />
       <SecondaryInput placeholder={phoneText} name="phone" />
     </>
   );

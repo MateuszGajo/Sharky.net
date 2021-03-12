@@ -5,6 +5,8 @@ import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import styles from "./signin.module.scss";
 import useTranslation from "next-translate/useTranslation";
 import { Form, Formik } from "formik";
+import cx from "classnames";
+import { signinValidationSchema as validationSchema } from "~utils/utils";
 
 const Signin = () => {
   const [creds, setCreds] = useState({ email: "", password: "" });
@@ -30,13 +32,28 @@ const Signin = () => {
             name="facebook f"
             size="large"
             circular
-            className={styles.icon}
+            className={cx(styles.icon, styles.facebookIcon)}
           />
-          <Icon name="twitter" size="large" circular className={styles.icon} />
-          <Icon name="google" size="large" circular className={styles.icon} />
+          <Icon
+            name="google"
+            size="large"
+            circular
+            c
+            className={cx(styles.icon, styles.googleIcon)}
+          />
+          <Icon
+            name="twitter"
+            size="large"
+            circular
+            className={cx(styles.icon, styles.twitterIcon)}
+          />
         </div>
         <p className={styles.alternativeText}>{alternativeText}</p>
-        <Formik initialValues={creds} onSubmit={handleSubmit}>
+        <Formik
+          initialValues={creds}
+          onSubmit={handleSubmit}
+          validationSchema={validationSchema()}
+        >
           {({ handleSubmit }) => (
             <Form onSubmit={handleSubmit}>
               <SecondaryInput placeholder="E-mail" name="email" fluid />

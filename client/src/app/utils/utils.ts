@@ -70,18 +70,28 @@ export const setLang = async (code: string) => {
 
 export const registerValidationSchema = () => {
   const { t } = useTranslate("common");
-  console.log(t("validation.requiredField", { name: "field" }));
+
+  const passwordText = t("signup:password");
+  const confirmPasswordText = t("signup:confirmPassword");
+  const firstNameText = t("signup:firstName");
+  const lastNameText = t("signup:lastName");
+
   const firstNameRequired = t("validation.requiredField", {
-    name: "First name",
+    name: firstNameText,
   });
-  const lastNameRequired = t("validation.requiredField", { name: "Last name" });
-  const emaiRequired = t("validation.requiredField", { name: "Email" });
-  const passwordRequired = t("validation.requiredField", { name: "password" });
+  const lastNameRequired = t("validation.requiredField", {
+    name: lastNameText,
+  });
+  const emaiRequired = t("validation.requiredField", { name: "E-mail" });
+  const passwordRequired = t("validation.requiredField", {
+    name: passwordText,
+  });
   const confirmPasswordRequired = t("validation.requiredField", {
-    name: "Confirm Password",
+    name: confirmPasswordText,
   });
   const incorrectEmail = t("validation.email");
   const incorrectPhone = t("validation.phone");
+
   return Yup.object().shape({
     email: Yup.string().required(emaiRequired).email(incorrectEmail),
     password: Yup.string().required(passwordRequired),
@@ -92,5 +102,21 @@ export const registerValidationSchema = () => {
       /^(?:(?:\+?1\s*(?:[.-]\s*)?)?(?:\(\s*([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9])\s*\)|([2-9]1[02-9]|[2-9][02-8]1|[2-9][02-8][02-9]))\s*(?:[.-]\s*)?)?([2-9]1[02-9]|[2-9][02-9]1|[2-9][02-9]{2})\s*(?:[.-]\s*)?([0-9]{4})(?:\s*(?:#|x\.?|ext\.?|extension)\s*(\d+))?$/,
       incorrectPhone
     ),
+  });
+};
+
+export const signinValidationSchema = () => {
+  const { t } = useTranslate("common");
+  const passwordText = t("signin:password");
+
+  const emailRequired = t("validation.requiredField", { name: "E-mail" });
+  const passwordRequired = t("validation.requiredField", {
+    name: passwordText,
+  });
+  const incorrectEmail = t("validation.email");
+
+  return Yup.object().shape({
+    email: Yup.string().required(emailRequired).email(incorrectEmail),
+    password: Yup.string().required(passwordRequired),
   });
 };

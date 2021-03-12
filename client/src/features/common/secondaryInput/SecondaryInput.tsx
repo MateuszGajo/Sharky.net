@@ -38,9 +38,11 @@ const SecondaryInput: React.FC<Props> = ({
         {placeholder}
       </h2>
       {meta.touched && meta.error ? (
-        <Label basic color="red">
-          {meta.error}
-        </Label>
+        <div className={styles.error}>
+          <Label basic color="red">
+            {meta.error}
+          </Label>
+        </div>
       ) : null}
     </div>
   );

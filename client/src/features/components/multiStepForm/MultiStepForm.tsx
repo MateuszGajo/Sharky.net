@@ -11,9 +11,8 @@ import { registerValidationSchema as validationSchema } from "~utils/utils";
 const SaveValues = () => {
   const { values } = useFormikContext<UserFormValue>();
   useEffect(() => {
-    window.onbeforeunload = function () {
-      console.log(values);
-      localStorage.setItem("registerFormValues", JSON.stringify(values));
+    window.onbeforeunload = () => {
+      sessionStorage.setItem("registerFormValues", JSON.stringify(values));
     };
   });
   return null;
@@ -34,7 +33,7 @@ const Wizzard = ({ children }) => {
   };
 
   useEffect(() => {
-    const values = localStorage.getItem("registerFormValues");
+    const values = sessionStorage.getItem("registerFormValues");
     if (values) {
       try {
         const valuesParsed = JSON.parse(values);
