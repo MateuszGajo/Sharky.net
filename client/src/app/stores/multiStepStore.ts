@@ -6,7 +6,7 @@ export default class MultiStepStore {
   }
 
   page = 1;
-  numberOfPages: number;
+  numberOfPages = 0;
 
   setNumberOfPages = (number: number) => {
     this.numberOfPages = number;

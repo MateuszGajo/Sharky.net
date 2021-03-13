@@ -13,12 +13,12 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly DataBaseContext _context;
         private readonly IMediator _mediator;
         private readonly IJwtGenerator _jwtGenerator;
-        public UsersController(DataBaseContext context, IMediator mediator, IJwtGenerator jwtGenerator)
+        public UserController(DataBaseContext context, IMediator mediator, IJwtGenerator jwtGenerator)
         {
             _jwtGenerator = jwtGenerator;
             _mediator = mediator;

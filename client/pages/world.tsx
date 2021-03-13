@@ -4,7 +4,9 @@ import HomeLayout from "~layout/homeLayout/HomeLayout";
 const World = () => {
   return (
     <div>
-      <HomeLayout children={<div>aa</div>} />
+      <HomeLayout>
+        <div>s</div>
+      </HomeLayout>
     </div>
   );
 };

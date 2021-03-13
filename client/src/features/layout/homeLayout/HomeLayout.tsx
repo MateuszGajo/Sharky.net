@@ -5,10 +5,10 @@ import Sidebar from "~components/sidebar/Sidebar";
 
 interface Props {
   children: ReactNode;
-  sidebar: boolean;
+  sidebar?: boolean;
 }
 
-const HomeLayout: React.FC<Props> = ({ children, sidebar }) => {
+const HomeLayout: React.FC<Props> = ({ children, sidebar = true }) => {
   return (
     <Grid padded className="full-height">
       <Grid.Column width={3} className="grid-column-clear-space">

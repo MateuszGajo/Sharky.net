@@ -13,7 +13,7 @@ import Preview from "./components/preview/Preview";
 import Content from "./components/preview/content/Content";
 
 const MessageBox = () => {
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState<any[]>([]);
   const [text, setText] = useState("");
   const onDrop = useCallback((acceptedFiles) => {
     setFile(
@@ -25,9 +25,7 @@ const MessageBox = () => {
     );
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
   };
 
@@ -38,19 +36,9 @@ const MessageBox = () => {
           <Segment>
             <Container textAlign="center">Create Post</Container>
             <Divider />
-            <Content
-              getRootProps={getRootProps}
-              getInputProps={getInputProps}
-              isDragActive={isDragActive}
-              setText={setText}
-            />
+            <Content onDrop={onDrop} setText={setText} />
             <Container className={`${style.toolbar} local`}>
-              <Preview
-                file={file}
-                setFile={setFile}
-                getRootProps={getRootProps}
-                getInputProps={getInputProps}
-              />
+              <Preview file={file} setFile={setFile} onDrop={onDrop} />
               <Button content="send" positive floated="right" />
             </Container>
           </Segment>

@@ -30,8 +30,9 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.11",
     "@types/node": "^14.14.31",
-    "@types/react": "^17.0.2",
+    "@types/react": "^17.0.3",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
     "babel-plugin-module-resolver": "^4.1.0",

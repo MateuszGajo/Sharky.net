@@ -1,7 +1,14 @@
 import React from "react";
+import { useDropzone } from "react-dropzone";
 import { Form, Grid, Header, Icon } from "semantic-ui-react";
 
-const Content = ({ getRootProps, getInputProps, isDragActive, setText }) => {
+interface Props {
+  onDrop: (props: any) => void;
+  setText: (content: string) => void;
+}
+
+const Content: React.FC<Props> = ({ onDrop, setText }) => {
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <Form.Field
       {...getRootProps({

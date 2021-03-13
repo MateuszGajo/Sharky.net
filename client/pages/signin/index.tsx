@@ -7,6 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { Form, Formik } from "formik";
 import cx from "classnames";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
+import { signinFormValues as formValue } from "~root/src/app/models/user";
 
 const Signin = () => {
   const [creds, setCreds] = useState({ email: "", password: "" });
@@ -20,7 +21,7 @@ const Signin = () => {
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
 
-  const handleSubmit = (creds) => {
+  const handleSubmit = (creds: formValue) => {
     console.log(creds);
   };
 

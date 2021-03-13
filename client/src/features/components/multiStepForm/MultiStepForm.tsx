@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, useFormikContext } from "formik";
-import { UserFormValue } from "~root/src/app/models/user";
+import { SignupFormValues as FormValue } from "~root/src/app/models/user";
 import StepWrapper from "./components/stepWrapper/StepWrrapper";
 import Step from "./components/step/Step";
 import Controls from "./components/controls/Controls";
 import CredsForm from "./components/credsForm/CredsForm";
 import PersonalForm from "./components/personalForm/PersonalForm";
 import { registerValidationSchema as validationSchema } from "~utils/utils";
+import agent from "~api/agent";
+import Loading from "~common/Loading/Loading";
 
 const SaveValues = () => {
-  const { values } = useFormikContext<UserFormValue>();
+  const { values } = useFormikContext<FormValue>();
   useEffect(() => {
     window.onbeforeunload = () => {
       sessionStorage.setItem("registerFormValues", JSON.stringify(values));
@@ -18,7 +20,11 @@ const SaveValues = () => {
   return null;
 };
 
-const Wizzard = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const Wizzard: React.FC<Props> = ({ children }) => {
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -27,9 +33,13 @@ const Wizzard = ({ children }) => {
     password: "",
     confirmPassword: "",
   });
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmitForm = (user) => {
-    console.log(user);
+  const handleSubmitForm = (user: FormValue) => {
+    console.log("Hello");
+    agent.Account.login(user)
+      .then((resp) => console.log(resp))
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -38,9 +48,15 @@ const Wizzard = ({ children }) => {
       try {
         const valuesParsed = JSON.parse(values);
         setUser({ ...user, ...valuesParsed });
-      } catch {}
+        setLoading(false);
+      } catch {
+        setLoading(false);
+      }
+    } else {
+      setLoading(false);
     }
   }, []);
+  if (loading) return <Loading />;
 
   return (
     <Formik
