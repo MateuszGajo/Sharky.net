@@ -7,7 +7,7 @@ import useTranslation from "next-translate/useTranslation";
 import { Form, Formik } from "formik";
 import cx from "classnames";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
-import { signinFormValues as formValue } from "~root/src/app/models/user";
+import { SigninFormValues as formValue } from "~root/src/app/models/user";
 
 const Signin = () => {
   const [creds, setCreds] = useState({ email: "", password: "" });
@@ -39,7 +39,6 @@ const Signin = () => {
             name="google"
             size="large"
             circular
-            c
             className={cx(styles.icon, styles.googleIcon)}
           />
           <Icon

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { useStore } from "~root/src/app/stores/store";
 
 interface Props {
@@ -27,10 +26,6 @@ const StepWrapper: React.FC<Props> = ({ children }) => {
   }, []);
 
   return childrenCloned;
-};
-
-StepWrapper.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
 };
 
 export default StepWrapper;

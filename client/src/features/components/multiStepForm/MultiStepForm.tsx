@@ -8,13 +8,14 @@ import CredsForm from "./components/credsForm/CredsForm";
 import PersonalForm from "./components/personalForm/PersonalForm";
 import { registerValidationSchema as validationSchema } from "~utils/utils";
 import agent from "~api/agent";
-import Loading from "~common/Loading/Loading";
+import { useStore } from "~root/src/app/stores/store";
 
 const SaveValues = () => {
   const { values } = useFormikContext<FormValue>();
+  const { password, confirmPassword, ...formValues } = values;
   useEffect(() => {
     window.onbeforeunload = () => {
-      sessionStorage.setItem("registerFormValues", JSON.stringify(values));
+      sessionStorage.setItem("registerFormValues", JSON.stringify(formValues));
     };
   });
   return null;
@@ -25,45 +26,25 @@ interface Props {
 }
 
 const Wizzard: React.FC<Props> = ({ children }) => {
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [loading, setLoading] = useState(true);
+  const { multiStepStore } = useStore();
+  const { initialFormValues: initialValues, touchedFields } = multiStepStore;
 
   const handleSubmitForm = (user: FormValue) => {
     console.log("Hello");
+    console.log(user);
     agent.Account.login(user)
       .then((resp) => console.log(resp))
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    const values = sessionStorage.getItem("registerFormValues");
-    if (values) {
-      try {
-        const valuesParsed = JSON.parse(values);
-        setUser({ ...user, ...valuesParsed });
-        setLoading(false);
-      } catch {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
-    }
-  }, []);
-  if (loading) return <Loading />;
-
   return (
     <Formik
-      initialValues={user}
+      initialValues={initialValues}
       validationSchema={validationSchema()}
+      validateOnMount={true}
       onSubmit={(values) => handleSubmitForm(values)}
       enableReinitialize
+      initialTouched={touchedFields}
     >
       {({ handleSubmit }) => {
         return (

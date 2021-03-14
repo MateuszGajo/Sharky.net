@@ -3,12 +3,13 @@ import { Dimmer, Loader } from "semantic-ui-react";
 
 interface Props {
   content?: string;
+  inverted?: boolean;
 }
 
-const Loading: React.FC<Props> = ({ content }) => {
+const Loading: React.FC<Props> = ({ content, inverted = true }) => {
   return (
-    <Dimmer active>
-      <Loader content={content} />
+    <Dimmer active inverted={true}>
+      <Loader content={content || "loading..."} />
     </Dimmer>
   );
 };

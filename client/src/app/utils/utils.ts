@@ -89,13 +89,18 @@ export const registerValidationSchema = () => {
   const confirmPasswordRequired = t("validation.requiredField", {
     name: confirmPasswordText,
   });
+  const incorrectConfirmPassword = t("validation.confirmPassword", {
+    name: confirmPasswordText,
+  });
   const incorrectEmail = t("validation.email");
   const incorrectPhone = t("validation.phone");
 
   return Yup.object().shape({
     email: Yup.string().required(emaiRequired).email(incorrectEmail),
     password: Yup.string().required(passwordRequired),
-    confirmPassword: Yup.string().required(confirmPasswordRequired),
+    confirmPassword: Yup.string()
+      .required(confirmPasswordRequired)
+      .oneOf([Yup.ref("password"), null], incorrectConfirmPassword),
     firstName: Yup.string().required(firstNameRequired),
     lastName: Yup.string().required(lastNameRequired),
     telephone: Yup.string().matches(

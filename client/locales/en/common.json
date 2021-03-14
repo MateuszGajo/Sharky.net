@@ -2,6 +2,7 @@
   "validation": {
     "requiredField": "{{name}} is required",
     "email": "Incorrect email",
-    "phone": "Incorrect phone number"
+    "phone": "Incorrect phone number",
+    "confirmPassword": "Password must match"
   }
 }

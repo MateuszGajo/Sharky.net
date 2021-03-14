@@ -35,8 +35,9 @@ const SecondaryInput: React.FC<Props> = ({
     onChange(e);
   };
 
+  useEffect(() => {}, [field]);
+
   useEffect(() => {
-    console.log(input.current?.value);
     if (input.current?.value) setActive(true);
   }, [input]);
 
