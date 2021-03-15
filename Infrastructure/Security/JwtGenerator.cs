@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using Application.Interface;
 using Domain;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 

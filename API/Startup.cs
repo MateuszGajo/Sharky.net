@@ -6,6 +6,7 @@ using API.Middleware;
 using Application.Interface;
 using Application.Users;
 using Domain;
+using FluentValidation.AspNetCore;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
@@ -18,10 +19,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Persistence;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace API
 {
@@ -43,7 +50,15 @@ namespace API
             });
 
             services.AddMediatR(typeof(Details.Handler).Assembly);
-            services.AddControllers();
+            services.AddControllers(opt =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            }).AddFluentValidation(cfg =>
+            {
+                cfg.RegisterValidatorsFromAssemblyContaining<Register>();
+            });
+
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
             services.AddIdentityCore<User>(opt =>
@@ -52,16 +67,41 @@ namespace API
             })
             .AddEntityFrameworkStores<DataBaseContext>()
             .AddSignInManager<SignInManager<User>>();
-            // .AddDefaultTokenProviders();
+            // .AddDefaultTokenProviders(); 
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, opt =>
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                   .AddJwtBearer(options =>
+                   {
+                       options.TokenValidationParameters = new TokenValidationParameters
+                       {
+                           ValidateIssuerSigningKey = true,
+                           IssuerSigningKey = key,
+                           ValidateAudience = false,
+                           ValidateIssuer = false,
+                           ValidateLifetime = true,
+                           ClockSkew = TimeSpan.Zero
+                       };
+
+                       options.Events = new JwtBearerEvents
+                       {
+                           OnMessageReceived = context =>
+                           {
+                               context.Token = context.Request.Cookies["Token"];
+                               return Task.CompletedTask;
+                           }
+                       };
+                   });
+
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("myPolicy", builder =>
                 {
-                    opt.SlidingExpiration = true;
-                    opt.ExpireTimeSpan = new TimeSpan(0, 1, 0);
+                    builder.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
                 });
+            });
 
-            services.AddScoped<IPhotoAccessor,PhotoAccessor>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddSwaggerGen(c =>
@@ -86,6 +126,7 @@ namespace API
 
             app.UseRouting();
 
+            app.UseCors("myPolicy");
             app.UseAuthentication();
 
             app.UseAuthorization();

@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Application.Interface;
 using Application.Users;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -28,9 +33,9 @@ namespace API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Details(string id)
         {
-            return await _mediator.Send(new Details.Query { Id = id});
+            return await _mediator.Send(new Details.Query { Id = id });
         }
-
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<Unit>> Register(Register.Command command)
         {
@@ -40,9 +45,9 @@ namespace API.Controllers
 
             return Unit.Value;
         }
-
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<Unit>> Login (Login.Command command)
+        public async Task<ActionResult<Unit>> Login(Login.Command command)
         {
             var user = await _mediator.Send(command);
 
@@ -50,7 +55,15 @@ namespace API.Controllers
             return Unit.Value;
         }
 
-        private  void CreateToken(User user)
+        [AllowAnonymous]
+        [HttpDelete("logout")]
+        public async Task<ActionResult<Unit>> Logout()
+        {
+            Response.Cookies.Delete("Token");
+            return Unit.Value;
+        }
+
+        private void CreateToken(User user)
         {
             var token = _jwtGenerator.CreateToken(user);
 
@@ -63,5 +76,7 @@ namespace API.Controllers
 
             Response.Cookies.Append("Token", token, cookieOptions);
         }
+
+
     }
 }

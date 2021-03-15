@@ -4,7 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interface;
+using Application.validators;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +24,21 @@ namespace Application.Users
             public string LastName { get; set; }
             public string Email { get; set; }
             public string Password { get; set; }
+            public string confirmPassword { get; set; }
+            public string phone { get; set; }
+        }
+
+        public class CommandValidator : AbstractValidator<Command>
+        {
+            public CommandValidator()
+            {
+                RuleFor(x => x.Email).EmailAddress().NotEmpty();
+                RuleFor(x => x.Password).Password();
+                RuleFor(x => x.confirmPassword).Equal(x => x.Password);
+                RuleFor(x => x.FirstName).NotEmpty();
+                RuleFor(x => x.LastName).NotEmpty();
+                RuleFor(x => x.phone).Phone();
+            }
         }
 
         public class Handler : IRequestHandler<Command, User>

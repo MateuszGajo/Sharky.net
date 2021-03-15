@@ -11,9 +11,8 @@ const requests = {
 };
 
 const Account = {
-  login: (user: SigninFormValues) => requests.post("/user/login", { user }),
-  register: (user: SignupFormValues) =>
-    requests.post("/user/register", { user }),
+  login: (user: SigninFormValues) => requests.post("/user/login", user),
+  register: (user: SignupFormValues) => requests.post("/user/register", user),
 };
 
 export default { Account };

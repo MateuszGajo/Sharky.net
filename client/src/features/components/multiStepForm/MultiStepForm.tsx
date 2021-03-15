@@ -32,7 +32,7 @@ const Wizzard: React.FC<Props> = ({ children }) => {
   const handleSubmitForm = (user: FormValue) => {
     console.log("Hello");
     console.log(user);
-    agent.Account.login(user)
+    agent.Account.register(user)
       .then((resp) => console.log(resp))
       .catch((err) => console.log(err));
   };
