@@ -56,12 +56,13 @@ namespace Application.Users
 
             public async Task<User> Handle(Command request, CancellationToken cancellationToken)
             {
+
                 if (await _context.Users.AnyAsync(x => x.Email == request.Email))
                 {
-                    throw new RestException(HttpStatusCode.Conflict, new {Error = "User already exists"});
+                    throw new RestException(HttpStatusCode.Conflict, new { email = "Email is already in use" });
                 }
 
-               int userCount = await _context.Users.CountAsync(x =>x.UserName.StartsWith(request.FirstName+request.LastName)) + 1;
+                int userCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(request.FirstName + request.LastName)) + 1;
 
                 var user = new User
                 {
@@ -73,9 +74,9 @@ namespace Application.Users
 
                 var result = await _userManager.CreateAsync(user, request.Password);
 
-                if(result.Succeeded) return user;
+                if (result.Succeeded) return user;
 
-                    throw new RestException(HttpStatusCode.BadRequest, new {Error = "Problem creating user"});
+                throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating user" });
             }
         }
     }

@@ -3,5 +3,7 @@
   "confirmPassword": "Powtórz hasło",
   "firstName": "Imię",
   "lastName": "Nazwisko",
-  "phone": "Telefon"
+  "phone": "Telefon",
+  "serverError": "Wystąpił problem zarejstrowania konta",
+  "serverErrorParagraph": "spróbuj ponowanie za kilka minut"
 }
