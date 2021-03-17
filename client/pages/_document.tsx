@@ -18,5 +18,10 @@ class MyDocument extends Document {
     );
   }
 }
+export async function getStaticProps() {
+  return {
+    props: {},
+  };
+}
 
 export default MyDocument;

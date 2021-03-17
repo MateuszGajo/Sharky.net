@@ -39,10 +39,18 @@
     margin-top: 10px;
   }
 
+  .errorContainer {
+    margin: 5px 0;
+  }
+
   .helpersContainer {
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
+  }
+
+  .errorContainer + .helpersContainer {
+    margin-top: 15px;
   }
 
   .helpersText {

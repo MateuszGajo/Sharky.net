@@ -2,6 +2,7 @@ import { SigninFormValues, SignupFormValues } from "~models/user";
 import axios from "axios";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.withCredentials = true;
 
 const requests = {
   get: (url: string) => axios.get(url),
@@ -11,8 +12,10 @@ const requests = {
 };
 
 const Account = {
-  login: (user: SigninFormValues) => requests.post("/user/login", user),
+  login: (user: SigninFormValues, predicate: string) =>
+    requests.post(`/user/login?predicate=${predicate}`, user),
   register: (user: SignupFormValues) => requests.post("/user/register", user),
+  creds: () => requests.post("user/creds", {}),
 };
 
 export default { Account };

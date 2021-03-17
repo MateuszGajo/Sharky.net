@@ -5,7 +5,7 @@ import { useStore } from "~root/src/app/stores/store";
 import Loading from "~common/Loading/Loading";
 import { observer } from "mobx-react-lite";
 
-const index = () => {
+const SignUp = () => {
   const { multiStepStore } = useStore();
   const { loading, loadInitialFormValues } = multiStepStore;
 
@@ -34,4 +34,10 @@ const index = () => {
   );
 };
 
-export default observer(index);
+export async function getStaticProps() {
+  return {
+    props: {},
+  };
+}
+
+export default observer(SignUp);

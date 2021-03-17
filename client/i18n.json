@@ -6,6 +6,6 @@
     "/home": ["home", "common", "components"],
     "/about": ["about"],
     "/signin": ["layout", "signin"],
-    "/signup": ["layout", "common", "signup"]
+    "/signup": ["signup", "layout", "common"]
   }
 }

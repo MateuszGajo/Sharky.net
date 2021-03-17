@@ -75,7 +75,7 @@ export default class MultiStepStore {
         const errors = err.response.data.errors;
         const touched: typeof errors = {};
         const initialFormExtend: typeof errors = this.initialFormValues;
-        console.log("robimy loopa");
+
         for (const [key, value] of Object.entries(errors)) {
           touched[key] = value ? true : false;
           console.log(errors[key]);

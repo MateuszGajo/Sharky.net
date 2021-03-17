@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Checkbox, Icon } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Checkbox, Icon, Message } from "semantic-ui-react";
 import SecondaryInput from "~common/secondaryInput/SecondaryInput";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import styles from "./signin.module.scss";
@@ -8,10 +8,14 @@ import { Form, Formik } from "formik";
 import cx from "classnames";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
 import { SigninFormValues as formValue } from "~root/src/app/models/user";
+import agent from "~api/agent";
+import router from "next/router";
+import Loading from "~common/Loading/Loading";
 
 const Signin = () => {
   const [creds, setCreds] = useState({ email: "", password: "" });
   const [isRemeberMeChecked, setRemeberMe] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const { t } = useTranslation("signin");
 
@@ -20,10 +24,44 @@ const Signin = () => {
   const buttonText = t("button");
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
+  const credsError = t("credsError");
 
-  const handleSubmit = (creds: formValue) => {
-    console.log(creds);
+  const handleSubmit = (
+    creds: formValue,
+    setFieldError: (msg: string) => void
+  ) => {
+    console.log(isRemeberMeChecked);
+    agent.Account.login(creds, isRemeberMeChecked ? "true" : "false")
+      .then(() => {
+        if (isRemeberMeChecked) localStorage.setItem("creds", "true");
+        else {
+          localStorage.removeItem("creds");
+        }
+        router.push("/home");
+      })
+      .catch((err) => {
+        const errors = err.response.data.errors;
+        if (errors["error"]) {
+          setFieldError("credsError");
+        }
+      });
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("creds")) {
+      agent.Account.creds()
+        .then(({ data }) => {
+          setCreds(data);
+          setRemeberMe(true);
+        })
+        .catch(() => {
+          localStorage.removeItem("creds");
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   return (
     <Authentication>
@@ -51,28 +89,41 @@ const Signin = () => {
         <p className={styles.alternativeText}>{alternativeText}</p>
         <Formik
           initialValues={creds}
-          onSubmit={handleSubmit}
+          onSubmit={(values, { setStatus }) => handleSubmit(values, setStatus)}
           validationSchema={validationSchema()}
+          enableReinitialize
         >
-          {({ handleSubmit }) => (
-            <Form onSubmit={handleSubmit}>
-              <SecondaryInput placeholder="E-mail" name="email" fluid />
-              <SecondaryInput
-                placeholder={PasswordText}
-                type="password"
-                name="password"
-                fluid
-              />
-              <div className={styles.helpersContainer}>
-                <Checkbox
-                  label={remeberMeText}
-                  className={styles.helpersText}
-                  onChange={() => setRemeberMe(!remeberMeText)}
-                />
-                <p className={styles.helpersText}>{forgotPasswordText}</p>
-              </div>
-              <button className={styles.button}>{buttonText}</button>
-            </Form>
+          {({ handleSubmit, status }) => (
+            <>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <Form onSubmit={handleSubmit}>
+                  <SecondaryInput placeholder="E-mail" name="email" fluid />
+                  <SecondaryInput
+                    placeholder={PasswordText}
+                    type="password"
+                    name="password"
+                    fluid
+                  />
+                  {status && (
+                    <Message negative className={styles.errorContainer}>
+                      <Message.Header>{credsError}</Message.Header>
+                    </Message>
+                  )}
+                  <div className={styles.helpersContainer}>
+                    <Checkbox
+                      label={remeberMeText}
+                      className={styles.helpersText}
+                      checked={isRemeberMeChecked}
+                      onChange={() => setRemeberMe(!isRemeberMeChecked)}
+                    />
+                    <p className={styles.helpersText}>{forgotPasswordText}</p>
+                  </div>
+                  <button className={styles.button}>{buttonText}</button>
+                </Form>
+              )}
+            </>
           )}
         </Formik>
       </div>

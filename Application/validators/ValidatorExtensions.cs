@@ -5,7 +5,7 @@ namespace Application.validators
 {
     public static class ValidatorExtensions
     {
-        public static IRuleBuilder<T,string> Password<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilder<T, string> Password<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             var options = ruleBuilder
             .NotEmpty()
@@ -18,14 +18,15 @@ namespace Application.validators
             return options;
         }
 
-           public static IRuleBuilder<T,string> Phone<T>(this IRuleBuilder<T, string> ruleBuilder)
+        public static IRuleBuilder<T, string> Phone<T>(this IRuleBuilder<T, string> ruleBuilder)
         {
             string pattern = @"^\d{9,10}$";
-   
+
             var options = ruleBuilder
-            .Custom((phone,context)=>{
-                         System.Console.WriteLine(Regex.IsMatch(phone, pattern));
-                if(phone.Length >0 && !Regex.IsMatch(phone, pattern)){
+            .Custom((phone, context) =>
+            {
+                if (phone.Length > 0 && !Regex.IsMatch(phone, pattern))
+                {
                     context.AddFailure("invalid phone number");
                 }
             });

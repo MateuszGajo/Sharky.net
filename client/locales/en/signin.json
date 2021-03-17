@@ -3,5 +3,6 @@
   "forgotPassword": "Forgot password?",
   "button": "Login",
   "alternativeText": "Or use your email account",
-  "password": "Password"
+  "password": "Password",
+  "credsError": "Incorrect email or password"
 }

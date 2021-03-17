@@ -28,6 +28,7 @@ const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
       type == "signin" ? "signupButtonText" : "signinButtonText"
     }`
   );
+
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
