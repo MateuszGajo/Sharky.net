@@ -16,6 +16,8 @@ const Account = {
     requests.post(`/user/login?predicate=${predicate}`, user),
   register: (user: SignupFormValues) => requests.post("/user/register", user),
   creds: () => requests.post("user/creds", {}),
+  fbLogin: (accessToken: string) =>
+    requests.post(`user/facebook`, { accessToken }),
 };
 
 export default { Account };

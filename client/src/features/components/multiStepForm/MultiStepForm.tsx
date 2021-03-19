@@ -30,12 +30,12 @@ interface Props {
 }
 
 const Wizzard: React.FC<Props> = observer(({ children }) => {
-  const { multiStepStore } = useStore();
+  const { authenticationStore } = useStore();
   const {
     initialFormValues: initialValues,
     touchedFields,
-    handleSubmitForm,
-  } = multiStepStore;
+    register,
+  } = authenticationStore;
 
   const [saveValues, setStatusOfSaveValues] = useState(true);
 
@@ -45,7 +45,7 @@ const Wizzard: React.FC<Props> = observer(({ children }) => {
       validationSchema={validationSchema()}
       validateOnMount={true}
       onSubmit={(values, { setErrors, setTouched, setStatus }) =>
-        handleSubmitForm(
+        register(
           values,
           setErrors,
           setTouched,

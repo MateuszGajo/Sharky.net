@@ -6,11 +6,11 @@ import Loading from "~common/Loading/Loading";
 import { observer } from "mobx-react-lite";
 
 const SignUp = () => {
-  const { multiStepStore } = useStore();
-  const { loading, loadInitialFormValues } = multiStepStore;
+  const { authenticationStore } = useStore();
+  const { loading, loadRegisterValues } = authenticationStore;
 
   useEffect(() => {
-    loadInitialFormValues();
+    loadRegisterValues();
   }, []);
 
   return (

@@ -1,9 +1,10 @@
 import agent from "~api/agent";
 import { makeAutoObservable } from "mobx";
-import { SignupFormValues as FormValue } from "~root/src/app/models/user";
+import { SignupFormValues as SignupValues } from "~root/src/app/models/user";
+import { SigninFormValues as SigninValues } from "~root/src/app/models/user";
 import router from "next/router";
 
-export default class MultiStepStore {
+export default class AuthenticationStore {
   constructor() {
     makeAutoObservable(this);
   }
@@ -20,6 +21,8 @@ export default class MultiStepStore {
     confirmPassword: "",
   };
   touchedFields = {};
+  creds = { email: "", password: "" };
+  remebermeStatus = false;
 
   setNumberOfPages = (number: number) => {
     this.numberOfPages = number;
@@ -37,7 +40,7 @@ export default class MultiStepStore {
     this.loading = state;
   };
 
-  loadInitialFormValues = () => {
+  loadRegisterValues = () => {
     const values = sessionStorage.getItem("registerFormValues");
 
     if (values) {
@@ -58,8 +61,8 @@ export default class MultiStepStore {
     this.setLoading(false);
   };
 
-  handleSubmitForm = (
-    user: FormValue,
+  register = (
+    user: SignupValues,
     setErrors: (fields: {}) => void,
     setTouched: (fields: {}, shouldValidate: boolean) => void,
     setStatus: (status: any) => void,
@@ -87,5 +90,50 @@ export default class MultiStepStore {
         setErrors(errors);
         setTouched(touched, false);
       });
+  };
+
+  login = (
+    creds: SigninValues,
+    setFieldError: (msg: string) => void,
+    isChecked: boolean
+  ) => {
+    agent.Account.login(creds, isChecked ? "true" : "false")
+      .then(() => {
+        if (isChecked) localStorage.setItem("creds", "true");
+        else {
+          localStorage.removeItem("creds");
+        }
+        router.push("/home");
+      })
+      .catch((err) => {
+        const errors = err.response.data.errors;
+        if (errors["error"]) {
+          setFieldError("credsError");
+        }
+      });
+  };
+
+  getCreds = () => {
+    if (localStorage.getItem("creds")) {
+      agent.Account.creds()
+        .then(({ data }) => {
+          this.creds = data;
+          this.remebermeStatus = true;
+        })
+        .catch(() => {
+          localStorage.removeItem("creds");
+        })
+        .finally(() => (this.loading = false));
+    } else {
+      this.loading = false;
+    }
+  };
+
+  setRemeberme = (status: boolean) => {
+    this.remebermeStatus = status;
+  };
+
+  fbLogin = (token: string) => {
+    console.log(token);
   };
 }

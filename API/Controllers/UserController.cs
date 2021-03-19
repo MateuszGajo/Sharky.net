@@ -1,18 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Security.Claims;
+using System.IO;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Application.DTOs;
 using Application.Interface;
 using Application.Users;
 using Domain;
 using MediatR;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using OAuth;
 using Persistence;
 
 
@@ -26,12 +27,16 @@ namespace API.Controllers
         private readonly IMediator _mediator;
         private readonly IJwtGenerator _jwtGenerator;
         private readonly UserManager<User> _userManager;
-        public UserController(DataBaseContext context, IMediator mediator, IJwtGenerator jwtGenerator, UserManager<User> userManager)
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _config;
+        public UserController(DataBaseContext context, IMediator mediator, IJwtGenerator jwtGenerator, UserManager<User> userManager, IConfiguration config)
         {
+            _config = config;
             _userManager = userManager;
             _jwtGenerator = jwtGenerator;
             _mediator = mediator;
             _context = context;
+            _httpClient = new HttpClient();
         }
 
         [HttpGet("{id}")]
@@ -90,6 +95,57 @@ namespace API.Controllers
                 return _jwtGenerator.decodeToken(token);
             }
             return NotFound();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("twitter")]
+
+
+        public ActionResult<Unit> FacebookLogin()
+        {
+            string ConsumerKey = _config["Twitter:ConsumerKey"];
+            string ConsumerSecret = _config["Twitter:ConsumerSecret"];
+            string AccessToken = _config["Twitter:AccessToken"];
+            string AccessTokenSecret = _config["Twitter:AccessTokenSecret"];
+
+            string REQUEST_URL = "https://api.twitter.com/oauth/request_token";
+            OAuthRequest client = new OAuthRequest()
+            {
+                Method = "GET",
+                Type = OAuthRequestType.AccessToken,
+                SignatureMethod = OAuthSignatureMethod.HmacSha1,
+                ConsumerKey = ConsumerKey,
+                ConsumerSecret = ConsumerSecret,
+                RequestUrl = "https://api.twitter.com/oauth/request_token",
+                Token = AccessToken,
+                TokenSecret = AccessTokenSecret,
+                CallbackUrl = "http://localhost:5000/api/user/facebook/callback",
+            };
+
+            string auth = client.GetAuthorizationHeader();
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
+            request.Headers.Add("Authorization", auth);
+            Console.WriteLine("Calling " + REQUEST_URL);
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            string strResponse = reader.ReadToEnd();
+
+            System.Console.WriteLine("https://api.twitter.com/oauth/authorize?" + strResponse);
+
+            return Unit.Value;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("twitter/callback")]
+
+        public ActionResult<Unit> TwitterCallback(string one, string two)
+        {
+            System.Console.WriteLine("callback");
+            System.Console.WriteLine(one);
+            System.Console.WriteLine(two);
+            return Unit.Value;
         }
 
         private void CreateToken(User user)

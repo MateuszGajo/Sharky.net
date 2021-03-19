@@ -1,16 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    // "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -19,45 +14,19 @@
     "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
-      "~page/*s": [
-        "./pages/*"
-      ],
-      "~common/*": [
-        "./src/features/common/*"
-      ],
-      "~components/*": [
-        "./src/features/components/*"
-      ],
-      "~layout/*": [
-        "./src/features/layout/*"
-      ],
-      "~root/*": [
-        "./*"
-      ],
-      "~styles/*": [
-        "./src/app/styles/*"
-      ],
-      "~api/*": [
-        "./src/app/api/*"
-      ],
-      "~models/*": [
-        "./src/app/models/*"
-      ],
-      "~stores/*": [
-        "./src/app/stores/*"
-      ],
-      "~utils/*": [
-        "./src/app/utils/*"
-      ]
+      "~page/*s": ["./pages/*"],
+      "~common/*": ["./src/features/common/*"],
+      "~components/*": ["./src/features/components/*"],
+      "~layout/*": ["./src/features/layout/*"],
+      "~root/*": ["./*"],
+      "~styles/*": ["./src/app/styles/*"],
+      "~api/*": ["./src/app/api/*"],
+      "~models/*": ["./src/app/models/*"],
+      "~stores/*": ["./src/app/stores/*"],
+      "~utils/*": ["./src/app/utils/*"]
     },
     "noEmit": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "./typings-custom/**/*", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
