@@ -11,8 +11,10 @@ import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import styles from "./signin.module.scss";
 import { observer } from "mobx-react-lite";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const Signin = () => {
+  const router = useRouter();
   const { authenticationStore } = useStore();
   const {
     login,
@@ -57,8 +59,8 @@ const Signin = () => {
             className={cx(styles.icon, styles.twitterIcon)}
             onClick={() => {
               axios
-                .post("http://localhost:5000/api/user/facebook")
-                .then((resp) => console.log(resp))
+                .post("http://localhost:5000/api/user/twitter")
+                .then((resp) => router.push(resp.data))
                 .catch((err) => console.log(err));
             }}
           />

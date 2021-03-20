@@ -2,7 +2,9 @@ using System;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using Application.DTOs;
 using Application.Interface;
 using Application.Users;
@@ -13,6 +15,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using OAuth;
 using Persistence;
 
@@ -101,14 +105,47 @@ namespace API.Controllers
         [HttpPost("twitter")]
 
 
-        public ActionResult<Unit> FacebookLogin()
+        public ActionResult<string> FacebookLogin()
         {
             string ConsumerKey = _config["Twitter:ConsumerKey"];
             string ConsumerSecret = _config["Twitter:ConsumerSecret"];
-            string AccessToken = _config["Twitter:AccessToken"];
-            string AccessTokenSecret = _config["Twitter:AccessTokenSecret"];
 
-            string REQUEST_URL = "https://api.twitter.com/oauth/request_token";
+            OAuthRequest client = new OAuthRequest()
+            {
+                Method = "GET",
+                Type = OAuthRequestType.RequestToken,
+                SignatureMethod = OAuthSignatureMethod.HmacSha1,
+                ConsumerKey = ConsumerKey,
+                ConsumerSecret = ConsumerSecret,
+                RequestUrl = "https://api.twitter.com/oauth/request_token",
+                CallbackUrl = "http://127.0.0.1:5000/api/user/twitter/callback",
+            };
+
+            string auth = client.GetAuthorizationHeader();
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
+            request.Headers.Add("Authorization", auth);
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream dataStream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(dataStream);
+            string strResponse = reader.ReadToEnd();
+
+            return "https://api.twitter.com/oauth/authorize?" + strResponse;
+        }
+
+
+
+        [AllowAnonymous]
+        [HttpGet("twitter/callback")]
+
+        public ActionResult<Unit> TwitterCallback()
+        {
+            string authToken = Request.Query["oauth_token"];
+            string authVerifier = Request.Query["oauth_verifier"];
+
+            string ConsumerKey = _config["Twitter:ConsumerKey"];
+            string ConsumerSecret = _config["Twitter:ConsumerSecret"];
+
             OAuthRequest client = new OAuthRequest()
             {
                 Method = "GET",
@@ -116,35 +153,49 @@ namespace API.Controllers
                 SignatureMethod = OAuthSignatureMethod.HmacSha1,
                 ConsumerKey = ConsumerKey,
                 ConsumerSecret = ConsumerSecret,
-                RequestUrl = "https://api.twitter.com/oauth/request_token",
-                Token = AccessToken,
-                TokenSecret = AccessTokenSecret,
-                CallbackUrl = "http://localhost:5000/api/user/facebook/callback",
+                Token = authToken,
+                RequestUrl = "https://api.twitter.com/oauth/access_token",
+                Verifier = authVerifier
             };
 
             string auth = client.GetAuthorizationHeader();
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
             request.Headers.Add("Authorization", auth);
-            Console.WriteLine("Calling " + REQUEST_URL);
 
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream dataStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(dataStream);
             string strResponse = reader.ReadToEnd();
 
-            System.Console.WriteLine("https://api.twitter.com/oauth/authorize?" + strResponse);
+            Uri myUri = new Uri("http://localhost:5000?" + strResponse);
+            string realAuthToken = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token");
+            string realAuthTokenSecret = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token_secret");
+            string user_id = HttpUtility.ParseQueryString(myUri.Query).Get("user_id");
 
-            return Unit.Value;
-        }
+            client = new OAuthRequest()
+            {
+                Method = "GET",
+                Type = OAuthRequestType.ProtectedResource,
+                SignatureMethod = OAuthSignatureMethod.HmacSha1,
+                ConsumerKey = ConsumerKey,
+                ConsumerSecret = ConsumerSecret,
+                Token = realAuthToken,
+                TokenSecret = realAuthTokenSecret,
+                RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={user_id}",
+            };
 
-        [AllowAnonymous]
-        [HttpGet("twitter/callback")]
+            auth = client.GetAuthorizationHeader();
+            request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
+            request.Headers.Add("Authorization", auth);
 
-        public ActionResult<Unit> TwitterCallback(string one, string two)
-        {
-            System.Console.WriteLine("callback");
-            System.Console.WriteLine(one);
-            System.Console.WriteLine(two);
+            response = (HttpWebResponse)request.GetResponse();
+            dataStream = response.GetResponseStream();
+            reader = new StreamReader(dataStream);
+            strResponse = reader.ReadToEnd();
+
+            var objResponse = (JObject)JsonConvert.DeserializeObject(strResponse);
+            string name = objResponse["name"].ToString();
+
             return Unit.Value;
         }
 
