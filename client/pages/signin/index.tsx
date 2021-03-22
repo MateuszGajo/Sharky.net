@@ -44,6 +44,11 @@ const Signin = () => {
             size="large"
             circular
             className={cx(styles.icon, styles.facebookIcon)}
+            onClick={() => {
+              router.push(
+                "https://www.facebook.com/v10.0/dialog/oauth?client_id=487050989139304&redirect_uri=http://localhost:5000/api/user/facebook/callback"
+              );
+            }}
           />
           <Icon
             name="google"

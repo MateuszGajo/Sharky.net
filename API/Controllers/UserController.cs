@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
 using Application.DTOs;
+using Application.Errors;
 using Application.Interface;
 using Application.Users;
 using Domain;
@@ -14,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -138,7 +140,7 @@ namespace API.Controllers
         [AllowAnonymous]
         [HttpGet("twitter/callback")]
 
-        public ActionResult<Unit> TwitterCallback()
+        public async Task<ActionResult<Unit>> TwitterCallback()
         {
             string authToken = Request.Query["oauth_token"];
             string authVerifier = Request.Query["oauth_verifier"];
@@ -159,10 +161,10 @@ namespace API.Controllers
             };
 
             string auth = client.GetAuthorizationHeader();
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
-            request.Headers.Add("Authorization", auth);
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
+            req.Headers.Add("Authorization", auth);
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
             Stream dataStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(dataStream);
             string strResponse = reader.ReadToEnd();
@@ -170,7 +172,16 @@ namespace API.Controllers
             Uri myUri = new Uri("http://localhost:5000?" + strResponse);
             string realAuthToken = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token");
             string realAuthTokenSecret = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token_secret");
-            string user_id = HttpUtility.ParseQueryString(myUri.Query).Get("user_id");
+            string userId = HttpUtility.ParseQueryString(myUri.Query).Get("user_id");
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.TwitterId == userId);
+
+            if (user != null)
+            {
+                CreateToken(user);
+                Response.Redirect("http://localhost:3000/home");
+                return Unit.Value;
+            }
 
             client = new OAuthRequest()
             {
@@ -181,14 +192,14 @@ namespace API.Controllers
                 ConsumerSecret = ConsumerSecret,
                 Token = realAuthToken,
                 TokenSecret = realAuthTokenSecret,
-                RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={user_id}",
+                RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={userId}",
             };
 
             auth = client.GetAuthorizationHeader();
-            request = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
-            request.Headers.Add("Authorization", auth);
+            req = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
+            req.Headers.Add("Authorization", auth);
 
-            response = (HttpWebResponse)request.GetResponse();
+            response = (HttpWebResponse)req.GetResponse();
             dataStream = response.GetResponseStream();
             reader = new StreamReader(dataStream);
             strResponse = reader.ReadToEnd();
@@ -196,7 +207,81 @@ namespace API.Controllers
             var objResponse = (JObject)JsonConvert.DeserializeObject(strResponse);
             string name = objResponse["name"].ToString();
 
-            return Unit.Value;
+            int userCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(name + name)) + 1;
+
+            User newUser = new User
+            {
+                Firstname = name,
+                Lastname = name,
+                UserName = $"{name + name + userCount}",
+                TwitterId = userId
+            };
+
+            _context.Users.Add(newUser);
+
+            var success = await _context.SaveChangesAsync() > 0;
+            if (success)
+            {
+                CreateToken(newUser);
+                Response.Redirect("http://localhost:3000/home");
+                return Unit.Value;
+            }
+
+            throw new RestException(HttpStatusCode.BadGateway, new { Error = "Problem authentication user" });
+        }
+
+        [AllowAnonymous]
+        [HttpGet("facebook/callback")]
+
+        public async Task<ActionResult<Unit>> FacebookCallback()
+        {
+            string clientSecret = _config["Facebook:clientSecret"];
+            string code = Request.Query["code"];
+            var response = await _httpClient.GetAsync($"https://graph.facebook.com/v10.0/oauth/access_token?client_id=487050989139304&redirect_uri=http://localhost:5000/api/user/facebook/callback&client_secret={clientSecret}&code={code}");
+            var jsonResponse = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+            string accessToken = (string)jsonResponse["access_token"];
+
+            var userData = await _httpClient.GetAsync($"https://graph.facebook.com/v10.0/me?access_token={accessToken}&fields=name");
+            var jsonUserData = JsonConvert.DeserializeObject<dynamic>(await userData.Content.ReadAsStringAsync());
+            string userId = (string)jsonUserData.id;
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == userId);
+
+            if (user != null)
+            {
+                CreateToken(user);
+                Response.Redirect("http://localhost:3000/home");
+                return Unit.Value;
+            }
+
+            string userName = (string)jsonUserData.name;
+            string userNameLowerCase = userName.ToLower();
+            string[] names = userName.Split(' ');
+            string firstName = names[0];
+            string lastName = names[1];
+
+            int userCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(userNameLowerCase)) + 1;
+
+            var newUser = new User
+            {
+                Firstname = firstName,
+                Lastname = lastName,
+                UserName = $"{userNameLowerCase + userCount}",
+                FacebookId = userId
+
+            };
+
+            await _context.Users.AddAsync(newUser);
+
+            var result = await _context.SaveChangesAsync() > 0;
+            if (result)
+            {
+                CreateToken(newUser);
+                Response.Redirect("http://localhost:3000/home");
+                return Unit.Value;
+            }
+
+            throw new RestException(HttpStatusCode.BadRequest, new { Error = "Can't authenticate user" });
         }
 
         private void CreateToken(User user)
