@@ -55,6 +55,11 @@ const Signin = () => {
             size="large"
             circular
             className={cx(styles.icon, styles.googleIcon)}
+            onClick={() => {
+              router.push(
+                "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&redirect_uri=http://localhost:5000/api/user/google/callback&client_id=24467567497-5u280n3sol5ihd15u09en4nn7567l93d.apps.googleusercontent.com"
+              );
+            }}
           />
 
           <Icon

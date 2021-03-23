@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Application.DTOs;
@@ -107,10 +109,11 @@ namespace API.Controllers
         [HttpPost("twitter")]
 
 
-        public ActionResult<string> FacebookLogin()
+        public ActionResult<string> TwitterLogin()
         {
             string ConsumerKey = _config["Twitter:ConsumerKey"];
             string ConsumerSecret = _config["Twitter:ConsumerSecret"];
+            string serverUrl = _config["Url:server"];
 
             OAuthRequest client = new OAuthRequest()
             {
@@ -120,7 +123,7 @@ namespace API.Controllers
                 ConsumerKey = ConsumerKey,
                 ConsumerSecret = ConsumerSecret,
                 RequestUrl = "https://api.twitter.com/oauth/request_token",
-                CallbackUrl = "http://127.0.0.1:5000/api/user/twitter/callback",
+                CallbackUrl = $"{serverUrl}/api/user/twitter/callback",
             };
 
             string auth = client.GetAuthorizationHeader();
@@ -135,29 +138,55 @@ namespace API.Controllers
             return "https://api.twitter.com/oauth/authorize?" + strResponse;
         }
 
-
-
         [AllowAnonymous]
         [HttpGet("twitter/callback")]
 
-        public async Task<ActionResult<Unit>> TwitterCallback()
+        public async Task<ActionResult> TwitterCallback()
         {
             string authToken = Request.Query["oauth_token"];
             string authVerifier = Request.Query["oauth_verifier"];
 
-            string ConsumerKey = _config["Twitter:ConsumerKey"];
-            string ConsumerSecret = _config["Twitter:ConsumerSecret"];
+            string clientUrl = _config["Url:client"];
+            string serverUrl = _config["Url:server"];
+            string consumerKey = _config["Twitter:ConsumerKey"];
+            string consumerSecret = _config["Twitter:ConsumerSecret"];
 
+            var pairs = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("oauth_token", authToken),
+                new KeyValuePair<string, string>("oauth_verifier", authVerifier),
+                new KeyValuePair<string, string>("oauth_consumer_key", consumerKey),
+
+            };
+
+            var content = new FormUrlEncodedContent(pairs);
+
+            var tokenRequest = await _httpClient.PostAsync($"https://api.twitter.com/oauth/access_token", content);
+
+            string tokenResponse = await tokenRequest.Content.ReadAsStringAsync();
+
+            Uri myUri = new Uri($"{serverUrl}?" + tokenResponse);
+
+            string realAuthToken = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token");
+            string realAuthTokenSecret = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token_secret");
+            string userId = HttpUtility.ParseQueryString(myUri.Query).Get("user_id");
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.TwitterId == userId);
+
+            if (user != null)
+            {
+                CreateToken(user);
+                return Redirect($"{clientUrl}/home");
+            }
             OAuthRequest client = new OAuthRequest()
             {
                 Method = "GET",
-                Type = OAuthRequestType.AccessToken,
+                Type = OAuthRequestType.ProtectedResource,
                 SignatureMethod = OAuthSignatureMethod.HmacSha1,
-                ConsumerKey = ConsumerKey,
-                ConsumerSecret = ConsumerSecret,
-                Token = authToken,
-                RequestUrl = "https://api.twitter.com/oauth/access_token",
-                Verifier = authVerifier
+                ConsumerKey = consumerKey,
+                ConsumerSecret = consumerSecret,
+                Token = realAuthToken,
+                TokenSecret = realAuthTokenSecret,
+                RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={userId}",
             };
 
             string auth = client.GetAuthorizationHeader();
@@ -168,41 +197,6 @@ namespace API.Controllers
             Stream dataStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(dataStream);
             string strResponse = reader.ReadToEnd();
-
-            Uri myUri = new Uri("http://localhost:5000?" + strResponse);
-            string realAuthToken = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token");
-            string realAuthTokenSecret = HttpUtility.ParseQueryString(myUri.Query).Get("oauth_token_secret");
-            string userId = HttpUtility.ParseQueryString(myUri.Query).Get("user_id");
-
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.TwitterId == userId);
-
-            if (user != null)
-            {
-                CreateToken(user);
-                Response.Redirect("http://localhost:3000/home");
-                return Unit.Value;
-            }
-
-            client = new OAuthRequest()
-            {
-                Method = "GET",
-                Type = OAuthRequestType.ProtectedResource,
-                SignatureMethod = OAuthSignatureMethod.HmacSha1,
-                ConsumerKey = ConsumerKey,
-                ConsumerSecret = ConsumerSecret,
-                Token = realAuthToken,
-                TokenSecret = realAuthTokenSecret,
-                RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={userId}",
-            };
-
-            auth = client.GetAuthorizationHeader();
-            req = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
-            req.Headers.Add("Authorization", auth);
-
-            response = (HttpWebResponse)req.GetResponse();
-            dataStream = response.GetResponseStream();
-            reader = new StreamReader(dataStream);
-            strResponse = reader.ReadToEnd();
 
             var objResponse = (JObject)JsonConvert.DeserializeObject(strResponse);
             string name = objResponse["name"].ToString();
@@ -223,8 +217,7 @@ namespace API.Controllers
             if (success)
             {
                 CreateToken(newUser);
-                Response.Redirect("http://localhost:3000/home");
-                return Unit.Value;
+                return Redirect($"{clientUrl}/home");
             }
 
             throw new RestException(HttpStatusCode.BadGateway, new { Error = "Problem authentication user" });
@@ -233,11 +226,26 @@ namespace API.Controllers
         [AllowAnonymous]
         [HttpGet("facebook/callback")]
 
-        public async Task<ActionResult<Unit>> FacebookCallback()
+        public async Task<ActionResult> FacebookCallback()
         {
-            string clientSecret = _config["Facebook:clientSecret"];
+            string clientSecret = _config["Facebook:ClientSecret"];
+            string clientId = _config["Facebook:ClientId"];
+            string clientUrl = _config["Url:client"];
+            string serverUrl = _config["Url:server"];
+
             string code = Request.Query["code"];
-            var response = await _httpClient.GetAsync($"https://graph.facebook.com/v10.0/oauth/access_token?client_id=487050989139304&redirect_uri=http://localhost:5000/api/user/facebook/callback&client_secret={clientSecret}&code={code}");
+            string redirectUri = $"{serverUrl}/api/user/facebook/callback";
+
+            var pairs = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("code", code),
+                new KeyValuePair<string, string>("client_secret", clientSecret),
+                new KeyValuePair<string, string>("client_id", clientId),
+                new KeyValuePair<string, string>("redirect_uri", redirectUri)
+            };
+
+            var content = new FormUrlEncodedContent(pairs);
+
+            var response = await _httpClient.PostAsync($"https://graph.facebook.com/v10.0/oauth/access_token", content);
             var jsonResponse = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
             string accessToken = (string)jsonResponse["access_token"];
 
@@ -250,8 +258,7 @@ namespace API.Controllers
             if (user != null)
             {
                 CreateToken(user);
-                Response.Redirect("http://localhost:3000/home");
-                return Unit.Value;
+                return Redirect($"{clientUrl}/home");
             }
 
             string userName = (string)jsonUserData.name;
@@ -277,11 +284,80 @@ namespace API.Controllers
             if (result)
             {
                 CreateToken(newUser);
-                Response.Redirect("http://localhost:3000/home");
-                return Unit.Value;
+                return Redirect($"{clientUrl}/home");
             }
 
             throw new RestException(HttpStatusCode.BadRequest, new { Error = "Can't authenticate user" });
+        }
+
+
+        [AllowAnonymous]
+        [HttpGet("google/callback")]
+
+        public async Task<ActionResult> GoogleCallback()
+        {
+            string code = Request.Query["code"];
+
+            string clientId = _config["Google:ClientId"];
+            string clientSecret = _config["Google:ClientSecret"];
+            string clientUrl = _config["Url:client"];
+            string serverUrl = _config["Url:server"];
+
+            string redirectUri = $"{serverUrl}/api/user/google/callback";
+
+
+            var pairs = new List<KeyValuePair<string, string>>{
+                new KeyValuePair<string, string>("code",code),
+                new KeyValuePair<string, string>("client_secret",clientSecret),
+                new KeyValuePair<string, string>("client_id",clientId),
+                new KeyValuePair<string, string>("redirect_uri",redirectUri),
+                new KeyValuePair<string, string>("grant_type","authorization_code")
+            };
+
+            var content = new FormUrlEncodedContent(pairs);
+
+            var access = await _httpClient.PostAsync($"https://oauth2.googleapis.com/token", content);
+            var response = JsonConvert.DeserializeObject<dynamic>(await access.Content.ReadAsStringAsync());
+            string accessToken = response["access_token"];
+
+            var userData = await _httpClient.GetAsync($"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={accessToken}");
+            var jsonUserData = JsonConvert.DeserializeObject<dynamic>(await userData.Content.ReadAsStringAsync());
+
+            string userId = (string)jsonUserData["id"];
+
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.GoogleId == userId);
+
+            if (user != null)
+            {
+                CreateToken(user);
+                return Redirect($"{clientUrl}/home");
+            }
+
+            string firstName = (string)jsonUserData["give_name"];
+            string lastName = (string)jsonUserData["family_name"];
+            string userName = firstName.ToLower() + lastName.ToLower();
+
+            int nameCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(userName)) + 1;
+
+            var newUser = new User
+            {
+                Firstname = firstName,
+                Lastname = lastName,
+                UserName = $"{userName + nameCount}",
+                GoogleId = userId
+            };
+
+            await _context.Users.AddAsync(newUser);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result)
+            {
+                CreateToken(newUser);
+                return Redirect($"{clientUrl}/home");
+            }
+
+            throw new RestException(HttpStatusCode.BadGateway, new { Error = "Can't authenticate user" });
         }
 
         private void CreateToken(User user)
