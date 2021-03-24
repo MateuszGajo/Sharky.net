@@ -3,8 +3,9 @@ import { Icon } from "semantic-ui-react";
 import cx from "classnames";
 import styles from "./Navbar.module.scss";
 import { navItems } from "~utils/utils";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
+import agent from "~root/src/app/api/agent";
 
 interface redirectProps {
   name: string;
@@ -15,9 +16,14 @@ const Navbar = () => {
   const { t } = useTranslation("components");
   const [activeItem, setActiveItem] = useState<string>("home");
   const router = useRouter();
+
   const handleItemClick = ({ name, linkTo }: redirectProps) => {
-    setActiveItem(name);
-    router.push(linkTo);
+    if (name == "logout") {
+      agent.Account.logout().then(() => router.push("/signin"));
+    } else {
+      setActiveItem(name);
+      router.push(linkTo);
+    }
   };
 
   const navbar = useRef<HTMLDivElement | null>(null);

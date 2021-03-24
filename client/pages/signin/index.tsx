@@ -1,19 +1,21 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox, Icon, Message } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { Form, Formik } from "formik";
 import cx from "classnames";
+import axios from "axios";
+import { useRouter } from "next/router";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
 import Loading from "~common/Loading/Loading";
 import { useStore } from "~root/src/app/stores/store";
 import SecondaryInput from "~common/secondaryInput/SecondaryInput";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
-import styles from "./signin.module.scss";
 import { observer } from "mobx-react-lite";
-import axios from "axios";
-import { useRouter } from "next/router";
+import styles from "./signin.module.scss";
 
-const Signin = () => {
+import { isNotLoggedIn } from "~utils/utils";
+
+const Signin = (props: any) => {
   const router = useRouter();
   const { authenticationStore } = useStore();
   const {
@@ -24,6 +26,7 @@ const Signin = () => {
     creds,
     getCreds,
   } = authenticationStore;
+
   const { t } = useTranslation("signin");
 
   const remeberMeText = t("remeberMe");
@@ -32,9 +35,19 @@ const Signin = () => {
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
   const credsError = t("credsError");
+  const socialErrorText = t("socialError");
 
-  useEffect(() => getCreds(), []);
+  const [socialError, setSocialError] = useState(false);
 
+  useEffect(() => {
+    getCreds();
+    if (router.query["error"]) {
+      setSocialError(true);
+      router.replace("/signin?error", "/signin", { shallow: true });
+    }
+  }, []);
+  console.log(socialError);
+  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   return (
     <Authentication>
       <div className={styles.container}>
@@ -46,7 +59,7 @@ const Signin = () => {
             className={cx(styles.icon, styles.facebookIcon)}
             onClick={() => {
               router.push(
-                "https://www.facebook.com/v10.0/dialog/oauth?client_id=487050989139304&redirect_uri=http://localhost:5000/api/user/facebook/callback"
+                `https://www.facebook.com/v10.0/dialog/oauth?client_id=487050989139304&redirect_uri=${serverUrl}/api/user/facebook/callback`
               );
             }}
           />
@@ -57,7 +70,7 @@ const Signin = () => {
             className={cx(styles.icon, styles.googleIcon)}
             onClick={() => {
               router.push(
-                "https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&redirect_uri=http://localhost:5000/api/user/google/callback&client_id=24467567497-5u280n3sol5ihd15u09en4nn7567l93d.apps.googleusercontent.com"
+                `https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&redirect_uri=${serverUrl}/api/user/google/callback&client_id=24467567497-5u280n3sol5ihd15u09en4nn7567l93d.apps.googleusercontent.com`
               );
             }}
           />
@@ -69,12 +82,13 @@ const Signin = () => {
             className={cx(styles.icon, styles.twitterIcon)}
             onClick={() => {
               axios
-                .post("http://localhost:5000/api/user/twitter")
+                .post(`${serverUrl}/api/user/twitter`)
                 .then((resp) => router.push(resp.data))
                 .catch((err) => console.log(err));
             }}
           />
         </div>
+        {socialError && <p className={styles.socialError}>{socialErrorText}</p>}
         <p className={styles.alternativeText}>{alternativeText}</p>
         <Formik
           initialValues={creds}
@@ -122,10 +136,8 @@ const Signin = () => {
   );
 };
 
-export async function getStaticProps() {
-  return {
-    props: {},
-  };
-}
+export const getServerSideProps = async ({ req }: any) => {
+  return await isNotLoggedIn(req);
+};
 
 export default observer(Signin);

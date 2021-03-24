@@ -1,1 +1,1 @@
-App in the purpose of stay in touch with friends
+Stay in touch with friends

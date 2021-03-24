@@ -47,6 +47,12 @@ namespace API.Controllers
             _httpClient = new HttpClient();
         }
 
+        [HttpGet("auth")]
+        public ActionResult Auth()
+        {
+            return Ok();
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Details(string id)
         {
@@ -159,10 +165,19 @@ namespace API.Controllers
             };
 
             var content = new FormUrlEncodedContent(pairs);
+            var tokenResponse = "";
 
-            var tokenRequest = await _httpClient.PostAsync($"https://api.twitter.com/oauth/access_token", content);
+            try
+            {
+                var tokenRequest = await _httpClient.PostAsync($"https://api.twitter.com/oauth/access_token", content);
 
-            string tokenResponse = await tokenRequest.Content.ReadAsStringAsync();
+                tokenRequest.EnsureSuccessStatusCode();
+                tokenResponse = await tokenRequest.Content.ReadAsStringAsync();
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
 
             Uri myUri = new Uri($"{serverUrl}?" + tokenResponse);
 
@@ -183,7 +198,7 @@ namespace API.Controllers
                 Type = OAuthRequestType.ProtectedResource,
                 SignatureMethod = OAuthSignatureMethod.HmacSha1,
                 ConsumerKey = consumerKey,
-                ConsumerSecret = consumerSecret,
+                ConsumerSecret = "Dada",
                 Token = realAuthToken,
                 TokenSecret = realAuthTokenSecret,
                 RequestUrl = $"https://api.twitter.com/1.1/users/show.json?user_id={userId}",
@@ -192,10 +207,18 @@ namespace API.Controllers
             string auth = client.GetAuthorizationHeader();
             HttpWebRequest req = (HttpWebRequest)WebRequest.Create(client.RequestUrl);
             req.Headers.Add("Authorization", auth);
+            StreamReader reader;
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                Stream dataStream = response.GetResponseStream();
+                reader = new StreamReader(dataStream);
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
 
-            HttpWebResponse response = (HttpWebResponse)req.GetResponse();
-            Stream dataStream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(dataStream);
             string strResponse = reader.ReadToEnd();
 
             var objResponse = (JObject)JsonConvert.DeserializeObject(strResponse);
@@ -220,7 +243,7 @@ namespace API.Controllers
                 return Redirect($"{clientUrl}/home");
             }
 
-            throw new RestException(HttpStatusCode.BadGateway, new { Error = "Problem authentication user" });
+            return Redirect($"{clientUrl}/signin?error=true");
         }
 
         [AllowAnonymous]
@@ -244,14 +267,34 @@ namespace API.Controllers
             };
 
             var content = new FormUrlEncodedContent(pairs);
+            var response = new HttpResponseMessage();
 
-            var response = await _httpClient.PostAsync($"https://graph.facebook.com/v10.0/oauth/access_token", content);
-            var jsonResponse = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
-            string accessToken = (string)jsonResponse["access_token"];
+            try
+            {
+                response = await _httpClient.PostAsync($"https://graph.facebook.com/v10.0/oauth/access_token", content);
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
 
-            var userData = await _httpClient.GetAsync($"https://graph.facebook.com/v10.0/me?access_token={accessToken}&fields=name");
-            var jsonUserData = JsonConvert.DeserializeObject<dynamic>(await userData.Content.ReadAsStringAsync());
-            string userId = (string)jsonUserData.id;
+            var data = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+            string accessToken = (string)data["access_token"];
+
+            try
+            {
+                response = await _httpClient.GetAsync($"https://graph.facebook.com/v10.0/me?access_token={accessToken}&fields=name");
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
+
+            data = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+
+            string userId = (string)data?.id;
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.FacebookId == userId);
 
@@ -261,7 +304,7 @@ namespace API.Controllers
                 return Redirect($"{clientUrl}/home");
             }
 
-            string userName = (string)jsonUserData.name;
+            string userName = (string)data.name;
             string userNameLowerCase = userName.ToLower();
             string[] names = userName.Split(' ');
             string firstName = names[0];
@@ -287,9 +330,8 @@ namespace API.Controllers
                 return Redirect($"{clientUrl}/home");
             }
 
-            throw new RestException(HttpStatusCode.BadRequest, new { Error = "Can't authenticate user" });
+            return Redirect($"{clientUrl}/signin?error=true");
         }
-
 
         [AllowAnonymous]
         [HttpGet("google/callback")]
@@ -315,15 +357,35 @@ namespace API.Controllers
             };
 
             var content = new FormUrlEncodedContent(pairs);
+            var response = new HttpResponseMessage();
 
-            var access = await _httpClient.PostAsync($"https://oauth2.googleapis.com/token", content);
-            var response = JsonConvert.DeserializeObject<dynamic>(await access.Content.ReadAsStringAsync());
-            string accessToken = response["access_token"];
+            try
+            {
+                response = await _httpClient.PostAsync($"https://oauth2.googleapis.com/token", content);
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
 
-            var userData = await _httpClient.GetAsync($"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={accessToken}");
-            var jsonUserData = JsonConvert.DeserializeObject<dynamic>(await userData.Content.ReadAsStringAsync());
+            var data = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+            string accessToken = data["access_token"];
 
-            string userId = (string)jsonUserData["id"];
+            try
+            {
+                response = await _httpClient.GetAsync($"https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={accessToken}");
+                response.EnsureSuccessStatusCode();
+            }
+            catch
+            {
+                return Redirect($"{clientUrl}/signin?error=true");
+            }
+
+
+            data = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+
+            string userId = (string)data["id"];
 
             var user = await _context.Users.FirstOrDefaultAsync(x => x.GoogleId == userId);
 
@@ -333,8 +395,8 @@ namespace API.Controllers
                 return Redirect($"{clientUrl}/home");
             }
 
-            string firstName = (string)jsonUserData["give_name"];
-            string lastName = (string)jsonUserData["family_name"];
+            string firstName = (string)data["give_name"];
+            string lastName = (string)data["family_name"];
             string userName = firstName.ToLower() + lastName.ToLower();
 
             int nameCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(userName)) + 1;
@@ -357,7 +419,7 @@ namespace API.Controllers
                 return Redirect($"{clientUrl}/home");
             }
 
-            throw new RestException(HttpStatusCode.BadGateway, new { Error = "Can't authenticate user" });
+            return Redirect($"{clientUrl}/signin?error=true");
         }
 
         private void CreateToken(User user)

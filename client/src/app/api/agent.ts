@@ -18,6 +18,7 @@ const Account = {
   creds: () => requests.post("user/creds", {}),
   fbLogin: (accessToken: string) =>
     requests.post(`user/facebook`, { accessToken }),
+  logout: () => requests.delete("/user/logout"),
 };
 
 export default { Account };

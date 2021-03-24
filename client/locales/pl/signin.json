@@ -4,5 +4,6 @@
   "button": "Zaloguj",
   "alternativeText": "Lub zaloguj się za pomocą e-mail",
   "password": "Hasło",
-  "credsError": "Niepoprawny email bądź hasło"
+  "credsError": "Niepoprawny email bądź hasło",
+  "socialError": "Błąd uwierzytelniania, spróbuj za kilka minut"
 }

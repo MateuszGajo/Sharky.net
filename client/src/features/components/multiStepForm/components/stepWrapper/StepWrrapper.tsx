@@ -6,8 +6,8 @@ interface Props {
 }
 
 const StepWrapper: React.FC<Props> = ({ children }) => {
-  const { multiStepStore } = useStore();
-  const { setNumberOfPages } = multiStepStore;
+  const { authenticationStore } = useStore();
+  const { setNumberOfPages } = authenticationStore;
 
   let amountOfPages = 0;
   const childrenCloned = children?.map((item: any) => {

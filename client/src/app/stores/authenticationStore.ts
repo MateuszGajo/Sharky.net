@@ -1,3 +1,4 @@
+import { store } from "./store";
 import agent from "~api/agent";
 import { makeAutoObservable } from "mobx";
 import { SignupFormValues as SignupValues } from "~root/src/app/models/user";
@@ -78,13 +79,19 @@ export default class AuthenticationStore {
         const errors = err.response.data.errors;
         const touched: typeof errors = {};
         const initialFormExtend: typeof errors = this.initialFormValues;
-
+        console.log(errors);
         for (const [key, value] of Object.entries(errors)) {
-          touched[key] = value ? true : false;
-          console.log(errors[key]);
-          if (!initialFormExtend[key]) {
-            console.log("errorus?");
+          const lower = key.toLocaleLowerCase();
+          console.log(initialFormExtend[lower]);
+          console.log(initialFormExtend["Das"]);
+          touched[lower] = value ? true : false;
+          if (initialFormExtend[lower] == "undefined") {
             setStatus("serverError");
+          }
+
+          if (lower !== key) {
+            errors[lower] = errors[key];
+            delete errors[key];
           }
         }
         setErrors(errors);
@@ -131,9 +138,5 @@ export default class AuthenticationStore {
 
   setRemeberme = (status: boolean) => {
     this.remebermeStatus = status;
-  };
-
-  fbLogin = (token: string) => {
-    console.log(token);
   };
 }
