@@ -32,32 +32,32 @@ const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
   return (
     <section className={styles.wrapper}>
       <div className={styles.container}>
-        <Grid className={styles.grid}>
-          <Grid.Column width={10} className={styles.gridForm}>
-            <h1 className={styles.brand}>
-              Sha<span className={styles.brandMix}>rky</span>
-            </h1>
+        <div className={styles.form}>
+          <h1 className={styles.brand}>
+            Sha<span className={styles.brandMix}>rky</span>
+          </h1>
+          <div className={styles.formContainer}>
             <h3 className={cx(styles.formTitle, styles.underline)}>
               {formTitle}
             </h3>
             <div className={styles.content}>{children}</div>
-          </Grid.Column>
-          <Grid.Column width={6} className={styles.gridWelcome}>
-            <div>
-              <h3 className={cx(styles.welcomeTitle, styles.underline)}>
-                {welcomeTitle}
-              </h3>
-              <p className={styles.welcomeText}>{welcomeText}</p>
-              <div className={styles.buttonWrapper}>
-                <button className={styles.welcomeButton}>
-                  <Link href={type === "signin" ? "/signup" : "/signin"}>
-                    {buttonText}
-                  </Link>
-                </button>
-              </div>
+          </div>
+        </div>
+        <div className={styles.welcome}>
+          <div className={styles.welcomeContainer}>
+            <h3 className={cx(styles.welcomeTitle, styles.underline)}>
+              {welcomeTitle}
+            </h3>
+            <p className={styles.welcomeText}>{welcomeText}</p>
+            <div className={styles.buttonWrapper}>
+              <button className={styles.welcomeButton}>
+                <Link href={type === "signin" ? "/signup" : "/signin"}>
+                  {buttonText}
+                </Link>
+              </button>
             </div>
-          </Grid.Column>
-        </Grid>
+          </div>
+        </div>
       </div>
     </section>
   );

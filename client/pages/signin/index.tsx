@@ -119,7 +119,7 @@ const Signin = (props: any) => {
                   <div className={styles.helpersContainer}>
                     <Checkbox
                       label={remeberMeText}
-                      className={styles.helpersText}
+                      className={cx(styles.helpersText, styles.checkbox)}
                       checked={remebermeStatus}
                       onChange={() => setRemeberme(!remebermeStatus)}
                     />

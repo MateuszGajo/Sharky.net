@@ -1,5 +1,9 @@
 @import "./variables.scss";
 
+html {
+  font-size: 53px;
+}
+
 body {
   background-color: rgb(234, 234, 234);
 }
@@ -48,4 +52,28 @@ body {
 .primary-scroll--active::-webkit-scrollbar-thumb {
   background-color: $primaryColor;
   border-radius: 20px;
+}
+
+@media (max-width: 3839px) {
+  html {
+    font-size: 35px;
+  }
+}
+
+@media (max-width: 2559px) {
+  html {
+    font-size: 25px;
+  }
+}
+
+@media (max-width: 1919px) {
+  html {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 1365px) {
+  html {
+    font-size: 16px;
+  }
 }
