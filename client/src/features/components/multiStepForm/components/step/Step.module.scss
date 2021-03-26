@@ -1,28 +1,94 @@
-.container {
-  position: relative;
-}
-
-@mixin arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: $primaryColor;
-  transition: color 0.2s;
-}
-
-.arrowRight {
-  @include arrow;
-  right: -60px;
-  &:hover {
-    color: $primaryHoverColor;
+:global(#app) {
+  .container {
+    position: relative;
   }
-}
 
-.arrowLeft {
-  @include arrow;
-  left: -60px;
-  &:hover {
-    color: $primaryHoverColor;
+  @mixin arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: $primaryColor;
+    transition: color 0.2s;
+    font-size: 2rem;
+    @media (max-width: 3839px) {
+      font-size: 1.7rem;
+    }
+  }
+
+  .arrowRight {
+    @include arrow;
+    right: -200px;
+    &:hover {
+      color: $primaryHoverColor;
+    }
+  }
+
+  .arrowLeft {
+    @include arrow;
+    left: -200px;
+    &:hover {
+      color: $primaryHoverColor;
+    }
+  }
+
+  @media (max-width: 3839px) {
+    .arrowRight {
+      right: -130px;
+    }
+
+    .arrowLeft {
+      left: -130px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .arrowRight {
+      right: -100px;
+    }
+
+    .arrowLeft {
+      left: -100px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .arrowRight {
+      right: -70px;
+    }
+
+    .arrowLeft {
+      left: -70px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .arrowRight {
+      right: -50px;
+    }
+
+    .arrowLeft {
+      left: -50px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .arrowRight {
+      right: -46px;
+    }
+
+    .arrowLeft {
+      left: -46px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .arrowRight {
+      right: -42px;
+    }
+
+    .arrowLeft {
+      left: -42px;
+    }
   }
 }

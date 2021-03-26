@@ -14,7 +14,6 @@ interface Props {
 const SecondaryInput: React.FC<Props> = ({
   placeholder,
   type = "text",
-  fluid = false,
   name,
 }) => {
   const [isActive, setActive] = useState(false);
@@ -42,11 +41,7 @@ const SecondaryInput: React.FC<Props> = ({
   }, [input]);
 
   return (
-    <div
-      className={cx(styles.container, {
-        [styles.fluid]: fluid,
-      })}
-    >
+    <div className={styles.container}>
       <input {...property} onChange={handleChange} ref={input} />
       <h2
         className={cx(styles.placeholder, {
@@ -58,7 +53,7 @@ const SecondaryInput: React.FC<Props> = ({
       </h2>
       {meta.touched && meta.error ? (
         <div className={styles.error}>
-          <Label basic color="red">
+          <Label basic color="red" size="small" className={styles.errorLabel}>
             {meta.error}
           </Label>
         </div>

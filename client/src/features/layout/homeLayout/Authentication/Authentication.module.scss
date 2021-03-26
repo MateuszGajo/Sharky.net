@@ -58,7 +58,7 @@
   }
 
   .content {
-    width: 40%;
+    width: 50%;
     margin-top: 20px;
   }
 
@@ -223,8 +223,21 @@
   }
 
   @media (max-width: 1023px) and (orientation: portrait) {
+    .brand {
+      font-size: 2.5rem;
+    }
+
+    .formTitle {
+      font-size: 3.5rem;
+    }
+
     .content {
       width: 90%;
+      margin-top: 35px;
+    }
+
+    .signupContent {
+      width: 75%;
     }
   }
 
@@ -237,8 +250,12 @@
       font-size: 1.4rem;
     }
 
+    .formTitle {
+      font-size: 3.5rem;
+    }
+
     .wrapper {
-      height: 250vh;
+      height: 300vh;
     }
 
     .welcomeButton {
@@ -247,23 +264,60 @@
     }
 
     .form {
-      height: 150vh;
+      height: 200vh;
+    }
+
+    .content {
+      width: 65%;
     }
   }
 
   @media (max-width: 767px) {
     .welcomeTitle {
-      font-size: 4rem;
+      font-size: 4.4rem;
     }
 
     .welcomeText {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .welcomeButton {
-      width: 180px;
-      height: 55px;
+      width: 190px;
+      height: 60px;
       border-radius: 40px;
+    }
+  }
+
+  @media (max-height: 700px) and (orientation: portrait) {
+    .wrapper {
+      height: 250vh;
+    }
+    .form {
+      height: 150vh;
+    }
+    .formTitle {
+      font-size: 3.2rem;
+    }
+    .content {
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .welcomeTitle {
+      font-size: 4rem;
+    }
+    .formTitle {
+      font-size: 2.6rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .welcomeTitle {
+      font-size: 4rem;
+    }
+    .formTitle {
+      font-size: 2.3rem;
     }
   }
 }

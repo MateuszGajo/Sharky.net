@@ -40,7 +40,13 @@ const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
             <h3 className={cx(styles.formTitle, styles.underline)}>
               {formTitle}
             </h3>
-            <div className={styles.content}>{children}</div>
+            <div
+              className={cx(styles.content, {
+                [styles.signupContent]: type == "signup",
+              })}
+            >
+              {children}
+            </div>
           </div>
         </div>
         <div className={styles.welcome}>

@@ -12,7 +12,7 @@
   .icon {
     cursor: pointer;
     transition: transform 0.2s;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 
   .icon:hover {
@@ -124,7 +124,7 @@
 
   @media (max-width: 2559px) {
     .icon {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
     }
 
     .alternativeText {
@@ -138,16 +138,118 @@
     }
 
     .helpersContainer {
-      margin-top: 55px;
+      margin-top: 39px;
     }
 
     .button {
-      width: 280px;
-      height: 72px;
+      width: 260px;
+      height: 65px;
       border-radius: 50px;
       margin-top: 35px;
     }
   }
 
-  //rwd
+  @media (max-width: 1919px) {
+    .alternativeText {
+      margin-top: 10px;
+    }
+
+    .checkbox label:before,
+    .checkbox label:after {
+      transform: scale(1.2);
+    }
+
+    .helpersContainer {
+      margin-top: 35px;
+    }
+
+    .button {
+      width: 200px;
+      height: 53px;
+      border-radius: 40px;
+      margin-top: 22px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .alternativeText {
+      margin-top: 8px;
+    }
+
+    .checkbox label:before,
+    .checkbox label:after {
+      transform: scale(1);
+    }
+
+    .helpersContainer {
+      margin-top: 30px;
+    }
+
+    .button {
+      width: 160px;
+      height: 42px;
+      border-radius: 30px;
+      margin-top: 18px;
+      margin-bottom: 5px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .icon {
+      font-size: 2rem;
+    }
+    .alternativeText {
+      margin-top: 10px;
+      font-size: 1.3rem;
+    }
+    .checkbox label:before,
+    .checkbox label:after {
+      transform: scale(1.6);
+    }
+
+    .helpersContainer {
+      margin-top: 45px;
+    }
+
+    .helpersText {
+      font-size: 1.1rem;
+    }
+
+    .button {
+      width: 300px;
+      height: 72px;
+      border-radius: 60px;
+      margin-top: 30px;
+      margin-bottom: 5px;
+    }
+  }
+
+  @media (max-height: 700px) and (orientation: portrait) {
+    .icon {
+      font-size: 1.8rem;
+    }
+
+    .alternativeText {
+      font-size: 1.25rem;
+    }
+
+    .checkbox label:before,
+    .checkbox label:after {
+      transform: scale(1.5);
+    }
+
+    .button {
+      width: 270px;
+      height: 65px;
+      border-radius: 50px;
+      margin-top: 25px;
+      margin-bottom: 5px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .helpersText {
+      font-size: 1rem;
+    }
+  }
 }

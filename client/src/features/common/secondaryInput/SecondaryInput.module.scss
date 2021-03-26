@@ -1,16 +1,12 @@
 :global(#app) {
   .container {
     position: relative;
-    width: 350px;
+    width: 100%;
     height: 150px;
   }
 
-  .fluid {
-    width: 100%;
-  }
-
   .container + .container {
-    margin-top: 112px;
+    margin-top: 122px;
   }
 
   .input {
@@ -36,7 +32,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-weight: normal;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     margin-left: 5px;
     color: $primaryGrey;
     background-color: white;
@@ -45,15 +41,19 @@
   }
 
   .inputActive {
-    transform: translateY(-100%);
-    margin-top: -15px;
     font-size: 1rem;
+    top: 0;
   }
 
   .error {
     position: absolute;
     left: 0;
     top: 100%;
+  }
+
+  .errorLabel {
+    position: relative;
+    z-index: 1;
   }
 
   @media (max-width: 3839px) {
@@ -68,11 +68,41 @@
 
   @media (max-width: 2559px) {
     .container {
-      height: 75px;
+      height: 65px;
     }
 
     .container + .container {
-      margin-top: 55px;
+      margin-top: 42px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      height: 50px;
+    }
+
+    .container + .container {
+      margin-top: 38px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      height: 45px;
+    }
+
+    .container + .container {
+      margin-top: 33px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .container {
+      height: 65px;
+    }
+
+    .container + .container {
+      margin-top: 40px;
     }
   }
 }
