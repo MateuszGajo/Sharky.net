@@ -1,23 +1,43 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import * as MultiStepForm from "~components/multiStepForm/MultiStepForm";
+import { useStore } from "~root/src/app/stores/store";
+import Loading from "~common/Loading/Loading";
+import { observer } from "mobx-react-lite";
 
-const index = () => {
+const SignUp = () => {
+  const { authenticationStore } = useStore();
+  const { loading, loadRegisterValues } = authenticationStore;
+
+  useEffect(() => {
+    loadRegisterValues();
+  }, []);
+
   return (
     <Authentication type="signup">
-      <MultiStepForm.Wizzard>
-        <MultiStepForm.StepWrapper>
-          <MultiStepForm.Step dataKey="Step">
-            <MultiStepForm.CredsForm />
-          </MultiStepForm.Step>
-          <MultiStepForm.Step dataKey="Step">
-            <MultiStepForm.PersonalForm />
-          </MultiStepForm.Step>
-        </MultiStepForm.StepWrapper>
-        <MultiStepForm.Controls />
-      </MultiStepForm.Wizzard>
+      {loading ? (
+        <Loading />
+      ) : (
+        <MultiStepForm.Wizzard>
+          <MultiStepForm.StepWrapper>
+            <MultiStepForm.Step dataKey="Step">
+              <MultiStepForm.CredsForm />
+            </MultiStepForm.Step>
+            <MultiStepForm.Step dataKey="Step">
+              <MultiStepForm.PersonalForm />
+            </MultiStepForm.Step>
+          </MultiStepForm.StepWrapper>
+          <MultiStepForm.Controls />
+        </MultiStepForm.Wizzard>
+      )}
     </Authentication>
   );
 };
 
-export default index;
+export async function getStaticProps() {
+  return {
+    props: {},
+  };
+}
+
+export default observer(SignUp);

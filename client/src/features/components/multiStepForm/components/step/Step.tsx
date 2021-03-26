@@ -11,8 +11,8 @@ interface Props {
 }
 
 const Step: React.FC<Props> = ({ children, pageIndex }) => {
-  const { multiStepStore } = useStore();
-  const { page, numberOfPages, nextPage, previousPage } = multiStepStore;
+  const { authenticationStore } = useStore();
+  const { page, numberOfPages, nextPage, previousPage } = authenticationStore;
   return pageIndex === page ? (
     <div className={styles.container}>
       <Icon

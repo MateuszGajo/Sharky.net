@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class InitialMigrations : Migration
+    public partial class initialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -24,6 +24,9 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
+                    TwitterId = table.Column<string>(type: "TEXT", nullable: true),
+                    FacebookId = table.Column<string>(type: "TEXT", nullable: true),
+                    GoogleId = table.Column<string>(type: "TEXT", nullable: true),
                     Firstname = table.Column<string>(type: "TEXT", nullable: true),
                     Lastname = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),

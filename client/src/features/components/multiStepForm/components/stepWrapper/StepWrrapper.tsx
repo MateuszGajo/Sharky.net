@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { useStore } from "~root/src/app/stores/store";
 
-const StepWrapper = ({ children }) => {
-  const { multiStepStore } = useStore();
-  const { setNumberOfPages } = multiStepStore;
+interface Props {
+  children: any;
+}
+
+const StepWrapper: React.FC<Props> = ({ children }) => {
+  const { authenticationStore } = useStore();
+  const { setNumberOfPages } = authenticationStore;
 
   let amountOfPages = 0;
-  const childrenCloned = children.map((item) => {
+  const childrenCloned = children?.map((item: any) => {
     if (item.props.dataKey === "Step") {
       amountOfPages += 1;
       return React.cloneElement(item, {
@@ -23,10 +26,6 @@ const StepWrapper = ({ children }) => {
   }, []);
 
   return childrenCloned;
-};
-
-StepWrapper.propTypes = {
-  children: PropTypes.arrayOf(PropTypes.element),
 };
 
 export default StepWrapper;

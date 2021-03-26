@@ -1,8 +1,16 @@
 import React from "react";
 import style from "./Preview.module.scss";
 import { Button } from "semantic-ui-react";
+import { useDropzone } from "react-dropzone";
 
-const Preview = ({ file, setFile, getRootProps, getInputProps }) => {
+interface Props {
+  onDrop: (props: any) => void;
+  file: any[];
+  setFile: (files: object[]) => void;
+}
+
+const Preview: React.FC<Props> = ({ onDrop, file, setFile }) => {
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
   return (
     <>
       {file.length ? (

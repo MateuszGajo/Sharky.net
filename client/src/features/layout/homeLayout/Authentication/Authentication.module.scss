@@ -7,10 +7,10 @@
     content: "";
     position: absolute;
     left: 50%;
-    bottom: -12px;
+    bottom: -16px;
     transform: translateX(-50%);
-    width: 40px;
-    height: 3px;
+    width: 110px;
+    height: 5px;
     background-color: $primaryColor;
   }
 
@@ -23,6 +23,7 @@
   }
 
   .container {
+    display: flex;
     width: 85%;
     height: 85%;
   }
@@ -31,23 +32,33 @@
     height: 100%;
   }
 
-  .gridForm {
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 60%;
     border-radius: 20px 0 0 20px;
     background-color: white;
   }
 
   .brand {
     color: $primaryColor;
+    padding: 1vw 0 0 2vw;
   }
 
   .brandMix {
     color: black;
   }
 
-  .content {
+  .formContainer {
+    flex-grow: 1;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .content {
+    width: 50%;
     margin-top: 20px;
   }
 
@@ -57,10 +68,11 @@
     color: $primaryColor;
   }
 
-  .gridWelcome {
+  .welcome {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 40%;
     border-radius: 0 20px 20px 0;
     background-color: $primaryColor;
   }
@@ -79,28 +91,233 @@
     text-align: center;
     color: white;
     font-size: 1.1rem;
-    margin-top: 40px;
+    margin-top: 90px;
   }
 
   .buttonWrapper {
-    margin-top: 30px;
+    margin-top: 90px;
     display: flex;
     justify-content: center;
   }
 
   .welcomeButton {
-    width: 150px;
-    height: 43px;
+    width: 350px;
+    height: 110px;
     font-size: 1.1rem;
     background-color: $primaryColor;
     border: 1px solid white;
     color: #f2f2f2;
-    border-radius: 40px;
+    border-radius: 60px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
     &:hover {
       background-color: $primaryHoverColor;
+    }
+  }
+
+  @media (max-width: 3839px) {
+    .underline::after {
+      bottom: -14px;
+      width: 70px;
+      height: 4px;
+    }
+
+    .welcomeButton {
+      width: 280px;
+      height: 95px;
+      border-radius: 45px;
+    }
+
+    .welcomeText,
+    .buttonWrapper {
+      margin-top: 70px;
+    }
+  }
+  @media (max-width: 2559px) {
+    .underline::after {
+      bottom: -12px;
+      width: 55px;
+      height: 3px;
+    }
+
+    .welcomeButton {
+      width: 180px;
+      height: 65px;
+      border-radius: 40px;
+    }
+
+    .welcomeText,
+    .buttonWrapper {
+      margin-top: 60px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .underline::after {
+      bottom: -10px;
+      width: 50px;
+      height: 2.5px;
+    }
+
+    .welcomeButton {
+      width: 150px;
+      height: 50px;
+      border-radius: 37px;
+    }
+
+    .welcomeText,
+    .buttonWrapper {
+      margin-top: 38px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .content {
+      width: 50%;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .wrapper {
+      height: 200vh;
+    }
+
+    .container {
+      flex-direction: column;
+      width: 100vw;
+      height: 100%;
+    }
+
+    .form,
+    .welcome {
+      height: 100vh;
+      width: 100vw;
+      border-radius: 0px;
+    }
+
+    .welcome {
+      order: -1;
+    }
+
+    .welcomeContainer {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+    }
+
+    .welcomeTitle {
+      font-size: 5.5rem;
+    }
+
+    .welcomeText {
+      font-size: 1.6rem;
+    }
+
+    .welcomeButton {
+      width: 240px;
+      height: 80px;
+      border-radius: 60px;
+    }
+  }
+
+  @media (max-width: 1023px) and (orientation: portrait) {
+    .brand {
+      font-size: 2.5rem;
+    }
+
+    .formTitle {
+      font-size: 3.5rem;
+    }
+
+    .content {
+      width: 90%;
+      margin-top: 35px;
+    }
+
+    .signupContent {
+      width: 75%;
+    }
+  }
+
+  @media (max-width: 1023px) and (orientation: landscape) {
+    .welcomeTitle {
+      font-size: 5rem;
+    }
+
+    .welcomeText {
+      font-size: 1.4rem;
+    }
+
+    .formTitle {
+      font-size: 3.5rem;
+    }
+
+    .wrapper {
+      height: 300vh;
+    }
+
+    .welcomeButton {
+      width: 200px;
+      height: 65px;
+    }
+
+    .form {
+      height: 200vh;
+    }
+
+    .content {
+      width: 65%;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .welcomeTitle {
+      font-size: 4.4rem;
+    }
+
+    .welcomeText {
+      font-size: 1.3rem;
+    }
+
+    .welcomeButton {
+      width: 190px;
+      height: 60px;
+      border-radius: 40px;
+    }
+  }
+
+  @media (max-height: 700px) and (orientation: portrait) {
+    .wrapper {
+      height: 250vh;
+    }
+    .form {
+      height: 150vh;
+    }
+    .formTitle {
+      font-size: 3.2rem;
+    }
+    .content {
+      margin-top: 10px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .welcomeTitle {
+      font-size: 4rem;
+    }
+    .formTitle {
+      font-size: 2.6rem;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .welcomeTitle {
+      font-size: 4rem;
+    }
+    .formTitle {
+      font-size: 2.3rem;
     }
   }
 }

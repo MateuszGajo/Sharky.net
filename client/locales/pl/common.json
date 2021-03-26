@@ -2,6 +2,7 @@
   "validation": {
     "requiredField": "{{name}} jest wymagane",
     "email": "Niepoprawny e-mail",
-    "phone": "Niepoprawny numer telefonu"
+    "phone": "Niepoprawny numer telefonu",
+    "confirmPassword": "Hasła musza być takie same"
   }
 }

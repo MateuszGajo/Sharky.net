@@ -1,16 +1,12 @@
 :global(#app) {
   .container {
     position: relative;
-    width: 350px;
-    height: 50px;
-  }
-
-  .fluid {
     width: 100%;
+    height: 150px;
   }
 
   .container + .container {
-    margin-top: 35px;
+    margin-top: 122px;
   }
 
   .input {
@@ -21,20 +17,13 @@
     font-size: 1.2rem;
     border: 1px solid $primaryGrey;
     &:focus + .placeholder {
-      transform: translateY(-100%);
-      margin-top: -15px;
       font-size: 1rem;
       color: $primaryColor;
+      top: 0;
     }
 
     &:focus {
       border-color: $primaryColor;
-    }
-
-    &:valid + .placeholder {
-      transform: translateY(-100%);
-      margin-top: -15px;
-      font-size: 1rem;
     }
   }
 
@@ -43,17 +32,77 @@
     top: 50%;
     transform: translateY(-50%);
     font-weight: normal;
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     margin-left: 5px;
     color: $primaryGrey;
     background-color: white;
     margin-top: 0;
-    transition: transform 0.3s, margin 0.2s;
+    transition: transform 0.3s, margin 0.2s, top 0.2s;
+  }
+
+  .inputActive {
+    font-size: 1rem;
+    top: 0;
   }
 
   .error {
     position: absolute;
     left: 0;
     top: 100%;
+  }
+
+  .errorLabel {
+    position: relative;
+    z-index: 1;
+  }
+
+  @media (max-width: 3839px) {
+    .container {
+      height: 100px;
+    }
+
+    .container + .container {
+      margin-top: 75px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .container {
+      height: 65px;
+    }
+
+    .container + .container {
+      margin-top: 42px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      height: 50px;
+    }
+
+    .container + .container {
+      margin-top: 38px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      height: 45px;
+    }
+
+    .container + .container {
+      margin-top: 33px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .container {
+      height: 65px;
+    }
+
+    .container + .container {
+      margin-top: 40px;
+    }
   }
 }

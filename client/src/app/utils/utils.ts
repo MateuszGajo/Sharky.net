@@ -1,6 +1,9 @@
 import useTranslate from "next-translate/useTranslation";
 import setLanguage from "next-translate/setLanguage";
+import type { NextApiRequest } from "next";
 import * as Yup from "yup";
+import jwt from "jsonwebtoken";
+import { url } from "node:inspector";
 
 export const navItems = [
   {
@@ -89,13 +92,24 @@ export const registerValidationSchema = () => {
   const confirmPasswordRequired = t("validation.requiredField", {
     name: confirmPasswordText,
   });
+  const incorrectConfirmPassword = t("validation.confirmPassword", {
+    name: confirmPasswordText,
+  });
   const incorrectEmail = t("validation.email");
   const incorrectPhone = t("validation.phone");
 
   return Yup.object().shape({
     email: Yup.string().required(emaiRequired).email(incorrectEmail),
-    password: Yup.string().required(passwordRequired),
-    confirmPassword: Yup.string().required(confirmPasswordRequired),
+    password: Yup.string()
+      .required(passwordRequired)
+      .matches(/^[A-Za-z\d@$!%*?&]{6,}$/, "Must Contain 8 Characters")
+      .matches(/(?=.*[A-Z])/, "one big")
+      .matches(/(?=.*[a-z])/, "one small")
+      .matches(/(?=.*\d)/, "one digit")
+      .matches(/[^-a-zA-Z0-9]/, "Password must contain non alphanumeric"),
+    confirmPassword: Yup.string()
+      .required(confirmPasswordRequired)
+      .oneOf([Yup.ref("password"), null], incorrectConfirmPassword),
     firstName: Yup.string().required(firstNameRequired),
     lastName: Yup.string().required(lastNameRequired),
     telephone: Yup.string().matches(
@@ -119,4 +133,42 @@ export const signinValidationSchema = () => {
     email: Yup.string().required(emailRequired).email(incorrectEmail),
     password: Yup.string().required(passwordRequired),
   });
+};
+
+const verifyJWT = (token: string) => {
+  return new Promise((resolve) => {
+    resolve(jwt.verify(token, String(process.env.TOKEN_KEY)));
+  });
+};
+
+export const isLoggedIn = async (req: NextApiRequest) => {
+  try {
+    await verifyJWT(req.cookies["Token"]);
+    return {
+      props: {},
+    };
+  } catch (err) {
+    return {
+      redirect: {
+        destination: "/signin",
+        permanent: false,
+      },
+    };
+  }
+};
+
+export const isNotLoggedIn = async (req: NextApiRequest) => {
+  try {
+    await verifyJWT(req.cookies["Token"]);
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  } catch (err) {
+    return {
+      props: {},
+    };
+  }
 };

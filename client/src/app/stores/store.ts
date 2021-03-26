@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
-import MultiStepStore from "./multiStepStore";
+import MultiStepStore from "./authenticationStore";
 
 export const store = {
-  multiStepStore: new MultiStepStore(),
+  authenticationStore: new MultiStepStore(),
 };
 
 export const StoreContext = createContext(store);

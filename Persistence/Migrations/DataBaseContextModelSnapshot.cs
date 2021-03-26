@@ -150,7 +150,13 @@ namespace Persistence.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FacebookId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Firstname")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Lastname")
@@ -178,6 +184,9 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TwitterId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")

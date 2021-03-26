@@ -3,5 +3,7 @@
   "confirmPassword": "Confirm Password",
   "firstName": "First name",
   "lastName": "Last name",
-  "phone": "Phone"
+  "phone": "Phone",
+  "serverErrorHeader": "Problem creating account",
+  "serverErrorParagraph": "please try again in a few minutes"
 }

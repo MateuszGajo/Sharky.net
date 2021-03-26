@@ -1,23 +1,92 @@
-.button {
-  display: block;
-  width: 200px;
-  height: 50px;
-  font-size: 1.2rem;
-  color: $primaryColor;
-  border-radius: 40px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  border: 2px solid $primaryColor;
-  margin: 32px auto 0 auto;
-  &:hover {
-    background-color: #f5f5f5;
-    color: $primaryHoverColor;
-    border-color: $primaryHoverColor;
+:global(#app) {
+  .button {
+    display: block;
+    width: 600px;
+    height: 150px;
+    font-size: 1.2rem;
+    color: $primaryColor;
+    border-radius: 70px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border: 2px solid $primaryColor;
+    margin: 130px auto 0 auto;
+    background-color: white;
+    &:hover {
+      background-color: #f5f5f5;
+      color: $primaryHoverColor;
+      border-color: $primaryHoverColor;
+    }
   }
-}
+  .errorContainer + .button {
+    margin: 15px auto 0 auto;
+  }
+  .errorContainer {
+    margin: 10px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-.disabledButton {
-  opacity: 0.45;
-  cursor: pointer;
+  .disabledButton {
+    opacity: 0.45;
+    cursor: default;
+  }
+
+  @media (max-width: 3839px) {
+    .button {
+      display: block;
+      width: 380px;
+      height: 100px;
+      font-size: 1.2rem;
+      color: $primaryColor;
+      border-radius: 60px;
+      margin-top: 60px;
+      &:hover {
+        background-color: #f5f5f5;
+        color: $primaryHoverColor;
+        border-color: $primaryHoverColor;
+      }
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .button {
+      display: block;
+      width: 250px;
+      height: 70px;
+      margin-top: 50px;
+      border-radius: 50px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .button {
+      display: block;
+      width: 180px;
+      height: 55px;
+      margin-top: 40px;
+      border-radius: 30px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .button {
+      display: block;
+      width: 150px;
+      height: 45px;
+      margin-top: 35px;
+      border-radius: 30px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .button {
+      display: block;
+      width: 200px;
+      height: 60px;
+      margin-top: 40px;
+      border-radius: 40px;
+    }
+  }
 }

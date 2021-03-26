@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210306091133_InitialMigrations")]
-    partial class InitialMigrations
+    [Migration("20210322210623_initialMigrations")]
+    partial class initialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,7 +152,13 @@ namespace Persistence.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FacebookId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Firstname")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Lastname")
@@ -180,6 +186,9 @@ namespace Persistence.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TwitterId")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")

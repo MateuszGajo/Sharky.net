@@ -6,6 +6,7 @@ const CredsForm = () => {
   const { t } = useTranslation("signup");
   const passwordText = t("password");
   const confirmPasswordText = t("confirmPassword");
+
   return (
     <>
       <SecondaryInput placeholder="Email*" name="email" />

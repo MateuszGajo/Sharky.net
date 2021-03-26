@@ -6,10 +6,9 @@ namespace Domain
 {
     public class User : IdentityUser
     {
-        //  public Guid Id { get; set; }
-        //  public string Email { get; set; }
-        //  public string Password { get; set; }
-        //  public string PasswordHash { get; set; }
+        public string TwitterId { get; set; }
+        public string FacebookId { get; set; }
+        public string GoogleId { get; set; }
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public ICollection<Post> Posts { get; set; }

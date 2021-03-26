@@ -74,7 +74,7 @@ module.exports = {
     "no-param-reassign": ["error", { props: false }],
     indent: "off",
     "no-use-before-define": "off",
-    "@typescript-eslint/no-use-before-define": ["error"],
+    // "@typescript-eslint/no-use-before-define": ["error"],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -95,16 +95,6 @@ module.exports = {
   settings: {
     "import/resolver": {
       "babel-module": {},
-    },
-    webpack: {
-      config: {
-        resolve: {
-          alias: {
-            "~": path.join(__dirname, "."),
-          },
-          extensions: [".js", ".jsx", ".ts", ".tsx", ".mjs"],
-        },
-      },
     },
     node: {
       extensions: [".js", ".jsx", ".ts", ".tsx"],
