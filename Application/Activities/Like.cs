@@ -6,7 +6,7 @@ using Application.Errors;
 using MediatR;
 using Persistence;
 
-namespace Application.Post
+namespace Application.Activities
 {
     public class Like
     {

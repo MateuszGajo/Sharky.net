@@ -5,9 +5,11 @@ import { Form, Grid, Header, Icon } from "semantic-ui-react";
 interface Props {
   onDrop: (props: any) => void;
   setText: (content: string) => void;
+  text: string;
 }
 
-const Content: React.FC<Props> = ({ onDrop, setText }) => {
+const Content: React.FC<Props> = ({ onDrop, setText, text }) => {
+  console.log(text);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <Form.Field
@@ -28,6 +30,7 @@ const Content: React.FC<Props> = ({ onDrop, setText }) => {
           placeholder="what's up?"
           rows={4}
           onChange={(e) => setText(e.target.value)}
+          value={text}
         />
       )}
     </Form.Field>

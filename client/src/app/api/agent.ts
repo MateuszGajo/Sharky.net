@@ -1,3 +1,4 @@
+import { Activity } from "./../models/activity";
 import { SigninFormValues, SignupFormValues } from "~models/user";
 import axios from "axios";
 
@@ -21,4 +22,15 @@ const Account = {
   logout: () => requests.delete("/user/logout"),
 };
 
-export default { Account };
+const Activities = {
+  create: (activity: Activity) => {
+    let formData = new FormData();
+    formData.append("File", activity.file);
+    formData.append("Content", activity.content);
+    return axios.post("/activity/create", formData, {
+      headers: { "Content-type": "multipart/form-data" },
+    });
+  },
+};
+
+export default { Account, Activities };

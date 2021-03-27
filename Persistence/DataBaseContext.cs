@@ -18,7 +18,7 @@ namespace Persistence
         {
             modelBuilder.Entity<Post>()
                     .HasOne(p => p.User)
-                    .WithMany(b => b.Posts);
+                     .WithMany(b => b.Posts);
         }
 
     }

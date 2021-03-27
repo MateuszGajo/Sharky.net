@@ -10,7 +10,10 @@ interface Props {
 }
 
 const Preview: React.FC<Props> = ({ onDrop, file, setFile }) => {
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: "image/*",
+  });
   return (
     <>
       {file.length ? (
@@ -31,8 +34,8 @@ const Preview: React.FC<Props> = ({ onDrop, file, setFile }) => {
             onDrop: (event) => event.stopPropagation(),
           })}
         >
-          <Button positive icon="plus" />
-          <input {...getInputProps()} />
+          <Button positive icon="plus" type="button" />
+          <input {...getInputProps()} accept="image/*" />
         </span>
       )}
     </>

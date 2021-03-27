@@ -1,5 +1,13 @@
-.toolbar {
-  display: flex !important;
-  justify-content: space-between;
-  align-items: flex-end;
+:global(#app) {
+  .toolbar {
+    display: flex !important;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+
+  .error {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 10px;
+  }
 }

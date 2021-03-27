@@ -6,28 +6,49 @@ import {
   Form,
   Segment,
   Button,
+  Label,
 } from "semantic-ui-react";
-import { useDropzone } from "react-dropzone";
-import style from "./MessageBox.module.scss";
+import styles from "./MessageBox.module.scss";
 import Preview from "./components/preview/Preview";
-import Content from "./components/preview/content/Content";
+import Content from "./components/content/Content";
+import { useStore } from "~root/src/app/stores/store";
 
 const MessageBox = () => {
+  const { activityStore } = useStore();
+  const { createActivity } = activityStore;
   const [file, setFile] = useState<any[]>([]);
   const [text, setText] = useState("");
+  const [error, setError] = useState("");
+
   const onDrop = useCallback((acceptedFiles) => {
-    setFile(
-      acceptedFiles.map((file: object) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      )
-    );
+    console.log(acceptedFiles);
+    if (!acceptedFiles[0]) {
+      setError("You can only upload a picture");
+    } else if (acceptedFiles[0].size > 5242880) {
+      setError("You can't upload picture larger than 5mb");
+    } else {
+      setError("");
+      setFile(
+        acceptedFiles.map((file: object) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        )
+      );
+    }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    createActivity({ content: text, file: file[0] || null })
+      .then(() => {
+        setFile([]);
+        setText("");
+      })
+      .catch((err) => setError(err));
   };
+
+  //need to add button loader
 
   return (
     <Grid centered>
@@ -36,9 +57,17 @@ const MessageBox = () => {
           <Segment>
             <Container textAlign="center">Create Post</Container>
             <Divider />
-            <Content onDrop={onDrop} setText={setText} />
-            <Container className={`${style.toolbar} local`}>
+            <Content onDrop={onDrop} setText={setText} text={text} />
+            {error && (
+              <Container className={styles.error}>
+                <Label color="red" basic>
+                  <p>{error}</p>
+                </Label>
+              </Container>
+            )}
+            <Container className={`${styles.toolbar} local`}>
               <Preview file={file} setFile={setFile} onDrop={onDrop} />
+
               <Button content="send" positive floated="right" />
             </Container>
           </Segment>

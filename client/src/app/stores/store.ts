@@ -1,8 +1,10 @@
 import { createContext, useContext } from "react";
-import MultiStepStore from "./authenticationStore";
+import AuthenticationStore from "./authenticationStore";
+import ActivityStore from "./activityStore";
 
 export const store = {
-  authenticationStore: new MultiStepStore(),
+  authenticationStore: new AuthenticationStore(),
+  activityStore: new ActivityStore(),
 };
 
 export const StoreContext = createContext(store);
