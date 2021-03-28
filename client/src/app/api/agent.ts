@@ -31,6 +31,7 @@ const Activities = {
       headers: { "Content-type": "multipart/form-data" },
     });
   },
+  get: () => requests.get("/activity"),
 };
 
 export default { Account, Activities };

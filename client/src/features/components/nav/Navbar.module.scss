@@ -1,6 +1,7 @@
 .navbar {
+  position: fixed;
   display: flex;
-  width: 100%;
+  width: inherit;
   justify-content: center;
   align-items: center;
   border-right: 1px solid $hover;
