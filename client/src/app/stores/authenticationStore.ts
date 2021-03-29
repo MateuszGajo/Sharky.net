@@ -1,8 +1,8 @@
 import { store } from "./store";
 import agent from "~api/agent";
 import { makeAutoObservable } from "mobx";
-import { SignupFormValues as SignupValues } from "~root/src/app/models/user";
-import { SigninFormValues as SigninValues } from "~root/src/app/models/user";
+import { SignupFormValues as SignupValues } from "~root/src/app/models/authentication";
+import { SigninFormValues as SigninValues } from "~root/src/app/models/authentication";
 import router from "next/router";
 
 export default class AuthenticationStore {
@@ -123,7 +123,7 @@ export default class AuthenticationStore {
   getCreds = () => {
     if (localStorage.getItem("creds")) {
       agent.Account.creds()
-        .then(({ data }) => {
+        .then((data) => {
           this.creds = data;
           this.remebermeStatus = true;
         })

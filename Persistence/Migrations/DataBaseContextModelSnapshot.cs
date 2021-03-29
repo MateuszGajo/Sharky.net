@@ -16,10 +16,40 @@ namespace Persistence.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.3");
 
+            modelBuilder.Entity("Domain.Activity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PhotoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Activities");
+                });
+
             modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AuthorId")
@@ -28,14 +58,11 @@ namespace Persistence.Migrations
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PostId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("ActivityId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("AuthorId");
 
                     b.ToTable("Comment");
                 });
@@ -46,23 +73,23 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("CommentId")
+                    b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("PostId")
+                    b.Property<Guid?>("CommentId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("ReplyId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<string>("UserId")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CommentId");
+                    b.HasIndex("ActivityId");
 
-                    b.HasIndex("PostId");
+                    b.HasIndex("CommentId");
 
                     b.HasIndex("ReplyId");
 
@@ -80,33 +107,6 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Photos");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Content")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreateAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PhotoId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PhotoId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>
@@ -153,13 +153,13 @@ namespace Persistence.Migrations
                     b.Property<string>("FacebookId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Firstname")
+                    b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Lastname")
+                    b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("LockoutEnabled")
@@ -200,47 +200,47 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Comment", b =>
-                {
-                    b.HasOne("Domain.User", "Author")
-                        .WithMany()
-                        .HasForeignKey("AuthorId");
-
-                    b.HasOne("Domain.Post", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("PostId");
-
-                    b.Navigation("Author");
-                });
-
-            modelBuilder.Entity("Domain.Like", b =>
-                {
-                    b.HasOne("Domain.Comment", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("CommentId");
-
-                    b.HasOne("Domain.Post", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("PostId");
-
-                    b.HasOne("Domain.Reply", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("ReplyId");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
+            modelBuilder.Entity("Domain.Activity", b =>
                 {
                     b.HasOne("Domain.Photo", "Photo")
                         .WithMany()
                         .HasForeignKey("PhotoId");
 
                     b.HasOne("Domain.User", "User")
-                        .WithMany("Posts")
+                        .WithMany("Activities")
                         .HasForeignKey("UserId");
 
                     b.Navigation("Photo");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.HasOne("Domain.Activity", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("ActivityId");
+
+                    b.HasOne("Domain.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Domain.Like", b =>
+                {
+                    b.HasOne("Domain.Activity", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("ActivityId");
+
+                    b.HasOne("Domain.Comment", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("CommentId");
+
+                    b.HasOne("Domain.Reply", null)
+                        .WithMany("Likes")
+                        .HasForeignKey("ReplyId");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>
@@ -256,18 +256,18 @@ namespace Persistence.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Domain.Activity", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Likes");
+                });
+
             modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.Navigation("Likes");
 
                     b.Navigation("Replies");
-                });
-
-            modelBuilder.Entity("Domain.Post", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>
@@ -277,7 +277,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.User", b =>
                 {
-                    b.Navigation("Posts");
+                    b.Navigation("Activities");
                 });
 #pragma warning restore 612, 618
         }

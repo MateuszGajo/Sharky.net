@@ -25,7 +25,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Post>> Details(Guid id)
+        public async Task<ActionResult<Activity>> Details(Guid id)
         {
             return await _mediator.Send(new Details.Query { Id = id });
         }
@@ -40,6 +40,12 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> Like(Guid id)
         {
             return await _mediator.Send(new Application.Activities.Like.Command { PostId = id });
+        }
+
+         [HttpPut("{id}/unlike")]
+        public async Task<ActionResult<Unit>> UnLike(Guid id)
+        {
+            return await _mediator.Send(new Application.Activities.UnLike.Command { PostId = id });
         }
     }
 }

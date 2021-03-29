@@ -51,7 +51,7 @@ namespace Application.Activities
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
                 System.Console.WriteLine(user);
 
-                var Post = new Domain.Post
+                var Post = new Domain.Activity
                 {
                     User = user,
                     Content = request.Content,
@@ -60,10 +60,10 @@ namespace Application.Activities
                         Id = PhotoUploadResult.PublicId,
                         Url = PhotoUploadResult.Url
                     } : null,
-                    CreateAt = DateTime.Now
+                    CreatedAt = DateTime.Now
                 };
 
-                _context.Posts.Add(Post);
+                _context.Activities.Add(Post);
 
                 var success = await _context.SaveChangesAsync() > 0;
 

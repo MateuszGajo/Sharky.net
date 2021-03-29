@@ -12,4 +12,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   );
 };
 
+export const getServerSideProps = async ({ req }: any) => {
+  console.log(req.cookies["NEXT_LOCALE"]);
+  console.log(req.cookies["NEXT_LOCALE"]);
+  console.log(req.cookies["NEXT_LOCALE"]);
+  return req.cookies["NEXT_LOCALE"];
+};
+
 export default MyApp;

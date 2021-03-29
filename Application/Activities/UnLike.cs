@@ -1,15 +1,17 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interface;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities
 {
-    public class Like
+    public class UnLike
     {
         public class Command : IRequest
         {
@@ -28,17 +30,18 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var post = await _context.Activities.FindAsync(request.PostId);
-
+                var post = await _context.Activities.Include(x => x.Likes).FirstOrDefaultAsync(x => x.Id == request.PostId);
                 if (post == null) throw new RestException(HttpStatusCode.BadRequest, new { Error = "Post doesn't exist" });
 
                 var userId = _userAccessor.GetCurrentId();
 
-                var like = new Domain.Like{
-                    UserId = userId,
-                };
+                var like = post.Likes.FirstOrDefault( x => x.UserId == userId);
+                
+                if(like == null){
+                     throw new RestException(HttpStatusCode.BadRequest, new { Error = "Activit isn't liked" });
+                }
 
-                post.Likes.Add(like);
+                post.Likes.Remove(like);
 
                 var result = await _context.SaveChangesAsync() > 0;
 

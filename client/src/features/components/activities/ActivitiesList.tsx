@@ -3,6 +3,7 @@ import styles from "./ActivitiesList.module.scss";
 import { Container } from "semantic-ui-react";
 import { useStore } from "~root/src/app/stores/store";
 import ActivityItem from "./ActivityItem";
+import { observer } from "mobx-react-lite";
 
 const ActivitiesList = () => {
   const { activityStore } = useStore();
@@ -13,12 +14,17 @@ const ActivitiesList = () => {
   }, []);
 
   return (
-    <Container className={styles.container}>
-      {activities.map((item) => (
-        <ActivityItem key={item.id} />
-      ))}
-    </Container>
+    <div>
+      <Container className={styles.container}>
+        {activities.map((item) => (
+          <ActivityItem key={item.id} item={item} />
+        ))}
+      </Container>
+      <p>
+        <p></p>
+      </p>
+    </div>
   );
 };
 
-export default ActivitiesList;
+export default observer(ActivitiesList);

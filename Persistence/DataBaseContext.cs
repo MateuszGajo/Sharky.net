@@ -11,14 +11,14 @@ namespace Persistence
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<Post> Posts { get; set; }
+        public DbSet<Activity> Activities { get; set; }
         public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Post>()
+            modelBuilder.Entity<Activity>()
                     .HasOne(p => p.User)
-                     .WithMany(b => b.Posts);
+                     .WithMany(b => b.Activities);
         }
 
     }

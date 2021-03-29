@@ -228,8 +228,8 @@ namespace API.Controllers
 
             User newUser = new User
             {
-                Firstname = name,
-                Lastname = name,
+                FirstName = name,
+                LastName = name,
                 UserName = $"{name + name + userCount}",
                 TwitterId = userId
             };
@@ -314,8 +314,8 @@ namespace API.Controllers
 
             var newUser = new User
             {
-                Firstname = firstName,
-                Lastname = lastName,
+                FirstName = firstName,
+                LastName = lastName,
                 UserName = $"{userNameLowerCase + userCount}",
                 FacebookId = userId
 
@@ -403,8 +403,8 @@ namespace API.Controllers
 
             var newUser = new User
             {
-                Firstname = firstName,
-                Lastname = lastName,
+                FirstName = firstName,
+                LastName = lastName,
                 UserName = $"{userName + nameCount}",
                 GoogleId = userId
             };

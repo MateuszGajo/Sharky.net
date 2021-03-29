@@ -67,8 +67,8 @@ namespace Application.Users
                 var user = new User
                 {
                     Email = request.Email,
-                    Firstname = request.FirstName,
-                    Lastname = request.LastName,
+                    FirstName = request.FirstName,
+                    LastName = request.LastName,
                     UserName = $"{request.FirstName + request.LastName + userCount}"
                 };
 

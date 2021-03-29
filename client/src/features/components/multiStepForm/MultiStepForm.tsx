@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, useFormikContext } from "formik";
 import { observer } from "mobx-react-lite";
-import { SignupFormValues as FormValue } from "~root/src/app/models/user";
+import { SignupFormValues as FormValue } from "~root/src/app/models/authentication";
 import StepWrapper from "./components/stepWrapper/StepWrrapper";
 import Step from "./components/step/Step";
 import Controls from "./components/controls/Controls";

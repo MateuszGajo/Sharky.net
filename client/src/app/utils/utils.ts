@@ -3,7 +3,7 @@ import setLanguage from "next-translate/setLanguage";
 import type { NextApiRequest } from "next";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
-import { url } from "node:inspector";
+import cookies from "js-cookie";
 
 export const navItems = [
   {
@@ -133,6 +133,51 @@ export const signinValidationSchema = () => {
     email: Yup.string().required(emailRequired).email(incorrectEmail),
     password: Yup.string().required(passwordRequired),
   });
+};
+
+const englishMonthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const polishMonthNames = [
+  "Styczeń",
+  "Luty",
+  "Marzec",
+  "Kwiecień",
+  "Maj",
+  "Czerwiec",
+  "Lipiec",
+  "Sierpień",
+  "Wrzesień",
+  "Październik",
+  "Listopad",
+  "Grudzień",
+];
+
+export const formatDate = (date: Date) => {
+  let d = new Date(date),
+    monthNumber = d.getMonth() + 1,
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  const monthNames =
+    cookies.get("NEXT_LOCALE") == "pl" ? polishMonthNames : englishMonthNames;
+
+  const month = monthNames[monthNumber - 1];
+  if (day.length < 2) day = "0" + day;
+
+  return [day, month, year].join(" ");
 };
 
 const verifyJWT = (token: string) => {

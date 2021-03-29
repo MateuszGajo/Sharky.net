@@ -33,4 +33,26 @@
   .photo {
     width: 100%;
   }
+
+  .like {
+    transition: color 0.2s;
+  }
+
+  .likeActive {
+    color: #ff2733;
+  }
+
+  .comment {
+    transition: color 0.2s;
+    &:hover {
+      color: $primaryColor;
+    }
+  }
+
+  .reply {
+    transition: color 0.2s;
+    &:hover {
+      color: aqua;
+    }
+  }
 }
