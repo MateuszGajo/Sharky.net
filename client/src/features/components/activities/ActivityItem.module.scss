@@ -30,29 +30,31 @@
     margin: 0;
   }
 
+  .userPhoto img {
+    border-radius: 3px;
+  }
+
   .photo {
     width: 100%;
   }
 
-  .like {
-    transition: color 0.2s;
-  }
-
-  .likeActive {
+  .like:hover .icon {
     color: #ff2733;
   }
 
-  .comment {
-    transition: color 0.2s;
-    &:hover {
-      color: $primaryColor;
-    }
+  .likeIconActive {
+    color: #ff2733;
   }
 
-  .reply {
+  .icon {
     transition: color 0.2s;
-    &:hover {
-      color: aqua;
-    }
+  }
+
+  .comment:hover .icon {
+    color: $primaryColor;
+  }
+
+  .reply:hover .icon {
+    color: aqua;
   }
 }

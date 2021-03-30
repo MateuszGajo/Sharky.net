@@ -1,25 +1,12 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Image,
-  Feed,
-  Container,
-  Icon,
-  Dropdown,
-  Divider,
-} from "semantic-ui-react";
+import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
 import cx from "classnames";
 import { Activity } from "~root/src/app/models/activity";
 import ActivityComment from "./ActivityComment";
 import styles from "./ActivityItem.module.scss";
 import { formatDate } from "~root/src/app/utils/utils";
 import { useStore } from "~root/src/app/stores/store";
-
-const options = [
-  { key: "edit", icon: "edit", text: "Edit Post", value: "edit" },
-  { key: "delete", icon: "delete", text: "Remove Post", value: "delete" },
-  { key: "hide", icon: "hide", text: "Hide Post", value: "hide" },
-];
+import ActivityDropdown from "./ActivityDropdown";
 
 const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
   const { activityStore } = useStore();
@@ -52,7 +39,10 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
           <Container className={styles.headerContainer}>
             <Feed className={styles.noMargin}>
               <Feed.Event>
-                <Feed.Label image="https://react.semantic-ui.com/images/avatar/large/stevie.jpg" />
+                <Feed.Label
+                  className={styles.userPhoto}
+                  image="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
+                />
                 <Feed.Content>
                   <Feed.Date content={date} />
                   <Feed.Summary>
@@ -62,13 +52,7 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
               </Feed.Event>
             </Feed>
             <div className={styles.optionsContainer}>
-              <Dropdown
-                className=" icon"
-                icon="ellipsis horizontal"
-                options={options}
-                direction="left"
-                trigger={<></>}
-              />
+              <ActivityDropdown />
             </div>
           </Container>
         </Card.Content>
@@ -83,34 +67,28 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
             />
           </Container>
         </Card.Content>
-        <Card.Content Extra>
+        <Card.Content extra>
           <Container className={styles.toolBar}>
-            <a>
+            <a className={cx(styles.like)} onClick={handleLikeClick}>
               <Icon
                 name="like"
-                className={cx(styles.like, {
-                  [styles.likeActive]: isLiked,
+                className={cx(styles.icon, {
+                  [styles.likeIconActive]: isLiked,
                 })}
-                onClick={handleLikeClick}
               />
               {numberOfLikes}
             </a>
-            <a>
-              <Icon name="comment" className={styles.comment} />
+            <a className={styles.comment}>
+              <Icon name="comment" className={styles.icon} />
               {numberOfComments}
             </a>
-            <a>
-              <Icon name="share" className={styles.reply} />
+            <a className={styles.reply}>
+              <Icon name="share" className={styles.icon} />
               22
             </a>
           </Container>
 
-          {!!item.comments.length && (
-            <>
-              <Divider />
-              <ActivityComment />
-            </>
-          )}
+          <ActivityComment postId={item.id} comments={item.comments} />
         </Card.Content>
       </Card>
     </Container>

@@ -55,9 +55,7 @@ export default class AuthenticationStore {
         }
         this.touchedFields = touchedFields;
         this.initialFormValues = { ...this.initialFormValues, ...valuesParsed };
-      } catch (e) {
-        console.log("catch");
-      }
+      } catch (e) {}
     }
     this.setLoading(false);
   };
@@ -79,11 +77,9 @@ export default class AuthenticationStore {
         const errors = err.response.data.errors;
         const touched: typeof errors = {};
         const initialFormExtend: typeof errors = this.initialFormValues;
-        console.log(errors);
+
         for (const [key, value] of Object.entries(errors)) {
           const lower = key.toLocaleLowerCase();
-          console.log(initialFormExtend[lower]);
-          console.log(initialFormExtend["Das"]);
           touched[lower] = value ? true : false;
           if (initialFormExtend[lower] == "undefined") {
             setStatus("serverError");

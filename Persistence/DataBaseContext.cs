@@ -17,8 +17,17 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Activity>()
-                    .HasOne(p => p.User)
-                     .WithMany(b => b.Activities);
+                .HasOne(p => p.User)
+                .WithMany(b => b.Activities);
+        
+            modelBuilder.Entity<Comment>()
+                .HasOne(p => p.Activity)
+                .WithMany(b => b.Comments);
+
+            modelBuilder.Entity<Reply>()
+                .HasOne(p => p.Comment)
+                .WithMany(b => b.Replies);
+
         }
 
     }

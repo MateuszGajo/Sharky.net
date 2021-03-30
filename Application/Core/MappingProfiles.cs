@@ -12,10 +12,14 @@ namespace Application.Core
             string userId = null;
 
             CreateMap<Activity, ActivityDto>()
-                .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()))
-                .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Likes.FirstOrDefault(x => x.UserId == userId) == null ? false:true) );
+                 .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()))
+                  .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Likes.FirstOrDefault(x => x.UserId == userId) == null ? false:true) );
             CreateMap<Domain.Like, Application.Activities.Like>();
             CreateMap<User, UserDto>();
+            CreateMap<Comment,CommentDto>()
+                 .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()));
+            CreateMap<Reply, ReplyDto>();
+                //  .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()));
         }
     }
 }

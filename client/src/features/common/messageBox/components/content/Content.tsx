@@ -9,7 +9,6 @@ interface Props {
 }
 
 const Content: React.FC<Props> = ({ onDrop, setText, text }) => {
-  console.log(text);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
     <Form.Field

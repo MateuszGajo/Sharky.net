@@ -10,5 +10,15 @@
     "profile": "Profile",
     "settings": "Settings",
     "logout": "Logout"
+  },
+  "activities": {
+    "commentPlaceholder": "Write a comment...",
+    "header": {
+      "settings": {
+        "edit": "Edit post",
+        "remove": "Remove post",
+        "hide": "Hide post"
+      }
+    }
   }
 }

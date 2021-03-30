@@ -12,6 +12,7 @@ import styles from "./MessageBox.module.scss";
 import Preview from "./components/preview/Preview";
 import Content from "./components/content/Content";
 import { useStore } from "~root/src/app/stores/store";
+import { v4 as uuid } from "uuid";
 
 const MessageBox = () => {
   const { activityStore } = useStore();
@@ -21,7 +22,6 @@ const MessageBox = () => {
   const [error, setError] = useState("");
 
   const onDrop = useCallback((acceptedFiles) => {
-    console.log(acceptedFiles);
     if (!acceptedFiles[0]) {
       setError("You can only upload a picture");
     } else if (acceptedFiles[0].size > 5242880) {
@@ -40,15 +40,15 @@ const MessageBox = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createActivity({ content: text, file: file[0] || null })
+    const id = uuid();
+    console.log(id);
+    createActivity({ id, content: text, file: file[0] || null })
       .then(() => {
         setFile([]);
         setText("");
       })
       .catch((err) => setError(err));
   };
-
-  //need to add button loader
 
   return (
     <Grid centered>

@@ -217,13 +217,15 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.HasOne("Domain.Activity", null)
+                    b.HasOne("Domain.Activity", "Activity")
                         .WithMany("Comments")
                         .HasForeignKey("ActivityId");
 
                     b.HasOne("Domain.User", "Author")
                         .WithMany()
                         .HasForeignKey("AuthorId");
+
+                    b.Navigation("Activity");
 
                     b.Navigation("Author");
                 });
@@ -249,11 +251,13 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("AuthorId");
 
-                    b.HasOne("Domain.Comment", null)
+                    b.HasOne("Domain.Comment", "Comment")
                         .WithMany("Replies")
                         .HasForeignKey("CommentId");
 
                     b.Navigation("Author");
+
+                    b.Navigation("Comment");
                 });
 
             modelBuilder.Entity("Domain.Activity", b =>

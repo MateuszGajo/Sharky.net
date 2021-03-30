@@ -30,8 +30,10 @@ namespace Application.Activities
 
             public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                return await _context.Activities.Include(x => x.User).ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = _userAccessor.GetCurrentId()})
+                return await _context.Activities.Include(x => x.User).Include(x=>x.Comments).ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = _userAccessor.GetCurrentId()}).AsQueryable()
                  .ToListAsync();
+                //  return await _context.Activities.Include(x => x.User).Include(x => x.Comments).ThenInclude(x => x.Author).ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = _userAccessor.GetCurrentId()})
+                //  .ToListAsync();
             }
         }
     }

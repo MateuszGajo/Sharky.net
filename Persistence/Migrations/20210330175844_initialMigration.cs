@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class initialCreate : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -108,8 +108,8 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Content = table.Column<string>(type: "TEXT", nullable: true),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
-                    CommentId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    CommentId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -47,5 +47,11 @@ namespace API.Controllers
         {
             return await _mediator.Send(new Application.Activities.UnLike.Command { PostId = id });
         }
+
+         [HttpPut("{id}/comment/add")]
+        public async Task<ActionResult<Unit>> CreateComment([FromBody]string content, Guid id)
+        {
+             return await _mediator.Send(new Application.Activities.Comments.Create.Command{Content= content, PostId = id});
+        }
     }
 }

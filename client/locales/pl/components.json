@@ -10,5 +10,15 @@
     "profile": "Profil",
     "settings": "Ustawienia",
     "logout": "Wyloguj"
+  },
+  "activities": {
+    "commentPlaceholder": "Napisz komentarz...",
+    "header": {
+      "settings": {
+        "edit": "Edytuj post",
+        "remove": "Usuń post",
+        "hide": "ukryj post"
+      }
+    }
   }
 }

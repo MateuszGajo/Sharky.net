@@ -18,6 +18,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
+            public Guid Id {get; set;}
             public IFormFile File { get; set; }
             public string Content { get; set; }
         }
@@ -36,8 +37,6 @@ namespace Application.Activities
             }
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                System.Console.WriteLine(request.File);
-                System.Console.WriteLine(request.Content);
                 if (request.File == null && String.IsNullOrEmpty(request.Content))
                 {
                     throw new RestException(HttpStatusCode.BadRequest, new { Error = "Content cannot be empty" });
@@ -47,12 +46,11 @@ namespace Application.Activities
                     PhotoUploadResult = _photoAccessor.AddPhoto(request.File);
 
                 var userId = _userAccessor.GetCurrentId();
-                System.Console.WriteLine(userId);
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
-                System.Console.WriteLine(user);
 
                 var Post = new Domain.Activity
                 {
+                    Id = request.Id,
                     User = user,
                     Content = request.Content,
                     Photo = request.File != null ? new Photo

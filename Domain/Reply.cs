@@ -7,6 +7,7 @@ namespace Domain
     {
         public Guid Id { get; set; }
         public string Content { get; set; }
+        public Comment Comment { get; set; }
         public User Author { get; set; }
         public ICollection<Like> Likes { get; set; } = new List<Like>();
     }

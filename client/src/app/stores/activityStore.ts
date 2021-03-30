@@ -12,9 +12,7 @@ export default class AcitivtyStore {
   createActivity = async (activity: ActivityFormValues) => {
     try {
       await agent.Activities.create(activity);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   getActivities = async () => {
@@ -22,9 +20,7 @@ export default class AcitivtyStore {
       await agent.Activities.get().then((data) => {
         this.activities = data;
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   likeHandle = async (isLiked: boolean, activityId: string) => {

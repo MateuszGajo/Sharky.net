@@ -46,7 +46,7 @@ const Signin = (props: any) => {
       router.replace("/signin?error", "/signin", { shallow: true });
     }
   }, []);
-  console.log(socialError);
+
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   return (
     <Authentication>
@@ -83,8 +83,7 @@ const Signin = (props: any) => {
             onClick={() => {
               axios
                 .post(`${serverUrl}/api/user/twitter`)
-                .then((resp) => router.push(resp.data))
-                .catch((err) => console.log(err));
+                .then((resp) => router.push(resp.data));
             }}
           />
         </div>

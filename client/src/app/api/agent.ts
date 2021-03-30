@@ -32,6 +32,7 @@ const Activities = {
     let formData = new FormData();
     formData.append("File", activity.file);
     formData.append("Content", activity.content);
+    formData.append("Id", activity.id);
     return axios.post<void>("/activity/create", formData, {
       headers: { "Content-type": "multipart/form-data" },
     });
@@ -39,6 +40,12 @@ const Activities = {
   get: () => requests.get<Activity[]>("/activity"),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
+  createComment: (id: string, content: string) =>
+    axios.put<void>(`/activity/${id}/comment/add`, JSON.stringify(content), {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }),
 };
 
 export default { Account, Activities };

@@ -13,6 +13,6 @@ namespace Application.Activities
         public DateTime CreatedAt { get; set; }
         public int Likes { get; set; }
         public bool IsLiked { get; set; }
-        public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+         public ICollection<CommentDto> Comments { get; set; }
     }
 }

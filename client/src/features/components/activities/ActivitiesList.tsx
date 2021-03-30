@@ -20,9 +20,6 @@ const ActivitiesList = () => {
           <ActivityItem key={item.id} item={item} />
         ))}
       </Container>
-      <p>
-        <p></p>
-      </p>
     </div>
   );
 };
