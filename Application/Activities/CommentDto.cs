@@ -10,6 +10,6 @@ namespace Application.Activities
         public string Content { get; set; }
         public UserDto Author { get; set; }
          public int Likes { get; set; } 
-         public ICollection<ReplyDto> Replies { get; set; }
+          public ICollection<ReplyDto> Replies { get; set; }
     }
 }

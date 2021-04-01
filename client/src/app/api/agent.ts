@@ -33,9 +33,11 @@ const Activities = {
     formData.append("File", activity.file);
     formData.append("Content", activity.content);
     formData.append("Id", activity.id);
-    return axios.post<void>("/activity/create", formData, {
-      headers: { "Content-type": "multipart/form-data" },
-    });
+    return axios
+      .post<void>("/activity/create", formData, {
+        headers: { "Content-type": "multipart/form-data" },
+      })
+      .then(responseBody);
   },
   get: () => requests.get<Activity[]>("/activity"),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),

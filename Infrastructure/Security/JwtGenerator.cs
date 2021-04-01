@@ -24,7 +24,10 @@ namespace Infrastructure.Security
         public string CreateToken(User user)
         {
             var claims = new List<Claim>{
-               new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString())
+               new Claim("id", user.Id.ToString()),
+               new Claim("firstName", user.FirstName),
+               new Claim("lastName", user.LastName),
+               new Claim("email", user.Email),
            };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

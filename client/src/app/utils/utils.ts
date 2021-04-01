@@ -4,6 +4,7 @@ import type { NextApiRequest } from "next";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
+import { Token, User } from "../models/authentication";
 
 export const navItems = [
   {
@@ -180,17 +181,29 @@ export const formatDate = (date: Date) => {
   return [day, month, year].join(" ");
 };
 
-const verifyJWT = (token: string) => {
-  return new Promise((resolve) => {
-    resolve(jwt.verify(token, String(process.env.TOKEN_KEY)));
+export const verifyJWT = (token: string) => {
+  return new Promise<Token>((resolve) => {
+    const user = jwt.verify(token, String(process.env.TOKEN_KEY)) as Token;
+    resolve(user);
+  });
+};
+
+export const verifyJWTSyn = (token: string) => {
+  jwt.verify(token, "shhhhh", function (err, decoded) {
+    return decoded;
   });
 };
 
 export const isLoggedIn = async (req: NextApiRequest) => {
   try {
-    await verifyJWT(req.cookies["Token"]);
+    const resp = await verifyJWT(req.cookies["Token"]);
+    const user = {
+      id: resp.id,
+      firstName: resp.firstName,
+      lastName: resp.lastName,
+    };
     return {
-      props: {},
+      props: { user },
     };
   } catch (err) {
     return {

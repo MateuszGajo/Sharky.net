@@ -6,7 +6,8 @@ import ActivityItem from "./ActivityItem";
 import { observer } from "mobx-react-lite";
 
 const ActivitiesList = () => {
-  const { activityStore } = useStore();
+  const { activityStore, commonStore } = useStore();
+  console.log(commonStore.getUser());
   const { getActivities, activities } = activityStore;
 
   useEffect(() => {
@@ -16,7 +17,7 @@ const ActivitiesList = () => {
   return (
     <div>
       <Container className={styles.container}>
-        {activities.map((item) => (
+        {Array.from(activities.values()).map((item) => (
           <ActivityItem key={item.id} item={item} />
         ))}
       </Container>

@@ -11,6 +11,10 @@ export interface Activity {
     firstName: string;
     lastName: string;
   };
+  photo?: {
+    id: string;
+    url: string;
+  };
   content: string;
   createdAt: Date;
   isLiked: boolean;

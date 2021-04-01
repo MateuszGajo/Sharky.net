@@ -9,13 +9,13 @@ const home = () => {
     <section>
       <HomeLayout sidebar>
         <MessageBox />
-        <ActivitiesList />
+        {/* <ActivitiesList /> */}
       </HomeLayout>
     </section>
   );
 };
 
-export const getServerSideProps = async ({ req }: any) => {
+export const getServerSideProps = async ({ req, ctx }: any) => {
   return await isLoggedIn(req);
 };
 

@@ -1,24 +1,32 @@
 import { Activity, ActivityFormValues } from "./../models/activity";
 import { makeAutoObservable } from "mobx";
 import agent from "~api/agent";
+import cookies from "js-cookie";
+import { RootStore } from "./RootStore";
 
 export default class AcitivtyStore {
-  constructor() {
+  root: RootStore;
+  constructor(root: RootStore) {
+    this.root = root;
     makeAutoObservable(this);
   }
 
-  activities: Activity[] = [];
+  activities = new Map<string, Activity>();
 
   createActivity = async (activity: ActivityFormValues) => {
     try {
-      await agent.Activities.create(activity);
+      await agent.Activities.create(activity).then((photo) => {});
     } catch (error) {}
   };
+
+  setActivity = (activity: Activity) => {};
 
   getActivities = async () => {
     try {
       await agent.Activities.get().then((data) => {
-        this.activities = data;
+        data.forEach((activity) => {
+          this.activities.set(activity.id, activity);
+        });
       });
     } catch (error) {}
   };

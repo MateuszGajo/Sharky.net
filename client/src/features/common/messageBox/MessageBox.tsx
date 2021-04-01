@@ -11,12 +11,11 @@ import {
 import styles from "./MessageBox.module.scss";
 import Preview from "./components/preview/Preview";
 import Content from "./components/content/Content";
-import { useStore } from "~root/src/app/stores/store";
 import { v4 as uuid } from "uuid";
+import { useActivityStore } from "~root/src/app/stores/RootStoreProvider";
 
 const MessageBox = () => {
-  const { activityStore } = useStore();
-  const { createActivity } = activityStore;
+  const { createActivity } = useActivityStore();
   const [file, setFile] = useState<any[]>([]);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -41,9 +40,8 @@ const MessageBox = () => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const id = uuid();
-    console.log(id);
     createActivity({ id, content: text, file: file[0] || null })
-      .then(() => {
+      .then((photo) => {
         setFile([]);
         setText("");
       })

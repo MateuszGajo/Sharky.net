@@ -16,14 +16,14 @@ namespace Application.Activities
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Photo>
         {
-            public Guid Id {get; set;}
+            public Guid Id { get; set; }
             public IFormFile File { get; set; }
             public string Content { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Photo>
         {
             private readonly IPhotoAccessor _photoAccessor;
             private readonly DataBaseContext _context;
@@ -35,15 +35,24 @@ namespace Application.Activities
                 _photoAccessor = photoAccessor;
 
             }
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Photo> Handle(Command request, CancellationToken cancellationToken)
             {
                 if (request.File == null && String.IsNullOrEmpty(request.Content))
                 {
                     throw new RestException(HttpStatusCode.BadRequest, new { Error = "Content cannot be empty" });
                 }
                 var PhotoUploadResult = new Application.Photos.PhotoUploadResult();
+                var photo = new Photo();
                 if (request.File != null)
+                {
                     PhotoUploadResult = _photoAccessor.AddPhoto(request.File);
+
+                    photo = new Photo
+                    {
+                        Id = PhotoUploadResult.PublicId,
+                        Url = PhotoUploadResult.Url
+                    };
+                }
 
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -53,19 +62,15 @@ namespace Application.Activities
                     Id = request.Id,
                     User = user,
                     Content = request.Content,
-                    Photo = request.File != null ? new Photo
-                    {
-                        Id = PhotoUploadResult.PublicId,
-                        Url = PhotoUploadResult.Url
-                    } : null,
+                    Photo = request.File != null ? photo : null,
                     CreatedAt = DateTime.Now
                 };
 
                 _context.Activities.Add(Post);
 
                 var success = await _context.SaveChangesAsync() > 0;
-
-                if (success) return Unit.Value;
+                System.Console.WriteLine(photo);
+                if (success) return photo;
 
                 throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating post" });
             }
