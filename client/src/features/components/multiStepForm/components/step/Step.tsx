@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React from "react";
 import { Icon } from "semantic-ui-react";
-import { useStore } from "~root/src/app/stores/store";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 import styles from "./Step.module.scss";
 
 interface Props {
@@ -11,8 +11,12 @@ interface Props {
 }
 
 const Step: React.FC<Props> = ({ children, pageIndex }) => {
-  const { authenticationStore } = useStore();
-  const { page, numberOfPages, nextPage, previousPage } = authenticationStore;
+  const {
+    page,
+    numberOfPages,
+    nextPage,
+    previousPage,
+  } = useAuthenticationStore();
   return pageIndex === page ? (
     <div className={styles.container}>
       <Icon

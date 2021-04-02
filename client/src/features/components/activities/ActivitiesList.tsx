@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import styles from "./ActivitiesList.module.scss";
 import { Container } from "semantic-ui-react";
-import { useStore } from "~root/src/app/stores/store";
 import ActivityItem from "./ActivityItem";
 import { observer } from "mobx-react-lite";
+import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
 const ActivitiesList = () => {
-  const { activityStore, commonStore } = useStore();
-  console.log(commonStore.getUser());
-  const { getActivities, activities } = activityStore;
+  const { getActivities, activities } = useActivityStore();
 
   useEffect(() => {
     getActivities();

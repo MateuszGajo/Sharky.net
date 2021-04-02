@@ -9,7 +9,7 @@ const home = () => {
     <section>
       <HomeLayout sidebar>
         <MessageBox />
-        {/* <ActivitiesList /> */}
+        <ActivitiesList />
       </HomeLayout>
     </section>
   );

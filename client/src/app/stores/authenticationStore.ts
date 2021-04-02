@@ -1,12 +1,14 @@
-import { store } from "./store";
 import agent from "~api/agent";
 import { makeAutoObservable } from "mobx";
 import { SignupFormValues as SignupValues } from "~root/src/app/models/authentication";
 import { SigninFormValues as SigninValues } from "~root/src/app/models/authentication";
 import router from "next/router";
+import { RootStore } from "./rootStore";
 
 export default class AuthenticationStore {
-  constructor() {
+  root: RootStore;
+  constructor(root: RootStore) {
+    this.root = root;
     makeAutoObservable(this);
   }
 

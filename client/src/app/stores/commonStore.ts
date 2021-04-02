@@ -1,8 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { User } from "../models/authentication";
-import cookies from "js-cookie";
-import { verifyJWT, verifyJWTSyn } from "../utils/utils";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class CommonStore {
   root: RootStore;
@@ -15,7 +13,6 @@ export default class CommonStore {
 
   hydrate(data?: any) {
     if (data) {
-      console.log(data);
       this.user = data;
     }
   }

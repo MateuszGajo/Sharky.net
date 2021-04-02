@@ -5,12 +5,12 @@ import { Activity } from "~root/src/app/models/activity";
 import ActivityComment from "./ActivityComment";
 import styles from "./ActivityItem.module.scss";
 import { formatDate } from "~root/src/app/utils/utils";
-import { useStore } from "~root/src/app/stores/store";
 import ActivityDropdown from "./ActivityDropdown";
+import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
 const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
-  const { activityStore } = useStore();
-  const { likeHandle } = activityStore;
+  console.log(item);
+  const { likeHandle } = useActivityStore();
 
   const date = formatDate(new Date(item.createdAt));
 

@@ -1,6 +1,6 @@
 import { enableStaticRendering } from "mobx-react-lite";
 import React, { createContext, ReactNode, useContext } from "react";
-import { RootStore, RootStoreHydration } from "../stores/RootStore";
+import { RootStore, RootStoreHydration } from "../stores/rootStore";
 
 enableStaticRendering(typeof window === "undefined");
 
@@ -19,6 +19,16 @@ export function useRootStore() {
 export const useActivityStore = () => {
   const { activityStore } = useRootStore();
   return activityStore;
+};
+
+export const useCommonStore = () => {
+  const { commonStore } = useRootStore();
+  return commonStore;
+};
+
+export const useAuthenticationStore = () => {
+  const { authenticationStore } = useRootStore();
+  return authenticationStore;
 };
 
 export function RootStoreProvider({

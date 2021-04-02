@@ -17,8 +17,7 @@ namespace Infrastructure.Security
 
         public string GetCurrentId()
         {
-           var userId = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
+            var userId = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type.Equals("id"))?.Value;
             return userId;
         }
     }

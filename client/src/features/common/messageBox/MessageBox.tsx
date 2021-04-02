@@ -12,7 +12,7 @@ import styles from "./MessageBox.module.scss";
 import Preview from "./components/preview/Preview";
 import Content from "./components/content/Content";
 import { v4 as uuid } from "uuid";
-import { useActivityStore } from "~root/src/app/stores/RootStoreProvider";
+import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
 const MessageBox = () => {
   const { createActivity } = useActivityStore();

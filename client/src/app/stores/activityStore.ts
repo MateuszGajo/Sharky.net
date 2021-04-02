@@ -1,8 +1,7 @@
 import { Activity, ActivityFormValues } from "./../models/activity";
 import { makeAutoObservable } from "mobx";
 import agent from "~api/agent";
-import cookies from "js-cookie";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class AcitivtyStore {
   root: RootStore;

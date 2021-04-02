@@ -7,17 +7,15 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
 import Loading from "~common/Loading/Loading";
-import { useStore } from "~root/src/app/stores/store";
 import SecondaryInput from "~common/secondaryInput/SecondaryInput";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import { observer } from "mobx-react-lite";
 import styles from "./signin.module.scss";
-
 import { isNotLoggedIn } from "~utils/utils";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 const Signin = (props: any) => {
   const router = useRouter();
-  const { authenticationStore } = useStore();
   const {
     login,
     remebermeStatus,
@@ -25,7 +23,7 @@ const Signin = (props: any) => {
     loading: isLoading,
     creds,
     getCreds,
-  } = authenticationStore;
+  } = useAuthenticationStore();
 
   const { t } = useTranslation("signin");
 
@@ -35,14 +33,14 @@ const Signin = (props: any) => {
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
   const credsError = t("credsError");
-  const socialErrorText = t("socialError");
+  const errorText = t("error");
 
-  const [socialError, setSocialError] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     getCreds();
     if (router.query["error"]) {
-      setSocialError(true);
+      setError(true);
       router.replace("/signin?error", "/signin", { shallow: true });
     }
   }, []);
@@ -87,7 +85,7 @@ const Signin = (props: any) => {
             }}
           />
         </div>
-        {socialError && <p className={styles.socialError}>{socialErrorText}</p>}
+        {error && <p className={styles.error}>{errorText}</p>}
         <p className={styles.alternativeText}>{alternativeText}</p>
         <Formik
           initialValues={creds}

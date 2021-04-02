@@ -8,7 +8,7 @@ import Controls from "./components/controls/Controls";
 import CredsForm from "./components/credsForm/CredsForm";
 import PersonalForm from "./components/personalForm/PersonalForm";
 import { registerValidationSchema as validationSchema } from "~utils/utils";
-import { useStore } from "~root/src/app/stores/store";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 const SaveValues: React.FC<{ saveValues: boolean }> = ({ saveValues }) => {
   const { values, errors } = useFormikContext<FormValue>();
@@ -30,12 +30,11 @@ interface Props {
 }
 
 const Wizzard: React.FC<Props> = observer(({ children }) => {
-  const { authenticationStore } = useStore();
   const {
     initialFormValues: initialValues,
     touchedFields,
     register,
-  } = authenticationStore;
+  } = useAuthenticationStore();
 
   const [saveValues, setStatusOfSaveValues] = useState(true);
 
