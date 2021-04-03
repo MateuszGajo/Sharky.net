@@ -31,7 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<ActionResult<Photo>> Create([FromForm] Create.Command command)
+        public async Task<ActionResult<Create.Response>> Create([FromForm] Create.Command command)
         {
             return await _mediator.Send(command);
         }
@@ -48,10 +48,11 @@ namespace API.Controllers
             return await _mediator.Send(new Application.Activities.UnLike.Command { PostId = id });
         }
 
-        [HttpPut("{id}/comment/add")]
-        public async Task<ActionResult<Unit>> CreateComment([FromBody] string content, Guid id)
+        [HttpPut("{postId}/comment/add")]
+        public async Task<ActionResult<Application.Activities.Comments.Create.Response>> CreateComment(Application.Activities.Comments.Create.Command command, Guid postId)
         {
-            return await _mediator.Send(new Application.Activities.Comments.Create.Command { Content = content, PostId = id });
+            command.PostId = postId;
+            return await _mediator.Send(command);
         }
     }
 }

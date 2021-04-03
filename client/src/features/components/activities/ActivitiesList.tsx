@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
 const ActivitiesList = () => {
-  const { getActivities, activities } = useActivityStore();
+  const { getActivities, activitiesByDate } = useActivityStore();
 
   useEffect(() => {
     getActivities();
@@ -15,7 +15,7 @@ const ActivitiesList = () => {
   return (
     <div>
       <Container className={styles.container}>
-        {Array.from(activities.values()).map((item) => (
+        {activitiesByDate.map((item) => (
           <ActivityItem key={item.id} item={item} />
         ))}
       </Container>

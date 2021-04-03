@@ -7,6 +7,10 @@
     margin-top: 3em;
   }
 
+  .header {
+    padding: 0.85em 0.85em;
+  }
+
   .headerContainer {
     display: flex;
     justify-content: space-between;
@@ -24,6 +28,7 @@
   .description {
     margin-left: 1em;
     margin-bottom: 0.5em;
+    color: black;
   }
 
   .noMargin {
@@ -34,27 +39,57 @@
     border-radius: 3px;
   }
 
+  .date {
+    color: #647c7ce8;
+    font-size: 0.91em;
+  }
+
+  .userName {
+    color: $primaryColor;
+    font-size: 0.93em;
+  }
+
   .photo {
     width: 100%;
   }
 
-  .like:hover .icon {
-    color: #ff2733;
+  .like .icon {
+    color: #ff3d47;
+    opacity: 1;
   }
 
-  .likeIconActive {
-    color: #ff2733;
+  .like:hover .icon {
+    color: #cf2029;
+  }
+
+  .icon.likeIconActive {
+    color: #cf2029;
+  }
+  .likeIconActive + .number {
+    color: #cf2029;
+  }
+
+  .number {
+    color: grey;
   }
 
   .icon {
     transition: color 0.2s;
   }
 
-  .comment:hover .icon {
+  .comment .icon {
     color: $primaryColor;
   }
 
+  .comment:hover .icon {
+    color: $primaryHoverColor;
+  }
+
+  .reply .icon {
+    color: #00ffff;
+  }
+
   .reply:hover .icon {
-    color: aqua;
+    color: #00cccc;
   }
 }

@@ -17,7 +17,13 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  phone: string;
+  phone?: string;
+  photo: Photo | null;
+}
+
+export interface Photo {
+  id: string;
+  url: string;
 }
 
 export interface Token {

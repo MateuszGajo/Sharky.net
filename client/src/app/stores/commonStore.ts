@@ -4,7 +4,14 @@ import { RootStore } from "./rootStore";
 
 export default class CommonStore {
   root: RootStore;
-  user: User = { firstName: "", lastName: "", phone: "", id: "", email: "" };
+  user: User = {
+    firstName: "",
+    lastName: "",
+    phone: "",
+    id: "",
+    email: "",
+    photo: null,
+  };
 
   constructor(root: RootStore) {
     this.root = root;

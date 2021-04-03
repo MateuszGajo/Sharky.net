@@ -1,4 +1,9 @@
-import { Activity, ActivityFormValues } from "./../models/activity";
+import {
+  Activity,
+  ActivityFormValues,
+  CommentFormValues,
+  CreateActResp,
+} from "./../models/activity";
 import {
   SigninFormValues,
   SignupFormValues,
@@ -34,7 +39,7 @@ const Activities = {
     formData.append("Content", activity.content);
     formData.append("Id", activity.id);
     return axios
-      .post<void>("/activity/create", formData, {
+      .post<CreateActResp>("/activity/create", formData, {
         headers: { "Content-type": "multipart/form-data" },
       })
       .then(responseBody);
@@ -42,12 +47,8 @@ const Activities = {
   get: () => requests.get<Activity[]>("/activity"),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
-  createComment: (id: string, content: string) =>
-    axios.put<void>(`/activity/${id}/comment/add`, JSON.stringify(content), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }),
+  createComment: (id: string, comment: CommentFormValues) =>
+    requests.put<{ date: Date }>(`/activity/${id}/comment/add`, comment),
 };
 
 export default { Account, Activities };

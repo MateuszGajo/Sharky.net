@@ -13,9 +13,10 @@ import Preview from "./components/preview/Preview";
 import Content from "./components/content/Content";
 import { v4 as uuid } from "uuid";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
+import { observer } from "mobx-react-lite";
 
 const MessageBox = () => {
-  const { createActivity } = useActivityStore();
+  const { createActivity, isSubmitting } = useActivityStore();
   const [file, setFile] = useState<any[]>([]);
   const [text, setText] = useState("");
   const [error, setError] = useState("");
@@ -65,8 +66,13 @@ const MessageBox = () => {
             )}
             <Container className={`${styles.toolbar} local`}>
               <Preview file={file} setFile={setFile} onDrop={onDrop} />
-
-              <Button content="send" positive floated="right" />
+              <Button
+                content="send"
+                positive
+                floated="right"
+                loading={isSubmitting}
+                disabled={!text && !file.length}
+              />
             </Container>
           </Segment>
         </Form>
@@ -75,4 +81,4 @@ const MessageBox = () => {
   );
 };
 
-export default MessageBox;
+export default observer(MessageBox);

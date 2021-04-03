@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
 import cx from "classnames";
-import { Activity } from "~root/src/app/models/activity";
+import { Activity, ActivityMap } from "~root/src/app/models/activity";
 import ActivityComment from "./ActivityComment";
 import styles from "./ActivityItem.module.scss";
 import { formatDate } from "~root/src/app/utils/utils";
 import ActivityDropdown from "./ActivityDropdown";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
-const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
+const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   console.log(item);
   const { likeHandle } = useActivityStore();
 
@@ -17,7 +17,7 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
   const [isLiked, setStatusOfLike] = useState(item.isLiked);
   const [numberOfLikes, setNumberOfLikes] = useState<number>(item.likes);
   const [numberOfComments, setNumberOfComments] = useState<number>(
-    item.comments.length
+    item.comments.size
   );
 
   const handleLikeClick = () => {
@@ -35,17 +35,20 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
   return (
     <Container className={styles.container}>
       <Card fluid>
-        <Card.Content>
+        <Card.Content className={styles.header}>
           <Container className={styles.headerContainer}>
             <Feed className={styles.noMargin}>
               <Feed.Event>
                 <Feed.Label
                   className={styles.userPhoto}
-                  image="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
+                  image={
+                    item.user.photo?.url ||
+                    "https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
+                  }
                 />
                 <Feed.Content>
-                  <Feed.Date content={date} />
-                  <Feed.Summary>
+                  <Feed.Date content={date} className={styles.date} />
+                  <Feed.Summary className={styles.userName}>
                     {item.user.firstName + " " + item.user.lastName}
                   </Feed.Summary>
                 </Feed.Content>
@@ -61,22 +64,21 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
             <span>{item.content}</span>
           </Card.Description>
           <Container>
-            <Image
-              src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
-              className={styles.photo}
-            />
+            {item.photo && (
+              <Image src={item.photo.url} className={styles.photo} />
+            )}
           </Container>
         </Card.Content>
         <Card.Content extra>
           <Container className={styles.toolBar}>
-            <a className={cx(styles.like)} onClick={handleLikeClick}>
+            <a className={styles.like} onClick={handleLikeClick}>
               <Icon
                 name="like"
                 className={cx(styles.icon, {
                   [styles.likeIconActive]: isLiked,
                 })}
               />
-              {numberOfLikes}
+              <span className={styles.number}>{numberOfLikes}</span>
             </a>
             <a className={styles.comment}>
               <Icon name="comment" className={styles.icon} />
@@ -88,7 +90,11 @@ const ActivityItem: React.FC<{ item: Activity }> = ({ item }) => {
             </a>
           </Container>
 
-          <ActivityComment postId={item.id} comments={item.comments} />
+          <ActivityComment
+            postId={item.id}
+            comments={item.comments}
+            user={item.user}
+          />
         </Card.Content>
       </Card>
     </Container>

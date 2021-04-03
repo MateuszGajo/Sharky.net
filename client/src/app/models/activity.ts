@@ -1,3 +1,5 @@
+import { User } from "./authentication";
+
 export interface ActivityFormValues {
   id: string;
   content: string;
@@ -6,11 +8,7 @@ export interface ActivityFormValues {
 
 export interface Activity {
   id: string;
-  user: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
+  user: User;
   photo?: {
     id: string;
     url: string;
@@ -22,14 +20,38 @@ export interface Activity {
   comments: [];
 }
 
+export interface ActivityMap extends Omit<Activity, "comments"> {
+  comments: Map<string, CommentMap>;
+}
+
 export interface Comment {
   id: string;
   content: string;
-  author: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
+  author: User;
   likes: number;
-  replies: [];
+  createdAt: Date;
+  replies: Reply[];
+}
+
+export interface CommentMap extends Omit<Comment, "replies"> {
+  replies: Map<string, Reply>;
+}
+
+export interface Reply {
+  id: string;
+  content: string;
+  author: User;
+}
+
+export interface CreateActResp {
+  photo: {
+    id: string;
+    url: string;
+  };
+  date: Date;
+}
+
+export interface CommentFormValues {
+  id: string;
+  content: string;
 }
