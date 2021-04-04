@@ -2,7 +2,7 @@ import React from "react";
 import MessageBox from "~common/messageBox/MessageBox";
 import { isLoggedIn } from "~utils/utils";
 import HomeLayout from "~root/src/features/layout/homeLayout/HomeLayout";
-import ActivitiesList from "~components/activities/ActivitiesList";
+import ActivitiesList from "~components/activities/activitiesList/ActivitiesList";
 
 const home = () => {
   return (

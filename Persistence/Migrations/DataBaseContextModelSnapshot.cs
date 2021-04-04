@@ -67,7 +67,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Comment");
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Domain.Like", b =>
@@ -136,7 +136,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CommentId");
 
-                    b.ToTable("Reply");
+                    b.ToTable("Replies");
                 });
 
             modelBuilder.Entity("Domain.User", b =>

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styles from "./ActivitiesList.module.scss";
 import { Container } from "semantic-ui-react";
-import ActivityItem from "./ActivityItem";
+import ActivityItem from "../activitesItem/ActivityItem";
 import { observer } from "mobx-react-lite";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 

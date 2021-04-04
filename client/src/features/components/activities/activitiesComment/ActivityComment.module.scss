@@ -1,0 +1,41 @@
+:global(#app) {
+  .container {
+    position: relative;
+  }
+
+  .form {
+    margin-bottom: 0.7em;
+  }
+
+  .replyContainer {
+    padding: 1em 0 0;
+  }
+
+  .container:hover .options {
+    visibility: visible;
+  }
+
+  .replyRef:hover .replyIcon {
+    color: $primaryColor;
+  }
+
+  .container .options.hidden {
+    visibility: hidden;
+  }
+
+  .replyIcon {
+    transition: color 0.2s;
+    transform: rotate(180deg);
+  }
+
+  .replyIconActive {
+    color: $primaryColor;
+  }
+
+  .options {
+    visibility: hidden;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}

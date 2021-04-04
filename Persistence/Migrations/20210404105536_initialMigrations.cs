@@ -77,7 +77,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -88,15 +88,15 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comment_Activities_ActivityId",
+                        name: "FK_Comments_Activities_ActivityId",
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Comment_Users_AuthorId",
+                        name: "FK_Comments_Users_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -104,7 +104,7 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reply",
+                name: "Replies",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
@@ -115,15 +115,15 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reply", x => x.Id);
+                    table.PrimaryKey("PK_Replies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reply_Comment_CommentId",
+                        name: "FK_Replies_Comments_CommentId",
                         column: x => x.CommentId,
-                        principalTable: "Comment",
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Reply_Users_AuthorId",
+                        name: "FK_Replies_Users_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -150,15 +150,15 @@ namespace Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Like_Comment_CommentId",
+                        name: "FK_Like_Comments_CommentId",
                         column: x => x.CommentId,
-                        principalTable: "Comment",
+                        principalTable: "Comments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Like_Reply_ReplyId",
+                        name: "FK_Like_Replies_ReplyId",
                         column: x => x.ReplyId,
-                        principalTable: "Reply",
+                        principalTable: "Replies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -174,13 +174,13 @@ namespace Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_ActivityId",
-                table: "Comment",
+                name: "IX_Comments_ActivityId",
+                table: "Comments",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_AuthorId",
-                table: "Comment",
+                name: "IX_Comments_AuthorId",
+                table: "Comments",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
@@ -199,13 +199,13 @@ namespace Persistence.Migrations
                 column: "ReplyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reply_AuthorId",
-                table: "Reply",
+                name: "IX_Replies_AuthorId",
+                table: "Replies",
                 column: "AuthorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reply_CommentId",
-                table: "Reply",
+                name: "IX_Replies_CommentId",
+                table: "Replies",
                 column: "CommentId");
         }
 
@@ -215,10 +215,10 @@ namespace Persistence.Migrations
                 name: "Like");
 
             migrationBuilder.DropTable(
-                name: "Reply");
+                name: "Replies");
 
             migrationBuilder.DropTable(
-                name: "Comment");
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Activities");

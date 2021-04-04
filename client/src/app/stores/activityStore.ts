@@ -111,4 +111,34 @@ export default class AcitivtyStore {
       }
     } catch (eror) {}
   };
+
+  setComment = async (postId: string, commentId: string, content: string) => {
+    const activity = this.activities.get(postId);
+    const comment = activity?.comments.get(commentId);
+    if (comment && activity) {
+      comment.content = content;
+      activity.comments.set(comment.id, comment);
+    }
+  };
+
+  editComment = async (postId: string, commentId: string, content: string) => {
+    try {
+      await agent.Activities.editComment(postId, commentId, content);
+      this.setComment(postId, commentId, content);
+    } catch (error) {}
+  };
+
+  createReply = async (
+    postId: string,
+    commentId: string,
+    formValues: CommentFormValues
+  ) => {
+    try {
+      const response = await agent.Activities.createReply(
+        postId,
+        commentId,
+        formValues
+      );
+    } catch (err) {}
+  };
 }

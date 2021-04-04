@@ -48,7 +48,16 @@ const Activities = {
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
   createComment: (id: string, comment: CommentFormValues) =>
-    requests.put<{ date: Date }>(`/activity/${id}/comment/add`, comment),
+    requests.put<{ date: Date }>(`/activity/${id}/comment/create`, comment),
+  editComment: (postId: string, commentId: string, content: string) =>
+    requests.put<void>(`/activity/${postId}/comment/${commentId}/edit`, {
+      content,
+    }),
+  createReply: (postId: string, commentId: string, reply: CommentFormValues) =>
+    requests.put<{ createdAt: Date }>(
+      `/activity/${postId}/comment/${commentId}/reply/create`,
+      reply
+    ),
 };
 
 export default { Account, Activities };

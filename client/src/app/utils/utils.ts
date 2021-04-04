@@ -230,3 +230,11 @@ export const isNotLoggedIn = async (req: NextApiRequest) => {
     };
   }
 };
+
+export const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  if (e.key === "enter") {
+    e.preventDefault();
+    e.stopPropagation();
+    new Event("submit");
+  }
+};

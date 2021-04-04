@@ -17,7 +17,8 @@
       "settings": {
         "edit": "Edytuj post",
         "remove": "Usuń post",
-        "hide": "ukryj post"
+        "hide": "Ukryj post",
+        "block": "Zablokuj użytkownika"
       }
     }
   }

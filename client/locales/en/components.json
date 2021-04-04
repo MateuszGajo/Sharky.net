@@ -13,11 +13,13 @@
   },
   "activities": {
     "commentPlaceholder": "Write a comment...",
+    "replyPlaceholder": "Write a reply...",
     "header": {
       "settings": {
         "edit": "Edit post",
         "remove": "Remove post",
-        "hide": "Hide post"
+        "hide": "Hide post",
+        "block": "Block user"
       }
     }
   }

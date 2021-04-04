@@ -42,7 +42,6 @@ namespace Application.Activities
             }
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
-                System.Console.WriteLine(DateTime.Now);
                 if (request.File == null && String.IsNullOrEmpty(request.Content))
                 {
                     throw new RestException(HttpStatusCode.BadRequest, new { Error = "Content cannot be empty" });
@@ -83,7 +82,6 @@ namespace Application.Activities
                 };
 
                 var success = await _context.SaveChangesAsync() > 0;
-                System.Console.WriteLine(photo);
                 if (success) return response;
 
                 throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating post" });

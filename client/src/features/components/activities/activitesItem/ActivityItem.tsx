@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
 import cx from "classnames";
 import { Activity, ActivityMap } from "~root/src/app/models/activity";
-import ActivityComment from "./ActivityComment";
+import ActivityDownbar from "../activitesDownbar/ActivityDownbar";
 import styles from "./ActivityItem.module.scss";
 import { formatDate } from "~root/src/app/utils/utils";
-import ActivityDropdown from "./ActivityDropdown";
+import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
-  console.log(item);
   const { likeHandle } = useActivityStore();
 
   const date = formatDate(new Date(item.createdAt));
@@ -55,7 +54,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
               </Feed.Event>
             </Feed>
             <div className={styles.optionsContainer}>
-              <ActivityDropdown />
+              <ActivityDropdown onClick={() => {}} />
             </div>
           </Container>
         </Card.Content>
@@ -90,7 +89,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
             </a>
           </Container>
 
-          <ActivityComment
+          <ActivityDownbar
             postId={item.id}
             comments={item.comments}
             user={item.user}

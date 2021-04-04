@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Comment, Divider, Input, Item } from "semantic-ui-react";
+import { Comment, Divider, Icon, Input, Item } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
-import agent from "~root/src/app/api/agent";
 import { CommentMap as CommentInterface } from "~models/activity";
 import { User } from "~root/src/app/models/authentication";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import { v4 as uuid } from "uuid";
-import ActivityReply from "./ActivityReply";
+import { handleKeyDown } from "~root/src/app/utils/utils";
+import ActivityComment from "../activitiesComment/ActivityComment";
 
 interface Props {
   postId: string;
@@ -14,7 +14,7 @@ interface Props {
   user: User;
 }
 
-const ActivityComment: React.FC<Props> = ({
+const ActivityDownbar: React.FC<Props> = ({
   postId,
   comments: initialComments,
   user,
@@ -32,13 +32,6 @@ const ActivityComment: React.FC<Props> = ({
     );
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "enter") {
-      e.preventDefault();
-      e.stopPropagation();
-      new Event("submit");
-    }
-  };
   return (
     <>
       <Item.Group>
@@ -67,24 +60,9 @@ const ActivityComment: React.FC<Props> = ({
         <>
           <Divider />
           <Comment.Group>
-            {Array.from(comments.values()).map((item) => {
-              return (
-                <Comment key={item.id}>
-                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg" />
-                  <Comment.Content>
-                    <Comment.Author as="a"> Matt</Comment.Author>
-                    <Comment.Metadata>
-                      <div>Today at 5:44</div>
-                    </Comment.Metadata>
-                    <Comment.Text>{item.content}</Comment.Text>
-                    <Comment.Actions>
-                      <Comment.Action>Reply</Comment.Action>
-                    </Comment.Actions>
-                  </Comment.Content>
-                  <ActivityReply />
-                </Comment>
-              );
-            })}
+            {Array.from(comments.values()).map((item) => (
+              <ActivityComment key={item.id} item={item} postId={postId} />
+            ))}
           </Comment.Group>
         </>
       )}
@@ -92,4 +70,4 @@ const ActivityComment: React.FC<Props> = ({
   );
 };
 
-export default ActivityComment;
+export default ActivityDownbar;

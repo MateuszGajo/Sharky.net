@@ -48,10 +48,25 @@ namespace API.Controllers
             return await _mediator.Send(new Application.Activities.UnLike.Command { PostId = id });
         }
 
-        [HttpPut("{postId}/comment/add")]
+        [HttpPut("{postId}/comment/create")]
         public async Task<ActionResult<Application.Activities.Comments.Create.Response>> CreateComment(Application.Activities.Comments.Create.Command command, Guid postId)
         {
             command.PostId = postId;
+            return await _mediator.Send(command);
+        }
+
+        [HttpPut("{postId}/comment/{commentId}/edit")]
+        public async Task<ActionResult<Unit>> CreateComment(Application.Activities.Comments.Edit.Command command, Guid commentId)
+        {
+            command.CommentId = commentId;
+            return await _mediator.Send(command);
+        }
+
+        [HttpPut("{postId}/comment/{commentId}/reply/create")]
+        public async Task<ActionResult<Application.Activities.Comments.Replies.Create.Response>> CreateReply(Application.Activities.Comments.Replies.Create.Command command, Guid postId, Guid commentId)
+        {
+            command.PostId = postId;
+            command.CommentId = commentId;
             return await _mediator.Send(command);
         }
     }

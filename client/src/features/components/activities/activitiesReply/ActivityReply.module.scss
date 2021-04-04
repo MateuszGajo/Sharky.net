@@ -1,0 +1,17 @@
+:global(#app) {
+  .item {
+    position: relative;
+    font-size: 0.8rem;
+  }
+
+  .item:hover .options {
+    visibility: visible;
+  }
+
+  .options {
+    visibility: hidden;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}
