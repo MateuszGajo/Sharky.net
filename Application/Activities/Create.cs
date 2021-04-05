@@ -16,18 +16,19 @@ namespace Application.Activities
 {
     public class Create
     {
+        public class Response
+        {
+            public DateTime CreatedAt { get; set; }
+            public Photo Photo { get; set; }
+            public Guid Id { get; set; }
+        }
         public class Command : IRequest<Response>
         {
-            public Guid Id { get; set; }
             public IFormFile File { get; set; }
             public string Content { get; set; }
         }
 
-        public class Response
-        {
-            public DateTime Date { get; set; }
-            public Photo Photo { get; set; }
-        }
+
         public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IPhotoAccessor _photoAccessor;
@@ -64,24 +65,23 @@ namespace Application.Activities
 
                 DateTime date = DateTime.Now;
 
-                var Post = new Domain.Activity
+                var activity = new Domain.Activity
                 {
-                    Id = request.Id,
                     User = user,
                     Content = request.Content,
                     Photo = request.File != null ? photo : null,
                     CreatedAt = date
                 };
 
-                _context.Activities.Add(Post);
-
-                var response = new Response
-                {
-                    Date = date,
-                    Photo = photo
-                };
+                _context.Activities.Add(activity);
 
                 var success = await _context.SaveChangesAsync() > 0;
+                var response = new Response
+                {
+                    Id = activity.Id,
+                    CreatedAt = date,
+                    Photo = photo
+                };
                 if (success) return response;
 
                 throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating post" });

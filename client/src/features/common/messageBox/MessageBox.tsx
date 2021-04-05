@@ -11,7 +11,6 @@ import {
 import styles from "./MessageBox.module.scss";
 import Preview from "./components/preview/Preview";
 import Content from "./components/content/Content";
-import { v4 as uuid } from "uuid";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 
@@ -40,9 +39,8 @@ const MessageBox = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const id = uuid();
-    createActivity({ id, content: text, file: file[0] || null })
-      .then((photo) => {
+    createActivity({ content: text, file: file[0] || null })
+      .then(() => {
         setFile([]);
         setText("");
       })

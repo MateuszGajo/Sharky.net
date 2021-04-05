@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Card,
+  Image,
+  Feed,
+  Container,
+  Icon,
+  Form,
+  Button,
+} from "semantic-ui-react";
 import cx from "classnames";
 import { Activity, ActivityMap } from "~root/src/app/models/activity";
 import ActivityDownbar from "../activitesDownbar/ActivityDownbar";
@@ -18,6 +26,10 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const [numberOfComments, setNumberOfComments] = useState<number>(
     item.comments.size
   );
+  const [isEditting, setStatusOfEditting] = useState(true);
+  const [content, setContent] = useState("");
+
+  const editTextRef = useRef<HTMLHeadingElement>(null);
 
   const handleLikeClick = () => {
     likeHandle(isLiked, item.id).then(() => {
@@ -30,6 +42,23 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
       }
     });
   };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(content);
+  };
+
+  const handleChange = (e) => {
+    setContent(e.target.outerText);
+  };
+  useEffect(() => {
+    if (isEditting)
+      editTextRef.current?.addEventListener("input", handleChange);
+
+    return () => {
+      editTextRef.current?.removeEventListener("input", handleChange);
+    };
+  }, [isEditting]);
 
   return (
     <Container className={styles.container}>
@@ -54,47 +83,82 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
               </Feed.Event>
             </Feed>
             <div className={styles.optionsContainer}>
-              <ActivityDropdown onClick={() => {}} />
+              <ActivityDropdown onClick={() => {}} author={item.user} />
             </div>
           </Container>
         </Card.Content>
-        <Card.Content className={styles.content}>
-          <Card.Description className={styles.description}>
-            <span>{item.content}</span>
-          </Card.Description>
-          <Container>
-            {item.photo && (
-              <Image src={item.photo.url} className={styles.photo} />
-            )}
-          </Container>
-        </Card.Content>
-        <Card.Content extra>
-          <Container className={styles.toolBar}>
-            <a className={styles.like} onClick={handleLikeClick}>
-              <Icon
-                name="like"
-                className={cx(styles.icon, {
-                  [styles.likeIconActive]: isLiked,
-                })}
-              />
-              <span className={styles.number}>{numberOfLikes}</span>
-            </a>
-            <a className={styles.comment}>
-              <Icon name="comment" className={styles.icon} />
-              {numberOfComments}
-            </a>
-            <a className={styles.reply}>
-              <Icon name="share" className={styles.icon} />
-              22
-            </a>
-          </Container>
+        {isEditting ? (
+          <Card.Content className={styles.content}>
+            <Card.Description className={styles.editContainer}>
+              <Form onSubmit={handleSubmit}>
+                <Form.Field>
+                  <div className={styles.editContent}>
+                    <span
+                      ref={editTextRef}
+                      role="textbox"
+                      contentEditable
+                      className={styles.textEdit}
+                    >
+                      {item.content}
+                    </span>
+                    <div className={styles.previewContainer}>
+                      <img
+                        className={styles.preview}
+                        src="https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
+                        alt=""
+                      />
+                    </div>
+                  </div>
+                  <div className={styles.editButtons}>
+                    <Button icon="plus" positive />
+                    <Button positive>Save</Button>
+                  </div>
+                </Form.Field>
+              </Form>
+            </Card.Description>
+          </Card.Content>
+        ) : (
+          <>
+            <Card.Content className={styles.content}>
+              <Card.Description className={styles.description}>
+                <textarea>aa</textarea>
+                <span>{item.content}</span>
+              </Card.Description>
+              <Container>
+                {item.photo && (
+                  <Image src={item.photo.url} className={styles.photo} />
+                )}
+              </Container>
+            </Card.Content>
+            <Card.Content extra>
+              <Container className={styles.toolBar}>
+                <a className={styles.like} onClick={handleLikeClick}>
+                  <Icon
+                    name="like"
+                    className={cx(styles.icon, {
+                      [styles.likeIconActive]: isLiked,
+                    })}
+                  />
+                  <span className={styles.number}>{numberOfLikes}</span>
+                </a>
+                <a className={styles.comment}>
+                  <Icon name="comment" className={styles.icon} />
+                  {numberOfComments}
+                </a>
+                <a className={styles.reply}>
+                  <Icon name="share" className={styles.icon} />
+                  22
+                </a>
+              </Container>
 
-          <ActivityDownbar
-            postId={item.id}
-            comments={item.comments}
-            user={item.user}
-          />
-        </Card.Content>
+              <ActivityDownbar
+                postId={item.id}
+                comments={item.comments}
+                user={item.user}
+              />
+            </Card.Content>
+          </>
+        )}
       </Card>
     </Container>
   );

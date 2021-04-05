@@ -188,12 +188,6 @@ export const verifyJWT = (token: string) => {
   });
 };
 
-export const verifyJWTSyn = (token: string) => {
-  jwt.verify(token, "shhhhh", function (err, decoded) {
-    return decoded;
-  });
-};
-
 export const isLoggedIn = async (req: NextApiRequest) => {
   try {
     const resp = await verifyJWT(req.cookies["Token"]);

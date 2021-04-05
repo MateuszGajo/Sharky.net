@@ -1,7 +1,5 @@
 import {
-  Activity,
   ActivityFormValues,
-  CommentFormValues,
   CreateActResp,
   Comment,
   ActivityMap,
@@ -44,8 +42,9 @@ export default class AcitivtyStore {
     const user = this.root.commonStore.user;
     const activity: ActivityMap = {
       ...formValues,
+      id: resp.id,
       photo: resp.photo,
-      createdAt: resp.date,
+      createdAt: resp.createdAt,
       user: user,
       isLiked: false,
       comments: new Map<string, CommentMap>(),
@@ -87,36 +86,28 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  createComment = async (postId: string, formValues: CommentFormValues) => {
+  createComment = async (postId: string, content: string) => {
     try {
-      const response = await agent.Activities.createComment(postId, formValues);
+      const response = await agent.Activities.createComment(postId, content);
       const activity = this.activities.get(postId);
       if (activity) {
-        const comments = activity.comments;
         const user = this.root.commonStore.user;
         const comment = {
-          ...formValues,
-          createdAt: response.date,
+          content,
+          id: response.id,
+          createdAt: response.createdAt,
           author: user,
           likes: 0,
           replies: new Map<string, Reply>(),
         };
-        comments.set(activity.id, comment);
-
-        const newActivity = {
-          ...activity,
-          comments,
-        };
-        this.activities.set(activity.id, newActivity);
+        this.setComment(postId, comment);
       }
     } catch (eror) {}
   };
 
-  setComment = async (postId: string, commentId: string, content: string) => {
+  setComment = async (postId: string, comment: CommentMap) => {
     const activity = this.activities.get(postId);
-    const comment = activity?.comments.get(commentId);
     if (comment && activity) {
-      comment.content = content;
       activity.comments.set(comment.id, comment);
     }
   };
@@ -124,21 +115,39 @@ export default class AcitivtyStore {
   editComment = async (postId: string, commentId: string, content: string) => {
     try {
       await agent.Activities.editComment(postId, commentId, content);
-      this.setComment(postId, commentId, content);
+      const comment = this.activities.get(postId)?.comments.get(commentId);
+      if (comment) {
+        comment.content = content;
+        this.setComment(postId, comment);
+      }
     } catch (error) {}
   };
 
-  createReply = async (
-    postId: string,
-    commentId: string,
-    formValues: CommentFormValues
-  ) => {
+  createReply = async (postId: string, commentId: string, content: string) => {
     try {
       const response = await agent.Activities.createReply(
         postId,
         commentId,
-        formValues
+        content
       );
+      const user = this.root.commonStore.user;
+      var reply = {
+        id: response.id,
+        createdAt: response.createdAt,
+        content,
+        author: user,
+      };
+      this.setReply(postId, commentId, reply);
     } catch (err) {}
+  };
+
+  setReply = (postId: string, commentId: string, reply: Reply) => {
+    const activity = this.activities.get(postId);
+    const comments = activity?.comments;
+    const comment = comments?.get(commentId);
+    const replies = comment?.replies;
+    if (replies && comments && comment) {
+      replies.set(reply.id, reply);
+    }
   };
 }

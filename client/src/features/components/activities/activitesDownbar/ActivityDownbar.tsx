@@ -7,6 +7,7 @@ import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import { v4 as uuid } from "uuid";
 import { handleKeyDown } from "~root/src/app/utils/utils";
 import ActivityComment from "../activitiesComment/ActivityComment";
+import { observer } from "mobx-react";
 
 interface Props {
   postId: string;
@@ -27,9 +28,7 @@ const ActivityDownbar: React.FC<Props> = ({
   const commnetPlaceholder = t("activities.commentPlaceholder");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createComment(postId, { id: uuid(), content: comment }).then(() =>
-      setComment("")
-    );
+    createComment(postId, comment).then(() => setComment(""));
   };
 
   return (
@@ -70,4 +69,4 @@ const ActivityDownbar: React.FC<Props> = ({
   );
 };
 
-export default ActivityDownbar;
+export default observer(ActivityDownbar);

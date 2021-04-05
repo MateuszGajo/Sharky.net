@@ -7,8 +7,9 @@ import styles from "./ActivityComment.module.scss";
 import useTranslation from "next-translate/useTranslation";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import { v4 as uuid } from "uuid";
-import { handleKeyDown } from "~root/src/app/utils/utils";
+import { formatDate, handleKeyDown } from "~root/src/app/utils/utils";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
+import { observer } from "mobx-react-lite";
 
 interface Props {
   item: CommentMap;
@@ -16,20 +17,21 @@ interface Props {
 }
 
 const ActivityComment: React.FC<Props> = ({ item, postId }) => {
-  const [isReply, setStatusOfReply] = useState(false);
-  const [isEditting, setStatusOfEdit] = useState(false);
   const { t } = useTranslation("components");
 
+  const [isReply, setStatusOfReply] = useState(false);
+  const [isEditting, setStatusOfEdit] = useState(false);
   const [content, setContent] = useState("");
 
   const { createReply, editComment } = useActivityStore();
 
   const replyPlaceholder = t("activities.replyPlaceholder");
 
+  const date = formatDate(new Date(item.createdAt));
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    createReply(postId, item.id, { content, id: uuid() });
+    createReply(postId, item.id, content);
   };
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -88,7 +90,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
           <>
             <Comment.Author as="a"> Matt</Comment.Author>
             <Comment.Metadata>
-              <div>Today at 5:44</div>
+              <div>{date}</div>
             </Comment.Metadata>
             <Comment.Text>{item.content}</Comment.Text>
           </>
@@ -114,7 +116,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
             [styles.hidden]: isEditting,
           })}
         >
-          <ActivityDropdown onClick={handleDownbarClick} />
+          <ActivityDropdown onClick={handleDownbarClick} author={item.author} />
         </div>
       </Comment.Content>
       {isReply && (
@@ -142,12 +144,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
             </Item>
           </Item.Group>
           {Array.from(item.replies.values()).map((reply) => (
-            <ActivityReply
-              key={reply.id}
-              item={reply}
-              postId={postId}
-              commentId={item.id}
-            />
+            <ActivityReply key={reply.id} item={reply} />
           ))}
         </Comment.Group>
       )}
@@ -155,4 +152,4 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
   );
 };
 
-export default ActivityComment;
+export default observer(ActivityComment);

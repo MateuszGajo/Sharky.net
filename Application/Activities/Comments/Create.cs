@@ -15,11 +15,11 @@ namespace Application.Activities.Comments
         public class Response
         {
             public DateTime CreatedAt { get; set; }
+            public Guid Id { get; set; }
         }
         public class Command : IRequest<Response>
         {
             public Guid PostId { get; set; }
-            public Guid Id { get; set; }
             public string Content { get; set; }
         }
 
@@ -38,16 +38,15 @@ namespace Application.Activities.Comments
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 var post = await _context.Activities.FindAsync(request.PostId);
-
                 if (post == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Post doesn't exist" });
 
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FindAsync(userId);
-
                 if (user == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "User dosen't exist" });
 
                 DateTime date = DateTime.Now;
-                var commnet = new Comment
+
+                var comment = new Comment
                 {
                     Content = request.Content,
                     Author = user,
@@ -55,10 +54,11 @@ namespace Application.Activities.Comments
                     CreatedAt = date
                 };
 
-                post.Comments.Add(commnet);
+                post.Comments.Add(comment);
 
                 var result = await _context.SaveChangesAsync() > 0;
-                if (result) return new Response { CreatedAt = date };
+                var response = new Response { Id = comment.Id, CreatedAt = date };
+                if (result) return response;
 
                 throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating comment" });
             }

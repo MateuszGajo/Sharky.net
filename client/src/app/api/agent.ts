@@ -1,8 +1,8 @@
 import {
   Activity,
   ActivityFormValues,
-  CommentFormValues,
   CreateActResp,
+  CreateCommResp,
 } from "./../models/activity";
 import {
   SigninFormValues,
@@ -37,7 +37,6 @@ const Activities = {
     let formData = new FormData();
     formData.append("File", activity.file);
     formData.append("Content", activity.content);
-    formData.append("Id", activity.id);
     return axios
       .post<CreateActResp>("/activity/create", formData, {
         headers: { "Content-type": "multipart/form-data" },
@@ -47,16 +46,18 @@ const Activities = {
   get: () => requests.get<Activity[]>("/activity"),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
-  createComment: (id: string, comment: CommentFormValues) =>
-    requests.put<{ date: Date }>(`/activity/${id}/comment/create`, comment),
+  createComment: (id: string, content: string) =>
+    requests.put<CreateCommResp>(`/activity/${id}/comment/create`, {
+      content,
+    }),
   editComment: (postId: string, commentId: string, content: string) =>
     requests.put<void>(`/activity/${postId}/comment/${commentId}/edit`, {
       content,
     }),
-  createReply: (postId: string, commentId: string, reply: CommentFormValues) =>
-    requests.put<{ createdAt: Date }>(
+  createReply: (postId: string, commentId: string, content: string) =>
+    requests.put<CreateCommResp>(
       `/activity/${postId}/comment/${commentId}/reply/create`,
-      reply
+      { content }
     ),
 };
 

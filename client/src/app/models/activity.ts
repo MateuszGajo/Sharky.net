@@ -1,7 +1,6 @@
 import { User } from "./authentication";
 
 export interface ActivityFormValues {
-  id: string;
   content: string;
   file: Blob;
 }
@@ -40,18 +39,20 @@ export interface CommentMap extends Omit<Comment, "replies"> {
 export interface Reply {
   id: string;
   content: string;
+  createdAt: Date;
   author: User;
 }
 
 export interface CreateActResp {
+  id: string;
   photo: {
     id: string;
     url: string;
   };
-  date: Date;
+  createdAt: Date;
 }
 
-export interface CommentFormValues {
+export interface CreateCommResp {
+  createdAt: Date;
   id: string;
-  content: string;
 }

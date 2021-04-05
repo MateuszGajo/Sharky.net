@@ -2,6 +2,16 @@
   outline: none;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+.ui.form textarea:focus {
+  border-color: rgba(34, 36, 38, 0.15);
+}
+
 .ui.checkbox input:checked ~ .box:after,
 .ui.checkbox input:checked ~ label:after,
 .ui.checkbox input:checked:focus ~ label:after {

@@ -1,28 +1,32 @@
-import React, { useState } from "react";
-import { Comment, Input, Item } from "semantic-ui-react";
+import React from "react";
+import { Comment } from "semantic-ui-react";
 import styles from "./ActivityReply.module.scss";
 import { Reply } from "~root/src/app/models/activity";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
+import { formatDate } from "~root/src/app/utils/utils";
 
 interface Props {
   item: Reply;
-  postId: string;
-  commentId: string;
 }
 
-const ActivityReply: React.FC<Props> = ({ item, postId, commentId }) => {
+const ActivityReply: React.FC<Props> = ({ item }) => {
+  const { author, createdAt, content } = item;
+  const date = formatDate(new Date(createdAt));
+
   return (
     <Comment className={styles.item}>
       <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg" />
       <Comment.Content>
-        <Comment.Author as="a"> Matt</Comment.Author>
+        <Comment.Author as="a">
+          {author.firstName + " " + author.lastName}
+        </Comment.Author>
         <Comment.Metadata>
-          <div>Today at 5:44</div>
+          <div>{date}</div>
         </Comment.Metadata>
-        <Comment.Text>Wow wow wow</Comment.Text>
+        <Comment.Text>{content}</Comment.Text>
       </Comment.Content>
       <div className={styles.options}>
-        <ActivityDropdown onClick={() => {}} />
+        <ActivityDropdown onClick={() => {}} author={item.author} />
       </div>
     </Comment>
   );

@@ -49,8 +49,48 @@
     font-size: 0.93em;
   }
 
+  .editContainer {
+    margin: 0px 10px 10px 10px;
+  }
+
+  .textEdit {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: both;
+    min-height: 40px;
+    line-height: 20px;
+    resize: none;
+  }
+
+  .editButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
   .photo {
     width: 100%;
+  }
+
+  .editContent {
+    max-height: 40vh;
+    overflow-y: scroll;
+  }
+
+  .editContent::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  // .previewContainer {
+  // }
+
+  .preview {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-top: 15px;
+    overflow-y: scroll;
   }
 
   .like .icon {
