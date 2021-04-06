@@ -1,0 +1,58 @@
+:global(#app) {
+  .content {
+    overflow-y: auto;
+    height: 35vh;
+    max-height: 500px;
+    overflow-x: hidden;
+  }
+
+  .dropbox {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .field {
+    height: 100%;
+  }
+
+  .textarea {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: both;
+    min-height: 40px;
+    line-height: 20px;
+    resize: none;
+  }
+
+  .textareaOnly {
+    height: 100%;
+  }
+
+  .itemCenter {
+    display: flex;
+    justify-content: center;
+  }
+
+  .previewContainer {
+    position: relative;
+    display: inline-block;
+    border-radius: 5px;
+  }
+
+  .imgPreview {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+  }
+
+  .imgCancel {
+    position: absolute;
+    top: 0;
+    right: -2px;
+  }
+}

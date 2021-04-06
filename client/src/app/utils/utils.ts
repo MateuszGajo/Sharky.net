@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
 import { Token, User } from "../models/authentication";
+import React from "react";
 
 export const navItems = [
   {
@@ -206,6 +207,33 @@ export const isLoggedIn = async (req: NextApiRequest) => {
         permanent: false,
       },
     };
+  }
+};
+
+interface verifyPhotoProps {
+  setError: (err: string) => void;
+  setFile: (file: object[]) => void;
+  acceptedFiles: any;
+}
+
+export const verifyPhoto = ({
+  setError,
+  setFile,
+  acceptedFiles,
+}: verifyPhotoProps) => {
+  if (!acceptedFiles[0]) {
+    setError("You can only upload a picture");
+  } else if (acceptedFiles[0].size > 5242880) {
+    setError("You can't upload picture larger than 5mb");
+  } else {
+    setError("");
+    setFile(
+      acceptedFiles.map((file: object) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
   }
 };
 

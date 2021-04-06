@@ -1,5 +1,5 @@
 import React from "react";
-import MessageBox from "~common/messageBox/MessageBox";
+import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 import { isLoggedIn } from "~utils/utils";
 import HomeLayout from "~root/src/features/layout/homeLayout/HomeLayout";
 import ActivitiesList from "~components/activities/activitiesList/ActivitiesList";
@@ -8,7 +8,7 @@ const home = () => {
   return (
     <section>
       <HomeLayout sidebar>
-        <MessageBox />
+        <MessageBoxItem />
         <ActivitiesList />
       </HomeLayout>
     </section>
