@@ -8,9 +8,10 @@ import { formatDate } from "~root/src/app/utils/utils";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
+import agent from "~root/src/app/api/agent";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
-  const { likeHandle } = useActivityStore();
+  const { likeHandle, deleteActivity } = useActivityStore();
 
   const date = formatDate(new Date(item.createdAt));
 
@@ -20,9 +21,6 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
     item.comments.size
   );
   const [isEditting, setStatusOfEdit] = useState(false);
-  const [content, setContent] = useState("");
-
-  const editTextRef = useRef<HTMLHeadingElement>(null);
 
   const handleLikeClick = () => {
     likeHandle(isLiked, item.id).then(() => {
@@ -36,37 +34,29 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
   const handleDownbarClick = (type: string) => {
     switch (type) {
       case "edit":
         setStatusOfEdit(true);
         break;
+      case "delete":
+        deleteActivity(item.id);
+        break;
+      case "hide":
+        console.log("hide");
+        agent.Activities.hide(item.id);
+        break;
     }
   };
-
-  const handleChange = (e) => {
-    setContent(e.target.outerText);
-  };
-  useEffect(() => {
-    if (isEditting)
-      editTextRef.current?.addEventListener("input", handleChange);
-
-    return () => {
-      editTextRef.current?.removeEventListener("input", handleChange);
-    };
-  }, [isEditting]);
 
   return (
     <>
       {isEditting ? (
         <MessageBoxItem
-          isEdit
           content={item.content}
           photoUrl={item.photo?.url}
+          setStatusOfEdit={setStatusOfEdit}
+          postId={item.id}
         />
       ) : (
         <Container className={styles.container}>

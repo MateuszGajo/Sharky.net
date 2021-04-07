@@ -21,22 +21,23 @@ import { verifyPhoto } from "~root/src/app/utils/utils";
 interface Props {
   content?: string;
   photoUrl?: string;
-  isEdit?: boolean;
+  setStatusOfEdit?: (status: boolean) => void;
+  postId?: string;
 }
 
 const MessageBoxItem: React.FC<Props> = ({
   content = "",
   photoUrl,
-  isEdit = false,
+  setStatusOfEdit: isEdit,
+  postId,
 }) => {
-  const { createActivity, isSubmitting } = useActivityStore();
+  const { createActivity, isSubmitting, editActivity } = useActivityStore();
 
   const initialFileState = photoUrl ? [{ preview: photoUrl }] : [];
-
   const [file, setFile] = useState<any[]>(initialFileState);
-  const [text, setText] = useState(content);
+  const [text, setText] = useState(content || "");
   const [error, setError] = useState("");
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(isEdit ? true : false);
 
   const onDrop = useCallback((acceptedFiles) => {
     verifyPhoto({ setFile, setError, acceptedFiles });
@@ -46,15 +47,33 @@ const MessageBoxItem: React.FC<Props> = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createActivity({ content: text, file: file[0] || null })
-      .then(() => {
-        setOpen(false);
-      })
-      .catch((err) => setError(err));
+    if (isEdit) {
+      const photo = !file[0]
+        ? null
+        : file[0].preview == photoUrl
+        ? null
+        : file[0];
+      console.log(photo);
+      editActivity({ content: text, file: photo }, postId!);
+      isEdit(false);
+    } else {
+      createActivity({ content: text, file: file[0] || null })
+        .then(() => {
+          setOpen(false);
+        })
+        .catch((err) => setError(err));
+    }
+  };
+
+  const closeModal = () => {
+    setOpen(false);
+    if (isEdit) {
+      isEdit(false);
+    }
   };
   return (
     <Modal
-      onClose={() => setOpen(false)}
+      onClose={closeModal}
       onOpen={() => setOpen(true)}
       open={open}
       className={styles.modalContainer}
@@ -105,8 +124,6 @@ const MessageBoxItem: React.FC<Props> = ({
               <Button positive icon="plus" type="button" />
               <input {...getInputProps()} accept="image/*" />
             </span>
-            {console.log(!text)}
-            {console.log(!file.length)}
             <Button
               content={isEdit ? "save" : "send"}
               positive
@@ -117,7 +134,7 @@ const MessageBoxItem: React.FC<Props> = ({
           </Modal.Actions>
         </Segment>
       </Form>
-      <div className={styles.iconContainer} onClick={() => setOpen(false)}>
+      <div className={styles.iconContainer} onClick={closeModal}>
         <Icon name="close" className={styles.closeIcon} />
       </div>
     </Modal>

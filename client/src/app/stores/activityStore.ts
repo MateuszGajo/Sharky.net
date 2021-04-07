@@ -38,6 +38,29 @@ export default class AcitivtyStore {
     }
   };
 
+  editActivity = async (editedActivity: ActivityFormValues, postId: string) => {
+    this.isSubmitting = true;
+    try {
+      const resp = await agent.Activities.edit(editedActivity, postId);
+      const activity = this.activities.get(postId);
+      if (activity) {
+        const newActivity = {
+          ...activity,
+          photo: resp.photo ? resp.photo : activity?.photo,
+          content: editedActivity.content,
+        };
+        this.activities.set(postId, newActivity);
+      }
+    } catch (error) {}
+  };
+
+  deleteActivity = async (id: string) => {
+    try {
+      await agent.Activities.delete(id);
+      this.activities.delete(id);
+    } catch (error) {}
+  };
+
   setActivity = (formValues: ActivityFormValues, resp: CreateActResp) => {
     const user = this.root.commonStore.user;
     const activity: ActivityMap = {

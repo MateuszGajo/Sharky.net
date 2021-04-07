@@ -15,9 +15,14 @@ namespace Persistence
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reply> Replies { get; set; }
+        public DbSet<HiddenActivity> HiddenActivites { get; set; }
+        public DbSet<BlockedUser> BlockedUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<HiddenActivity>().HasKey(p => p.UserId);
+
+            modelBuilder.Entity<BlockedUser>().HasKey(p => p.UserId);
             modelBuilder.Entity<Activity>()
                 .HasOne(p => p.User)
                 .WithMany(b => b.Activities);

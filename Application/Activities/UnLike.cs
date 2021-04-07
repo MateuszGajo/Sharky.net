@@ -15,7 +15,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public Guid PostId { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -30,15 +30,16 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var post = await _context.Activities.Include(x => x.Likes).FirstOrDefaultAsync(x => x.Id == request.PostId);
+                var post = await _context.Activities.Include(x => x.Likes).FirstOrDefaultAsync(x => x.Id == request.Id);
                 if (post == null) throw new RestException(HttpStatusCode.BadRequest, new { Error = "Post doesn't exist" });
 
                 var userId = _userAccessor.GetCurrentId();
 
-                var like = post.Likes.FirstOrDefault( x => x.UserId == userId);
-                
-                if(like == null){
-                     throw new RestException(HttpStatusCode.BadRequest, new { Error = "Activit isn't liked" });
+                var like = post.Likes.FirstOrDefault(x => x.UserId == userId);
+
+                if (like == null)
+                {
+                    throw new RestException(HttpStatusCode.BadRequest, new { Error = "Activit isn't liked" });
                 }
 
                 post.Likes.Remove(like);

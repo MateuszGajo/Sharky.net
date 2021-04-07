@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Application.Interface;
 using Application.Photos;
 using CloudinaryDotNet;
@@ -45,6 +46,14 @@ namespace Infrastructure.Photos
                 PublicId = uploadResult.PublicId,
                 Url = uploadResult.SecureUrl.AbsoluteUri
             };
+        }
+
+        public async Task<string> DeletePhoto(string publicId)
+        {
+            var deleteParams = new DeletionParams(publicId);
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+
+            return result.Result == "ok" ? result.Result : null;
         }
     }
 }

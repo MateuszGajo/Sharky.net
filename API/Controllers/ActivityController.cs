@@ -39,13 +39,34 @@ namespace API.Controllers
         [HttpPut("{id}/like")]
         public async Task<ActionResult<Unit>> Like(Guid id)
         {
-            return await _mediator.Send(new Application.Activities.Like.Command { PostId = id });
+            return await _mediator.Send(new Application.Activities.Like.Command { Id = id });
         }
 
         [HttpPut("{id}/unlike")]
         public async Task<ActionResult<Unit>> UnLike(Guid id)
         {
-            return await _mediator.Send(new Application.Activities.UnLike.Command { PostId = id });
+            return await _mediator.Send(new Application.Activities.UnLike.Command { Id = id });
+        }
+
+        [HttpPut("{id}/edit")]
+        public async Task<ActionResult<Application.Activities.Edit.Response>> Edit([FromForm] Edit.Command command, Guid id)
+        {
+            command.Id = id;
+            return await _mediator.Send(command);
+        }
+
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<Unit>> Delete(Guid id)
+        {
+            return await _mediator.Send(new Delete.Command { Id = id });
+        }
+
+        [HttpPut("{id}/hide")]
+        public async Task<ActionResult<Unit>> Hide(Guid id)
+        {
+            System.Console.WriteLine("hide");
+            return await _mediator.Send(new Hide.Command { Id = id });
         }
 
         [HttpPut("{postId}/comment/create")]

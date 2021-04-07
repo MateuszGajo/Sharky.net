@@ -34,12 +34,24 @@ const ActivityDropdown: React.FC<Props> = ({ onClick, author }) => {
               text={editText}
               onClick={() => onClick("edit")}
             ></Dropdown.Item>
-            <Dropdown.Item icon="remove" text={removeText}></Dropdown.Item>
+            <Dropdown.Item
+              icon="remove"
+              text={removeText}
+              onClick={() => onClick("delete")}
+            ></Dropdown.Item>
           </>
         ) : (
           <>
-            <Dropdown.Item icon="hide" text={hideText}></Dropdown.Item>
-            <Dropdown.Item icon="ban" text={blockText}></Dropdown.Item>
+            <Dropdown.Item
+              icon="hide"
+              text={hideText}
+              onClick={() => onClick("hide")}
+            ></Dropdown.Item>
+            <Dropdown.Item
+              icon="ban"
+              text={blockText}
+              onClick={() => onClick("block")}
+            ></Dropdown.Item>
           </>
         )}
       </Dropdown.Menu>

@@ -23,8 +23,6 @@ namespace Application.Activities.Comments
             public string Content { get; set; }
         }
 
-
-
         public class Handler : IRequestHandler<Command, Response>
         {
             private readonly DataBaseContext _context;

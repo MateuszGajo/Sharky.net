@@ -15,6 +15,16 @@ axios.defaults.withCredentials = true;
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
+const sleep = (delay: number) =>
+  new Promise((resolve) => {
+    setTimeout(resolve, delay);
+  });
+
+axios.interceptors.response.use(async (response) => {
+  await sleep(1000);
+  return response;
+});
+
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
   post: <T>(url: string, body: {}) =>
@@ -43,7 +53,24 @@ const Activities = {
       })
       .then(responseBody);
   },
+  edit: (activity: ActivityFormValues, postId: string) => {
+    console.log(activity.content);
+    let formData = new FormData();
+    formData.append("File", activity.file);
+    formData.append("Content", activity.content);
+    return axios
+      .put<{ photo: { url: string; id: string } }>(
+        `/activity/${postId}/edit`,
+        formData,
+        {
+          headers: { "Content-type": "multipart/form-data" },
+        }
+      )
+      .then(responseBody);
+  },
+  delete: (id: string) => requests.delete<void>(`/activity/${id}`),
   get: () => requests.get<Activity[]>("/activity"),
+  hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
   createComment: (id: string, content: string) =>

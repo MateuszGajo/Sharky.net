@@ -13,7 +13,7 @@ namespace Application.Activities
     {
         public class Command : IRequest
         {
-            public Guid PostId { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -28,13 +28,14 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var post = await _context.Activities.FindAsync(request.PostId);
+                var post = await _context.Activities.FindAsync(request.Id);
 
                 if (post == null) throw new RestException(HttpStatusCode.BadRequest, new { Error = "Post doesn't exist" });
 
                 var userId = _userAccessor.GetCurrentId();
 
-                var like = new Domain.Like{
+                var like = new Domain.Like
+                {
                     UserId = userId,
                 };
 
