@@ -74,18 +74,24 @@ const Activities = {
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
   createComment: (id: string, content: string) =>
-    requests.put<CreateCommResp>(`/activity/${id}/comment/create`, {
+    requests.put<CreateCommResp>(`comment/create`, {
       content,
+      postId: id,
     }),
-  editComment: (postId: string, commentId: string, content: string) =>
-    requests.put<void>(`/activity/${postId}/comment/${commentId}/edit`, {
+  editComment: (commentId: string, content: string) =>
+    requests.put<void>(`comment/${commentId}/edit`, {
       content,
     }),
   createReply: (postId: string, commentId: string, content: string) =>
-    requests.put<CreateCommResp>(
-      `/activity/${postId}/comment/${commentId}/reply/create`,
-      { content }
-    ),
+    requests.post<CreateCommResp>(`reply/create`, {
+      content,
+      postId,
+      commentId,
+    }),
 };
 
-export default { Account, Activities };
+const User = {
+  block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
+};
+
+export default { Account, Activities, User };

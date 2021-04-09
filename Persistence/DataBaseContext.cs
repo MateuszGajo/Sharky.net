@@ -20,12 +20,26 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<HiddenActivity>().HasKey(p => p.UserId);
+            modelBuilder.Entity<HiddenActivity>()
+                 .HasOne(p => p.User)
+                 .WithMany(b => b.HiddenActivities);
 
-            modelBuilder.Entity<BlockedUser>().HasKey(p => p.UserId);
+            modelBuilder.Entity<HiddenComment>()
+                .HasOne(u => u.User)
+                .WithMany(h => h.HiddenComments);
+
+            modelBuilder.Entity<HiddenReply>()
+                .HasOne(u => u.User)
+                .WithMany(h => h.HiddenReplies);
+
+            modelBuilder.Entity<BlockedUser>()
+                .HasOne(u => u.User)
+                .WithMany(b => b.BlockedUsers);
+
             modelBuilder.Entity<Activity>()
                 .HasOne(p => p.User)
                 .WithMany(b => b.Activities);
+
 
             modelBuilder.Entity<Comment>()
                 .HasOne(p => p.Activity)

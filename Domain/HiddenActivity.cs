@@ -5,7 +5,9 @@ namespace Domain
 {
     public class HiddenActivity
     {
-        public String UserId { get; set; }
-        public ICollection<Activity> Activities { get; set; }
+        public Guid Id { get; set; }
+        public User User { get; set; }
+
+        public Activity Activity { get; set; }
     }
 }

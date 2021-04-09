@@ -61,6 +61,13 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
+  hideActivity = async (id: string) => {
+    try {
+      await agent.Activities.hide(id);
+      this.activities.delete(id);
+    } catch (error) {}
+  };
+
   setActivity = (formValues: ActivityFormValues, resp: CreateActResp) => {
     const user = this.root.commonStore.user;
     const activity: ActivityMap = {
@@ -137,7 +144,7 @@ export default class AcitivtyStore {
 
   editComment = async (postId: string, commentId: string, content: string) => {
     try {
-      await agent.Activities.editComment(postId, commentId, content);
+      await agent.Activities.editComment(commentId, content);
       const comment = this.activities.get(postId)?.comments.get(commentId);
       if (comment) {
         comment.content = content;

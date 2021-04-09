@@ -1,19 +1,17 @@
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Application.Interface;
+using Domain;
 using MediatR;
 using Persistence;
-using Microsoft.EntityFrameworkCore;
-using Application.Errors;
-using System.Net;
-using Domain;
 
-namespace Application.Activities.Comments.Replies
+namespace Application.Comments
 {
     public class Create
     {
-
         public class Response
         {
             public DateTime CreatedAt { get; set; }
@@ -22,7 +20,6 @@ namespace Application.Activities.Comments.Replies
         public class Command : IRequest<Response>
         {
             public Guid PostId { get; set; }
-            public Guid CommentId { get; set; }
             public string Content { get; set; }
         }
 
@@ -38,40 +35,30 @@ namespace Application.Activities.Comments.Replies
 
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
-
-                var comment = await _context.Comments.FindAsync(request.CommentId);
-                if (comment == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = "comment doesn't exist" });
+                var post = await _context.Activities.FindAsync(request.PostId);
+                if (post == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Post doesn't exist" });
 
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = "user doesn't exist" });
+                if (user == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "User dosen't exist" });
 
                 DateTime date = DateTime.Now;
 
-                var reply = new Reply
+                var comment = new Comment
                 {
                     Content = request.Content,
-                    CreatedAt = date,
                     Author = user,
-                    Comment = comment
+                    Activity = post,
+                    CreatedAt = date
                 };
 
-
-                comment.Replies.Add(reply);
-
+                post.Comments.Add(comment);
 
                 var result = await _context.SaveChangesAsync() > 0;
-                var response = new Response
-                {
-                    CreatedAt = date,
-                    Id = reply.Id
-
-                };
+                var response = new Response { Id = comment.Id, CreatedAt = date };
                 if (result) return response;
 
-                throw new RestException(HttpStatusCode.BadGateway, new { Error = "Problem creating reply" });
+                throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating comment" });
             }
         }
     }

@@ -8,13 +8,13 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Activities.Comments
+namespace Application.Comments
 {
     public class Edit
     {
         public class Command : IRequest
         {
-            public Guid CommentId { get; set; }
+            public Guid Id { get; set; }
             public string Content { get; set; }
         }
 
@@ -32,7 +32,7 @@ namespace Application.Activities.Comments
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var comment = await _context.Comments.FindAsync(request.CommentId);
+                var comment = await _context.Comments.FindAsync(request.Id);
                 if (comment == null)
                     throw new RestException(HttpStatusCode.NotFound, new { Error = "Comment doesn't exist" });
 

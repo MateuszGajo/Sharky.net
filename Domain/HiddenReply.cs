@@ -2,10 +2,10 @@ using System;
 
 namespace Domain
 {
-    public class BlockedUser
+    public class HiddenReply
     {
         public Guid Id { get; set; }
         public User User { get; set; }
-        public User Blocked { get; set; }
+        public Reply Reply { get; set; }
     }
 }

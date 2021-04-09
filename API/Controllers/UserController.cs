@@ -47,12 +47,11 @@ namespace API.Controllers
             _httpClient = new HttpClient();
         }
 
-        [HttpGet("auth")]
-        public ActionResult Auth()
+        [HttpPut("{id}/block")]
+        public async Task<ActionResult<Unit>> Block(string id)
         {
-            return Ok();
+            return await _mediator.Send(new Block.Command { UserId = id });
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Details(string id)
         {

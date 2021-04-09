@@ -1,6 +1,7 @@
 import CommonStore from "./commonStore";
 import ActivityStore from "./activityStore";
 import AuthenticationStore from "./authenticationStore";
+import UserStore from "./userStore";
 
 export type RootStoreHydration = {
   user?: {
@@ -14,10 +15,12 @@ export class RootStore {
   commonStore: CommonStore;
   activityStore: ActivityStore;
   authenticationStore: AuthenticationStore;
+  userStore: UserStore;
   constructor() {
     this.commonStore = new CommonStore(this);
     this.activityStore = new ActivityStore(this);
     this.authenticationStore = new AuthenticationStore(this);
+    this.userStore = new UserStore(this);
   }
 
   hydrate(data: RootStoreHydration) {

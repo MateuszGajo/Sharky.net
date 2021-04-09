@@ -31,7 +31,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createReply(postId, item.id, content);
+    createReply(postId, item.id, content).then(() => setContent(""));
   };
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {

@@ -31,6 +31,11 @@ export const useAuthenticationStore = () => {
   return authenticationStore;
 };
 
+export const useUserStore = () => {
+  const { userStore } = useRootStore();
+  return userStore;
+};
+
 export function RootStoreProvider({
   children,
   hydrationData,

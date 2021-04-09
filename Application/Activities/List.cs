@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Errors;
 using Application.Interface;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -32,16 +34,30 @@ namespace Application.Activities
             public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
-                var activities = await _context.HiddenActivites.Include(x => x.Activities).FirstOrDefaultAsync(x => x.UserId == userId);
-                var ids = activities != null ? activities.Activities.Select(x => x.Id) : Enumerable.Empty<Guid>();
+
+                User user = await _context.Users
+                .Include(x => x.BlockedUsers)
+                    .ThenInclude(x => x.Blocked)
+                        .ThenInclude(x => x.Activities)
+                .Include(x => x.HiddenActivities)
+                    .ThenInclude(x => x.Activity).FirstOrDefaultAsync(x => x.Id == userId);
+                if (user == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = "User doesn't exist" });
+
+                ICollection<BlockedUser> blockedUsers = user.BlockedUsers;
+                var excludedActivities = blockedUsers.SelectMany(x => x.Blocked.Activities.Select(x => x.Id)).ToList();
+
+                var hiddenActivity = user.HiddenActivities.Count != 0 ? user.HiddenActivities.Select(x => x.Activity.Id).ToList() : Enumerable.Empty<Guid>();
+                excludedActivities.AddRange(hiddenActivity);
+
+                //ukrywanie komentarzy?
 
                 return await _context.Activities
                                 .Include(x => x.User)
                                 .Include(x => x.Comments)
                                     .ThenInclude(x => x.Replies)
-                                .Where(r => !ids.Contains(r.Id))
+                                 .Where(r => !excludedActivities.Contains(r.Id))
                                 .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = _userAccessor.GetCurrentId() })
-                                .AsQueryable()
                                 .ToListAsync();
             }
         }

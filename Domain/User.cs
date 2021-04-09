@@ -11,5 +11,9 @@ namespace Domain
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public ICollection<Activity> Activities { get; set; }
+        public ICollection<HiddenActivity> HiddenActivities { get; set; } = new List<HiddenActivity>();
+        public ICollection<HiddenComment> HiddenComments { get; set; } = new List<HiddenComment>();
+        public ICollection<HiddenReply> HiddenReplies { get; set; } = new List<HiddenReply>();
+        public ICollection<BlockedUser> BlockedUsers { get; set; } = new List<BlockedUser>();
     }
 }

@@ -6,12 +6,16 @@ import ActivityDownbar from "../activitesDownbar/ActivityDownbar";
 import styles from "./ActivityItem.module.scss";
 import { formatDate } from "~root/src/app/utils/utils";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
-import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
+import {
+  useActivityStore,
+  useUserStore,
+} from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 import agent from "~root/src/app/api/agent";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
-  const { likeHandle, deleteActivity } = useActivityStore();
+  const { likeHandle, deleteActivity, hideActivity } = useActivityStore();
+  const { blockUser } = useUserStore();
 
   const date = formatDate(new Date(item.createdAt));
 
@@ -43,8 +47,10 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
         deleteActivity(item.id);
         break;
       case "hide":
-        console.log("hide");
-        agent.Activities.hide(item.id);
+        hideActivity(item.id);
+        break;
+      case "block":
+        blockUser(item.user.id);
         break;
     }
   };

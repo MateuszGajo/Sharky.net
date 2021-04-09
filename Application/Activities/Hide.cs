@@ -32,25 +32,22 @@ namespace Application.Activities
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 string userId = _usserAccessor.GetCurrentId();
+                User user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { Errors = "User doesn't exist" });
+
                 Activity activity = await _context.Activities.FindAsync(request.Id);
                 if (activity == null)
                     throw new RestException(HttpStatusCode.NotFound, new { Error = "Activity doesn't exist" });
 
-                HiddenActivity hiddenActivity = await _context.HiddenActivites.Include(x => x.Activities).FirstOrDefaultAsync(x => x.UserId == userId);
-                if (hiddenActivity == null)
+
+                HiddenActivity hiddenActivity = new HiddenActivity
                 {
-                    hiddenActivity = new HiddenActivity
-                    {
-                        UserId = userId,
-                        Activities = new List<Activity>()
-                    };
-                    hiddenActivity.Activities.Add(activity);
-                    _context.HiddenActivites.Add(hiddenActivity);
-                }
-                else
-                {
-                    hiddenActivity.Activities.Add(activity);
-                }
+                    User = user,
+                    Activity = activity
+                };
+
+                user.HiddenActivities.Add(hiddenActivity);
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;
