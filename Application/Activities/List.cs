@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,12 +36,14 @@ namespace Application.Activities
             {
                 string userId = _userAccessor.GetCurrentId();
 
-                User user = await _context.Users
+                User user = await _context.Users.AsNoTracking()
                 .Include(x => x.BlockedUsers)
                     .ThenInclude(x => x.Blocked)
                         .ThenInclude(x => x.Activities)
                 .Include(x => x.HiddenActivities)
-                    .ThenInclude(x => x.Activity).FirstOrDefaultAsync(x => x.Id == userId);
+                    .ThenInclude(x => x.Activity)
+                .FirstOrDefaultAsync(x => x.Id == userId);
+
                 if (user == null)
                     throw new RestException(HttpStatusCode.NotFound, new { Error = "User doesn't exist" });
 
@@ -48,18 +51,17 @@ namespace Application.Activities
                 var excludedActivities = blockedUsers.SelectMany(x => x.Blocked.Activities.Select(x => x.Id)).ToList();
 
                 var hiddenActivity = user.HiddenActivities.Count != 0 ? user.HiddenActivities.Select(x => x.Activity.Id).ToList() : Enumerable.Empty<Guid>();
-                excludedActivities.AddRange(hiddenActivity);
 
-                //ukrywanie komentarzy?
-
-                return await _context.Activities
-                                .Include(x => x.User)
-                                .Include(x => x.Comments)
-                                    .ThenInclude(x => x.Replies)
-                                 .Where(r => !excludedActivities.Contains(r.Id))
-                                .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = _userAccessor.GetCurrentId() })
-                                .ToListAsync();
+                var activities = _context.Activities
+                  .AsSingleQuery()
+                  .Where(p => !excludedActivities.Contains(p.Id))
+                  .OrderByDescending(x => x.CreatedAt)
+                  .Take(10)
+                  .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider).ToList();
+                return activities;
             }
+
         }
+
     }
 }

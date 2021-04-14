@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Replies;
 using MediatR;
@@ -13,6 +15,12 @@ namespace API.Controllers
         public ReplyController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<ReplyDto>>> List(Guid commentId)
+        {
+            return await _mediator.Send(new List.Query { CommentId = commentId });
         }
 
         [HttpPost("create")]

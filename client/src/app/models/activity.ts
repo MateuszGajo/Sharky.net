@@ -17,6 +17,7 @@ export interface Activity {
   isLiked: boolean;
   likes: number;
   comments: [];
+  commentsCount: number;
 }
 
 export interface ActivityMap extends Omit<Activity, "comments"> {
@@ -29,7 +30,7 @@ export interface Comment {
   author: User;
   likes: number;
   createdAt: Date;
-  replies: Reply[];
+  replies: [];
 }
 
 export interface CommentMap extends Omit<Comment, "replies"> {

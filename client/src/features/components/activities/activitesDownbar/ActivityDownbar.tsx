@@ -1,24 +1,34 @@
 import React, { useState } from "react";
-import { Comment, Divider, Icon, Input, Item } from "semantic-ui-react";
+import {
+  Comment,
+  Container,
+  Divider,
+  Icon,
+  Input,
+  Item,
+  Segment,
+} from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { CommentMap as CommentInterface } from "~models/activity";
 import { User } from "~root/src/app/models/authentication";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
-import { v4 as uuid } from "uuid";
 import { handleKeyDown } from "~root/src/app/utils/utils";
 import ActivityComment from "../activitiesComment/ActivityComment";
 import { observer } from "mobx-react";
+import Loading from "~common/Loading/Loading";
 
 interface Props {
   postId: string;
   comments: Map<string, CommentInterface>;
   user: User;
+  isComments: boolean;
 }
 
 const ActivityDownbar: React.FC<Props> = ({
   postId,
   comments: initialComments,
   user,
+  isComments,
 }) => {
   const { t } = useTranslation("components");
   const { createComment } = useActivityStore();
@@ -55,15 +65,21 @@ const ActivityDownbar: React.FC<Props> = ({
           </Item.Content>
         </Item>
       </Item.Group>
-      {!!comments.size && (
+      {isComments && !comments.size ? (
         <>
-          <Divider />
-          <Comment.Group>
-            {Array.from(comments.values()).map((item) => (
-              <ActivityComment key={item.id} item={item} postId={postId} />
-            ))}
-          </Comment.Group>
+          <Segment basic loading></Segment>
         </>
+      ) : (
+        !!comments.size && (
+          <>
+            <Divider />
+            <Comment.Group>
+              {Array.from(comments.values()).map((item) => (
+                <ActivityComment key={item.id} item={item} postId={postId} />
+              ))}
+            </Comment.Group>
+          </>
+        )
       )}
     </>
   );

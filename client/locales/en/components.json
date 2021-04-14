@@ -16,10 +16,17 @@
     "replyPlaceholder": "Write a reply...",
     "header": {
       "settings": {
-        "edit": "Edit post",
-        "remove": "Remove post",
-        "hide": "Hide post",
-        "block": "Block user"
+        "activity": {
+          "edit": "Edit post",
+          "remove": "Remove post",
+          "hide": "Hide post",
+          "block": "Block user"
+        },
+        "comment": {
+          "edit": "Edit comment",
+          "remove": "Remove comment",
+          "hide": "Hide comment"
+        }
       }
     }
   }

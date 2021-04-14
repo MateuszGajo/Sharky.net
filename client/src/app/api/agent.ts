@@ -1,5 +1,6 @@
 import {
   Activity,
+  Comment,
   ActivityFormValues,
   CreateActResp,
   CreateCommResp,
@@ -73,16 +74,24 @@ const Activities = {
   hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
-  createComment: (id: string, content: string) =>
+};
+
+const Comments = {
+  get: (postId: string) => requests.get<Comment[]>(`/comment?PostId=${postId}`),
+  create: (id: string, content: string) =>
     requests.put<CreateCommResp>(`comment/create`, {
       content,
       postId: id,
     }),
-  editComment: (commentId: string, content: string) =>
-    requests.put<void>(`comment/${commentId}/edit`, {
+  edit: (id: string, content: string) =>
+    requests.put<void>(`comment/${id}/edit`, {
       content,
     }),
-  createReply: (postId: string, commentId: string, content: string) =>
+  hide: (id: string) => requests.put<void>(`comment/${id}/hide`, {}),
+};
+
+const Replies = {
+  create: (postId: string, commentId: string, content: string) =>
     requests.post<CreateCommResp>(`reply/create`, {
       content,
       postId,
@@ -94,4 +103,4 @@ const User = {
   block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
 };
 
-export default { Account, Activities, User };
+export default { Account, Activities, Comments, Replies, User };

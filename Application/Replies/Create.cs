@@ -58,9 +58,8 @@ namespace Application.Replies
                     Comment = comment
                 };
 
-
+                comment.RepliesCount += 1;
                 comment.Replies.Add(reply);
-
 
                 var result = await _context.SaveChangesAsync() > 0;
                 var response = new Response

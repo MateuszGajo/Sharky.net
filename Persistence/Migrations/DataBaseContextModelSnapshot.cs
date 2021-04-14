@@ -22,11 +22,17 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CommentsCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Content")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PhotoId")
                         .HasColumnType("TEXT");
@@ -81,6 +87,12 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("RepliesCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -213,6 +225,9 @@ namespace Persistence.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("LikesCount")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

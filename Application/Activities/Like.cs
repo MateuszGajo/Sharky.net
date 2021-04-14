@@ -40,6 +40,7 @@ namespace Application.Activities
                 };
 
                 post.Likes.Add(like);
+                post.LikesCount += 1;
 
                 var result = await _context.SaveChangesAsync() > 0;
 

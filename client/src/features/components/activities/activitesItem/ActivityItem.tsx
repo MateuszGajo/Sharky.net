@@ -14,7 +14,12 @@ import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 import agent from "~root/src/app/api/agent";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
-  const { likeHandle, deleteActivity, hideActivity } = useActivityStore();
+  const {
+    likeHandle,
+    deleteActivity,
+    hideActivity,
+    getComments,
+  } = useActivityStore();
   const { blockUser } = useUserStore();
 
   const date = formatDate(new Date(item.createdAt));
@@ -22,8 +27,9 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const [isLiked, setStatusOfLike] = useState(item.isLiked);
   const [numberOfLikes, setNumberOfLikes] = useState<number>(item.likes);
   const [numberOfComments, setNumberOfComments] = useState<number>(
-    item.comments.size
+    item.commentsCount
   );
+  const [isComments, setStatusOfComments] = useState(false);
   const [isEditting, setStatusOfEdit] = useState(false);
 
   const handleLikeClick = () => {
@@ -53,6 +59,11 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
         blockUser(item.user.id);
         break;
     }
+  };
+
+  const handleCommentIconClick = () => {
+    if (!isComments) getComments(item.id);
+    setStatusOfComments((prev) => !prev);
   };
 
   return (
@@ -90,6 +101,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                   <ActivityDropdown
                     onClick={handleDownbarClick}
                     author={item.user}
+                    isActivity
                   />
                 </div>
               </Container>
@@ -118,7 +130,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                   />
                   <span className={styles.number}>{numberOfLikes}</span>
                 </a>
-                <a className={styles.comment}>
+                <a className={styles.comment} onClick={handleCommentIconClick}>
                   <Icon name="comment" className={styles.icon} />
                   {numberOfComments}
                 </a>
@@ -128,11 +140,14 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                 </a>
               </Container>
 
-              <ActivityDownbar
-                postId={item.id}
-                comments={item.comments}
-                user={item.user}
-              />
+              {isComments && (
+                <ActivityDownbar
+                  postId={item.id}
+                  comments={item.comments}
+                  user={item.user}
+                  isComments={item.commentsCount > 0}
+                />
+              )}
             </Card.Content>
           </Card>
         </Container>

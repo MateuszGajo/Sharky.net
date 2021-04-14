@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class initialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -57,7 +57,9 @@ namespace Persistence.Migrations
                     UserId = table.Column<string>(type: "TEXT", nullable: true),
                     Content = table.Column<string>(type: "TEXT", nullable: true),
                     PhotoId = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    CommentsCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -109,7 +111,9 @@ namespace Persistence.Migrations
                     Content = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     AuthorId = table.Column<string>(type: "TEXT", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    RepliesCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -186,7 +190,8 @@ namespace Persistence.Migrations
                     Content = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CommentId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: true)
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -32,6 +32,28 @@ namespace Persistence
                     new Activity{Id = Guid.NewGuid(), User=new User {Email="ruslav1@ruslav1.pl",FirstName="Bob",LastName="smith", UserName="ruslavruslav1"},Content="ccc",Photo=null,CreatedAt=DateTime.Now.AddDays(-2)},
                     new Activity{Id = Guid.NewGuid(), User=new User {Email="ruslav1@ruslav1.pl",FirstName="Bob",LastName="smith", UserName="ruslavruslav1"},Content="ccc",Photo=null,CreatedAt=DateTime.Now.AddDays(-150)},
                 };
+                for (int i = 0; i < 2; i++)
+                {
+                    var activity = new Activity { Id = Guid.NewGuid(), User = new User { Email = "ruslav1@ruslav1.pl", FirstName = "Bob", LastName = "smith", UserName = "ruslavruslav1" }, Content = "ddd", Photo = null, CreatedAt = DateTime.Now };
+                    var comments = new List<Comment>();
+                    for (int j = 0; j < 100000; j++)
+                    {
+                        var comment = new Comment { Id = Guid.NewGuid(), Content = "lorem ipsu lorem ipsu lorem ipsu", Author = new User { Email = "ruslav1@ruslav1.pl", FirstName = "Bob", LastName = "smith", UserName = "ruslavruslav1" }, CreatedAt = DateTime.Now };
+                        activity.CommentsCount += 1;
+                        var replies = new List<Reply>();
+                        comments.Add(comment);
+                        for (int k = 0; k < 1; k++)
+                        {
+                            var reply = new Reply { Id = Guid.NewGuid(), Content = "lorem ipsu lorem ipsu lorem ipsu", Author = new User { Email = "ruslav1@ruslav1.pl", FirstName = "Bob", LastName = "smith", UserName = "ruslavruslav1" }, CreatedAt = DateTime.Now };
+                            replies.Add(reply);
+                            comment.RepliesCount += 1;
+                        }
+                        comment.Replies = replies;
+                    }
+                    activity.Comments = comments;
+                    Users.Add(activity);
+                }
+
 
                 context.AddRange(Users);
                 context.SaveChanges();

@@ -23,7 +23,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
   const [isEditting, setStatusOfEdit] = useState(false);
   const [content, setContent] = useState("");
 
-  const { createReply, editComment } = useActivityStore();
+  const { createReply, editComment, hideComment } = useActivityStore();
 
   const replyPlaceholder = t("activities.replyPlaceholder");
 
@@ -50,6 +50,11 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
       case "edit":
         setStatusOfEdit(true);
         setContent(item.content);
+        break;
+      case "hide":
+        hideComment(postId, item.id);
+        break;
+      case "delete":
         break;
     }
   };

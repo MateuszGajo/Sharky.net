@@ -7,17 +7,28 @@ import { useCommonStore } from "~root/src/app/providers/RootStoreProvider";
 interface Props {
   onClick: (type: string) => void;
   author: User;
+  isActivity?: boolean;
 }
 
-const ActivityDropdown: React.FC<Props> = ({ onClick, author }) => {
+const ActivityDropdown: React.FC<Props> = ({
+  onClick,
+  author,
+  isActivity = false,
+}) => {
   const { t } = useTranslate("components");
 
   const { user } = useCommonStore();
 
-  const editText = t("activities.header.settings.edit");
-  const removeText = t("activities.header.settings.remove");
-  const hideText = t("activities.header.settings.hide");
-  const blockText = t("activities.header.settings.block");
+  const editText = t(
+    `activities.header.settings.${isActivity ? "activity" : "comment"}.edit`
+  );
+  const removeText = t(
+    `activities.header.settings.${isActivity ? "activity" : "comment"}.remove`
+  );
+  const hideText = t(
+    `activities.header.settings.${isActivity ? "activity" : "comment"}.hide`
+  );
+  const blockText = t("activities.header.settings.activity.block");
 
   return (
     <Dropdown
@@ -47,11 +58,13 @@ const ActivityDropdown: React.FC<Props> = ({ onClick, author }) => {
               text={hideText}
               onClick={() => onClick("hide")}
             ></Dropdown.Item>
-            <Dropdown.Item
-              icon="ban"
-              text={blockText}
-              onClick={() => onClick("block")}
-            ></Dropdown.Item>
+            {isActivity && (
+              <Dropdown.Item
+                icon="ban"
+                text={blockText}
+                onClick={() => onClick("block")}
+              ></Dropdown.Item>
+            )}
           </>
         )}
       </Dropdown.Menu>

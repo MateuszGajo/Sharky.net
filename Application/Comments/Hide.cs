@@ -8,13 +8,13 @@ using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Users
+namespace Application.Comments
 {
-    public class Block
+    public class Hide
     {
         public class Command : IRequest
         {
-            public string UserId { get; set; }
+            public Guid Id { get; set; }
         }
 
         public class Handler : IRequestHandler<Command>
@@ -34,23 +34,22 @@ namespace Application.Users
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "User doesn't exist" });
 
-                User blockedUser = await _context.Users.FindAsync(request.UserId);
-                if (blockedUser == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = "User doesn't exist" });
+                Comment comment = await _context.Comments.FindAsync(request.Id);
+                if (comment == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = "Comment doesn't exist" });
 
-                BlockedUser block = new BlockedUser
+                HiddenComment hiddenComment = new HiddenComment
                 {
                     User = user,
-                    Blocked = blockedUser
+                    Comment = comment
                 };
 
-                user.BlockedUsers.Add(block);
+                user.HiddenComments.Add(hiddenComment);
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;
 
-                throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem blocking user" });
-
+                throw new RestException(HttpStatusCode.BadRequest, new { Errors = "Problem hidding comment" });
             }
         }
     }

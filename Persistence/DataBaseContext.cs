@@ -40,7 +40,6 @@ namespace Persistence
                 .HasOne(p => p.User)
                 .WithMany(b => b.Activities);
 
-
             modelBuilder.Entity<Comment>()
                 .HasOne(p => p.Activity)
                 .WithMany(b => b.Comments);

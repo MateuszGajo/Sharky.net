@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Comments;
 using MediatR;
@@ -16,10 +17,16 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<CommentDto>>> List(Guid PostId)
+        {
+            return await _mediator.Send(new List.Query { PostId = PostId });
+        }
+
         [HttpPut("{id}/hide")]
         public async Task<ActionResult<Unit>> Hide(Guid id)
         {
-            return Unit.Value;
+            return await _mediator.Send(new Hide.Command { Id = id });
         }
 
         [HttpPut("create")]

@@ -35,12 +35,12 @@ namespace Application.Comments
 
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
-                var post = await _context.Activities.FindAsync(request.PostId);
-                if (post == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Post doesn't exist" });
-
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FindAsync(userId);
-                if (user == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "User dosen't exist" });
+                if (user == null) throw new RestException(HttpStatusCode.Unauthorized, new { Error = "User dosen't exist" });
+
+                var activity = await _context.Activities.FindAsync(request.PostId);
+                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Post doesn't exist" });
 
                 DateTime date = DateTime.Now;
 
@@ -48,11 +48,12 @@ namespace Application.Comments
                 {
                     Content = request.Content,
                     Author = user,
-                    Activity = post,
+                    Activity = activity,
                     CreatedAt = date
                 };
 
-                post.Comments.Add(comment);
+                activity.CommentsCount += 1;
+                activity.Comments.Add(comment);
 
                 var result = await _context.SaveChangesAsync() > 0;
                 var response = new Response { Id = comment.Id, CreatedAt = date };
