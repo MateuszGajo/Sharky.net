@@ -4,6 +4,7 @@ import {
   ActivityFormValues,
   CreateActResp,
   CreateCommResp,
+  Reply,
 } from "./../models/activity";
 import {
   SigninFormValues,
@@ -54,14 +55,14 @@ const Activities = {
       })
       .then(responseBody);
   },
-  edit: (activity: ActivityFormValues, postId: string) => {
+  edit: (activity: ActivityFormValues, activityId: string) => {
     console.log(activity.content);
     let formData = new FormData();
     formData.append("File", activity.file);
     formData.append("Content", activity.content);
     return axios
       .put<{ photo: { url: string; id: string } }>(
-        `/activity/${postId}/edit`,
+        `/activity/${activityId}/edit`,
         formData,
         {
           headers: { "Content-type": "multipart/form-data" },
@@ -77,11 +78,12 @@ const Activities = {
 };
 
 const Comments = {
-  get: (postId: string) => requests.get<Comment[]>(`/comment?PostId=${postId}`),
+  get: (activityId: string) =>
+    requests.get<Comment[]>(`/comment?ActivityId=${activityId}`),
   create: (id: string, content: string) =>
     requests.put<CreateCommResp>(`comment/create`, {
       content,
-      postId: id,
+      activityId: id,
     }),
   edit: (id: string, content: string) =>
     requests.put<void>(`comment/${id}/edit`, {
@@ -91,12 +93,15 @@ const Comments = {
 };
 
 const Replies = {
-  create: (postId: string, commentId: string, content: string) =>
+  get: (commentId: string) =>
+    requests.get<Reply[]>(`/reply?CommentId=${commentId}`),
+  create: (commentId: string, content: string) =>
     requests.post<CreateCommResp>(`reply/create`, {
       content,
-      postId,
       commentId,
     }),
+  delete: (replyId: string) => requests.delete<void>(`/reply/${replyId}`),
+  hide: (replyId: string) => requests.put<void>(`/reply/${replyId}/hide`, {}),
 };
 
 const User = {

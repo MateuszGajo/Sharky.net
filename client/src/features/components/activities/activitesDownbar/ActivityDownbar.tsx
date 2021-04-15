@@ -18,27 +18,27 @@ import { observer } from "mobx-react";
 import Loading from "~common/Loading/Loading";
 
 interface Props {
-  postId: string;
+  activityId: string;
   comments: Map<string, CommentInterface>;
   user: User;
   isComments: boolean;
 }
 
 const ActivityDownbar: React.FC<Props> = ({
-  postId,
+  activityId,
   comments: initialComments,
   user,
   isComments,
 }) => {
   const { t } = useTranslation("components");
-  const { createComment } = useActivityStore();
+  const { createComment, isCommnetsLoading: isLoading } = useActivityStore();
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState(initialComments);
 
   const commnetPlaceholder = t("activities.commentPlaceholder");
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createComment(postId, comment).then(() => setComment(""));
+    createComment(activityId, comment).then(() => setComment(""));
   };
 
   return (
@@ -65,7 +65,7 @@ const ActivityDownbar: React.FC<Props> = ({
           </Item.Content>
         </Item>
       </Item.Group>
-      {isComments && !comments.size ? (
+      {isLoading ? (
         <>
           <Segment basic loading></Segment>
         </>
@@ -75,7 +75,11 @@ const ActivityDownbar: React.FC<Props> = ({
             <Divider />
             <Comment.Group>
               {Array.from(comments.values()).map((item) => (
-                <ActivityComment key={item.id} item={item} postId={postId} />
+                <ActivityComment
+                  key={item.id}
+                  item={item}
+                  activityId={activityId}
+                />
               ))}
             </Comment.Group>
           </>

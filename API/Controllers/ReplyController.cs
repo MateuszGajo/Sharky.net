@@ -23,10 +23,23 @@ namespace API.Controllers
             return await _mediator.Send(new List.Query { CommentId = commentId });
         }
 
+        [HttpDelete("{id}")]
+
+        public async Task<ActionResult<Unit>> Delete(Guid id)
+        {
+            return await _mediator.Send(new Delete.Command { Id = id });
+        }
+
         [HttpPost("create")]
         public async Task<ActionResult<Create.Response>> CreateReply(Create.Command command)
         {
             return await _mediator.Send(command);
+        }
+
+        [HttpPut("{id}/hide")]
+        public async Task<ActionResult<Unit>> hide(Guid id)
+        {
+            return await _mediator.Send(new Hide.Command { Id = id });
         }
     }
 }

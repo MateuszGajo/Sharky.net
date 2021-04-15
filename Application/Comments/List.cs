@@ -19,7 +19,7 @@ namespace Application.Comments
     {
         public class Query : IRequest<List<CommentDto>>
         {
-            public Guid PostId { get; set; }
+            public Guid ActivityId { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, List<CommentDto>>
@@ -49,7 +49,7 @@ namespace Application.Comments
                 var excludedComments = user.HiddenComments.Count() != 0 ? user.HiddenComments.Select(x => x.Comment.Id) : Enumerable.Empty<Guid>();
 
                 return await _context.Comments
-                .Where(x => x.Activity.Id == request.PostId && !excludedComments.Contains(x.Id))
+                .Where(x => x.Activity.Id == request.ActivityId && !excludedComments.Contains(x.Id))
                 .OrderByDescending(c => c.CreatedAt)
                 .Take(10)
                 .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)

@@ -21,7 +21,6 @@ namespace Application.Replies
         }
         public class Command : IRequest<Response>
         {
-            public Guid PostId { get; set; }
             public Guid CommentId { get; set; }
             public string Content { get; set; }
         }

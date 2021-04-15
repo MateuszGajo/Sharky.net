@@ -20,6 +20,8 @@ export default class AcitivtyStore {
   activities = new Map<string, ActivityMap>();
 
   isSubmitting = false;
+  isRepliesLoading = false;
+  isCommnetsLoading = false;
 
   get activitiesByDate() {
     return Array.from(this.activities.values()).sort((a, b) => {
@@ -38,18 +40,21 @@ export default class AcitivtyStore {
     }
   };
 
-  editActivity = async (editedActivity: ActivityFormValues, postId: string) => {
+  editActivity = async (
+    editedActivity: ActivityFormValues,
+    activityId: string
+  ) => {
     this.isSubmitting = true;
     try {
-      const resp = await agent.Activities.edit(editedActivity, postId);
-      const activity = this.activities.get(postId);
+      const resp = await agent.Activities.edit(editedActivity, activityId);
+      const activity = this.activities.get(activityId);
       if (activity) {
         const newActivity = {
           ...activity,
           photo: resp.photo ? resp.photo : activity?.photo,
           content: editedActivity.content,
         };
-        this.activities.set(postId, newActivity);
+        this.activities.set(activityId, newActivity);
       }
     } catch (error) {}
   };
@@ -89,39 +94,12 @@ export default class AcitivtyStore {
       await agent.Activities.get().then((data) => {
         console.log(data);
         data.forEach((activity) => {
-          // const comments = new Map<string, CommentMap>();
-          // activity.comments.forEach((comment: Comment) => {
-          //   const replies = new Map<string, Reply>();
-          //   comment.replies.forEach((reply: Reply) => {
-          //     replies.set(reply.id, reply);
-          //   });
-          //   const newComment = {
-          //     ...comment,
-          //     replies,
-          //   };
-          //   comments.set(comment.id, newComment);
-          // });
           const newActivity = {
             ...activity,
             comments: new Map<string, CommentMap>(),
           };
           this.activities.set(activity.id, newActivity);
         });
-      });
-    } catch (error) {}
-  };
-
-  getComments = async (postId: string) => {
-    try {
-      const comments = await agent.Comments.get(postId);
-      // const commentsMap = new Map<string, CommentMap>();
-      const activity = this.activities.get(postId);
-      comments.forEach((item) => {
-        const newComment = {
-          ...item,
-          replies: new Map<string, Reply>(),
-        };
-        activity?.comments.set(item.id, newComment);
       });
     } catch (error) {}
   };
@@ -133,10 +111,28 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  createComment = async (postId: string, content: string) => {
+  getComments = async (activityId: string) => {
+    this.isCommnetsLoading = true;
     try {
-      const response = await agent.Comments.create(postId, content);
-      const activity = this.activities.get(postId);
+      const comments = await agent.Comments.get(activityId);
+      const activity = this.activities.get(activityId);
+      comments.forEach((item) => {
+        const newComment = {
+          ...item,
+          replies: new Map<string, Reply>(),
+        };
+        activity?.comments.set(item.id, newComment);
+      });
+      this.isCommnetsLoading = false;
+    } catch (error) {
+      this.isCommnetsLoading = false;
+    }
+  };
+
+  createComment = async (activityId: string, content: string) => {
+    try {
+      const response = await agent.Comments.create(activityId, content);
+      const activity = this.activities.get(activityId);
       if (activity) {
         const user = this.root.commonStore.user;
         const comment = {
@@ -146,41 +142,61 @@ export default class AcitivtyStore {
           author: user,
           likes: 0,
           replies: new Map<string, Reply>(),
+          repliesCount: 0,
         };
-        this.setComment(postId, comment);
+        this.setComment(activityId, comment);
       }
     } catch (eror) {}
   };
 
-  setComment = async (postId: string, comment: CommentMap) => {
-    const activity = this.activities.get(postId);
+  setComment = async (activityId: string, comment: CommentMap) => {
+    const activity = this.activities.get(activityId);
     if (comment && activity) {
       activity.comments.set(comment.id, comment);
     }
   };
 
-  editComment = async (postId: string, commentId: string, content: string) => {
+  editComment = async (
+    activityId: string,
+    commentId: string,
+    content: string
+  ) => {
     try {
       await agent.Comments.edit(commentId, content);
-      const comment = this.activities.get(postId)?.comments.get(commentId);
+      const comment = this.activities.get(activityId)?.comments.get(commentId);
       if (comment) {
         comment.content = content;
-        this.setComment(postId, comment);
+        this.setComment(activityId, comment);
       }
     } catch (error) {}
   };
 
-  hideComment = async (postId: string, commentId: string) => {
+  hideComment = async (activityId: string, commentId: string) => {
     try {
       await agent.Comments.hide(commentId);
-      const comments = this.activities.get(postId)?.comments;
+      const comments = this.activities.get(activityId)?.comments;
       comments?.delete(commentId);
     } catch (error) {}
   };
 
-  createReply = async (postId: string, commentId: string, content: string) => {
+  getReplies = async (activityId: string, commentId: string) => {
     try {
-      const response = await agent.Replies.create(postId, commentId, content);
+      const replies = await agent.Replies.get(commentId);
+      console.log(replies);
+      const comment = this.activities.get(activityId)?.comments.get(commentId);
+      replies.forEach((item) => {
+        comment?.replies.set(item.id, item);
+      });
+    } catch (error) {}
+  };
+
+  createReply = async (
+    activityId: string,
+    commentId: string,
+    content: string
+  ) => {
+    try {
+      const response = await agent.Replies.create(commentId, content);
       const user = this.root.commonStore.user;
       var reply = {
         id: response.id,
@@ -188,17 +204,47 @@ export default class AcitivtyStore {
         content,
         author: user,
       };
-      this.setReply(postId, commentId, reply);
+      this.setReply(activityId, commentId, reply);
     } catch (err) {}
   };
 
-  setReply = (postId: string, commentId: string, reply: Reply) => {
-    const activity = this.activities.get(postId);
+  setReply = (activityId: string, commentId: string, reply: Reply) => {
+    const activity = this.activities.get(activityId);
     const comments = activity?.comments;
     const comment = comments?.get(commentId);
     const replies = comment?.replies;
     if (replies && comments && comment) {
       replies.set(reply.id, reply);
+    }
+  };
+
+  deleteReply = async (
+    activityId: string,
+    commentId: string,
+    replyId: string
+  ) => {
+    try {
+      await agent.Replies.delete(replyId);
+      const replies = this.activities.get(activityId)?.comments.get(commentId)
+        ?.replies;
+      replies?.delete(replyId);
+    } catch (error) {}
+  };
+
+  hideReply = async (
+    activityId: string,
+    commentId: string,
+    replyId: string
+  ) => {
+    this.isRepliesLoading = true;
+    try {
+      await agent.Replies.hide(replyId);
+      const replies = this.activities.get(activityId)?.comments.get(commentId)
+        ?.replies;
+      replies?.delete(replyId);
+      this.isRepliesLoading = false;
+    } catch (error) {
+      this.isRepliesLoading = false;
     }
   };
 }

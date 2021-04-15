@@ -19,7 +19,7 @@ namespace Application.Comments
         }
         public class Command : IRequest<Response>
         {
-            public Guid PostId { get; set; }
+            public Guid ActivityId { get; set; }
             public string Content { get; set; }
         }
 
@@ -39,7 +39,7 @@ namespace Application.Comments
                 var user = await _context.Users.FindAsync(userId);
                 if (user == null) throw new RestException(HttpStatusCode.Unauthorized, new { Error = "User dosen't exist" });
 
-                var activity = await _context.Activities.FindAsync(request.PostId);
+                var activity = await _context.Activities.FindAsync(request.ActivityId);
                 if (activity == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Post doesn't exist" });
 
                 DateTime date = DateTime.Now;

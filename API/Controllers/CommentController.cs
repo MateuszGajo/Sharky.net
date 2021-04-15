@@ -18,9 +18,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<CommentDto>>> List(Guid PostId)
+        public async Task<ActionResult<List<CommentDto>>> List(Guid ActivityId)
         {
-            return await _mediator.Send(new List.Query { PostId = PostId });
+            return await _mediator.Send(new List.Query { ActivityId = ActivityId });
         }
 
         [HttpPut("{id}/hide")]

@@ -22,14 +22,14 @@ interface Props {
   content?: string;
   photoUrl?: string;
   setStatusOfEdit?: (status: boolean) => void;
-  postId?: string;
+  activityId?: string;
 }
 
 const MessageBoxItem: React.FC<Props> = ({
   content = "",
   photoUrl,
   setStatusOfEdit: isEdit,
-  postId,
+  activityId,
 }) => {
   const { createActivity, isSubmitting, editActivity } = useActivityStore();
 
@@ -54,7 +54,7 @@ const MessageBoxItem: React.FC<Props> = ({
         ? null
         : file[0];
       console.log(photo);
-      editActivity({ content: text, file: photo }, postId!);
+      editActivity({ content: text, file: photo }, activityId!);
       isEdit(false);
     } else {
       createActivity({ content: text, file: file[0] || null })

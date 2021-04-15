@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Comment, Icon, Input, Item, TextArea } from "semantic-ui-react";
+import {
+  Comment,
+  Icon,
+  Input,
+  Item,
+  Segment,
+  TextArea,
+} from "semantic-ui-react";
 import cx from "classnames";
 import { CommentMap } from "~root/src/app/models/activity";
 import ActivityReply from "../activitiesReply/ActivityReply";
@@ -13,17 +20,23 @@ import { observer } from "mobx-react-lite";
 
 interface Props {
   item: CommentMap;
-  postId: string;
+  activityId: string;
 }
 
-const ActivityComment: React.FC<Props> = ({ item, postId }) => {
+const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
   const { t } = useTranslation("components");
 
   const [isReply, setStatusOfReply] = useState(false);
   const [isEditting, setStatusOfEdit] = useState(false);
   const [content, setContent] = useState("");
 
-  const { createReply, editComment, hideComment } = useActivityStore();
+  const {
+    createReply,
+    editComment,
+    hideComment,
+    getReplies,
+    isRepliesLoading: isLoading,
+  } = useActivityStore();
 
   const replyPlaceholder = t("activities.replyPlaceholder");
 
@@ -31,7 +44,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createReply(postId, item.id, content).then(() => setContent(""));
+    createReply(activityId, item.id, content).then(() => setContent(""));
   };
 
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -39,7 +52,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
     if (item.content == content) {
       setStatusOfEdit(false);
     } else {
-      editComment(postId, item.id, content).then(() => {
+      editComment(activityId, item.id, content).then(() => {
         setStatusOfEdit(false);
       });
     }
@@ -52,7 +65,7 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
         setContent(item.content);
         break;
       case "hide":
-        hideComment(postId, item.id);
+        hideComment(activityId, item.id);
         break;
       case "delete":
         break;
@@ -61,6 +74,11 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
 
   const handleDocumentClick = () => {
     setStatusOfEdit(false);
+  };
+
+  const handleIconClick = () => {
+    if (!isReply && item.replies.size == 0) getReplies(activityId, item.id);
+    setStatusOfReply(!isReply);
   };
 
   useEffect(() => {
@@ -102,17 +120,14 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
         )}
 
         <Comment.Actions>
-          <Comment.Action
-            className={styles.replyRef}
-            onClick={() => setStatusOfReply(!isReply)}
-          >
+          <Comment.Action className={styles.replyRef} onClick={handleIconClick}>
             <Icon
               name="reply"
               className={cx(styles.replyIcon, {
                 [styles.replyIconActive]: isReply,
               })}
             />
-            {item.replies.size + " "}
+            {item.repliesCount + " "}
             {item.replies.size === 1 ? "reply" : "replies"}
           </Comment.Action>
         </Comment.Actions>
@@ -148,9 +163,18 @@ const ActivityComment: React.FC<Props> = ({ item, postId }) => {
               </Item.Content>
             </Item>
           </Item.Group>
-          {Array.from(item.replies.values()).map((reply) => (
-            <ActivityReply key={reply.id} item={reply} />
-          ))}
+          {isLoading ? (
+            <Segment loading basic></Segment>
+          ) : (
+            Array.from(item.replies.values()).map((reply) => (
+              <ActivityReply
+                key={reply.id}
+                item={reply}
+                activityId={activityId}
+                commentId={item.id}
+              />
+            ))
+          )}
         </Comment.Group>
       )}
     </Comment>

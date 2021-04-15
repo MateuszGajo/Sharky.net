@@ -31,6 +31,7 @@ export interface Comment {
   likes: number;
   createdAt: Date;
   replies: [];
+  repliesCount: number;
 }
 
 export interface CommentMap extends Omit<Comment, "replies"> {

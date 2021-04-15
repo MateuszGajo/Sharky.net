@@ -73,7 +73,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
           content={item.content}
           photoUrl={item.photo?.url}
           setStatusOfEdit={setStatusOfEdit}
-          postId={item.id}
+          activityId={item.id}
         />
       ) : (
         <Container className={styles.container}>
@@ -142,7 +142,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
 
               {isComments && (
                 <ActivityDownbar
-                  postId={item.id}
+                  activityId={item.id}
                   comments={item.comments}
                   user={item.user}
                   isComments={item.commentsCount > 0}
