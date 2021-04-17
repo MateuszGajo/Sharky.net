@@ -53,7 +53,6 @@ const MessageBoxItem: React.FC<Props> = ({
         : file[0].preview == photoUrl
         ? null
         : file[0];
-      console.log(photo);
       editActivity({ content: text, file: photo }, activityId!);
       isEdit(false);
     } else {

@@ -11,6 +11,8 @@ namespace Application.Comments
         public DateTime CreatedAt { get; set; }
         public UserDto Author { get; set; }
         public int Likes { get; set; }
+
+        public bool isHidden { get; set; }
         public int RepliesCount { get; set; }
     }
 }

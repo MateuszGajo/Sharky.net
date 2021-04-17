@@ -8,6 +8,22 @@
     visibility: visible;
   }
 
+  .hiddenAvatar {
+    filter: brightness(0.45);
+  }
+
+  .username {
+    color: $primaryColor;
+  }
+
+  .usernameHidden {
+    color: $primaryGrey;
+  }
+
+  .hiddenContent {
+    color: $primaryGrey;
+  }
+
   .options {
     visibility: hidden;
     position: absolute;

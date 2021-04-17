@@ -49,10 +49,10 @@ namespace Application.Comments
                 var excludedComments = user.HiddenComments.Count() != 0 ? user.HiddenComments.Select(x => x.Comment.Id) : Enumerable.Empty<Guid>();
 
                 return await _context.Comments
-                .Where(x => x.Activity.Id == request.ActivityId && !excludedComments.Contains(x.Id))
+                .Where(x => x.Activity.Id == request.ActivityId)
                 .OrderByDescending(c => c.CreatedAt)
                 .Take(10)
-                .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<CommentDto>(_mapper.ConfigurationProvider, new { hiddenElements = excludedComments })
                 .ToListAsync();
             }
         }

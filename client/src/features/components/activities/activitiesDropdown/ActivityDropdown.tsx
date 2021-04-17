@@ -8,12 +8,14 @@ interface Props {
   onClick: (type: string) => void;
   author: User;
   isActivity?: boolean;
+  isHidden?: boolean;
 }
 
 const ActivityDropdown: React.FC<Props> = ({
   onClick,
   author,
   isActivity = false,
+  isHidden = false,
 }) => {
   const { t } = useTranslate("components");
 
@@ -28,8 +30,10 @@ const ActivityDropdown: React.FC<Props> = ({
   const hideText = t(
     `activities.header.settings.${isActivity ? "activity" : "comment"}.hide`
   );
+  const unhideText = t(
+    `activities.header.settings.${isActivity ? "activity" : "comment"}.unhide`
+  );
   const blockText = t("activities.header.settings.activity.block");
-
   return (
     <Dropdown
       className=" icon"
@@ -54,9 +58,9 @@ const ActivityDropdown: React.FC<Props> = ({
         ) : (
           <>
             <Dropdown.Item
-              icon="hide"
-              text={hideText}
-              onClick={() => onClick("hide")}
+              icon={isHidden ? "unhide" : "hide"}
+              text={isHidden ? unhideText : hideText}
+              onClick={() => onClick(isHidden ? "unhide" : "hide")}
             ></Dropdown.Item>
             {isActivity && (
               <Dropdown.Item

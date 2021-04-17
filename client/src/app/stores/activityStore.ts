@@ -92,7 +92,6 @@ export default class AcitivtyStore {
   getActivities = async () => {
     try {
       await agent.Activities.get().then((data) => {
-        console.log(data);
         data.forEach((activity) => {
           const newActivity = {
             ...activity,
@@ -143,6 +142,7 @@ export default class AcitivtyStore {
           likes: 0,
           replies: new Map<string, Reply>(),
           repliesCount: 0,
+          isHidden: false,
         };
         this.setComment(activityId, comment);
       }
@@ -171,23 +171,30 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  hideComment = async (activityId: string, commentId: string) => {
+  hideComment = async (commentId: string) => {
     try {
       await agent.Comments.hide(commentId);
-      const comments = this.activities.get(activityId)?.comments;
-      comments?.delete(commentId);
+    } catch (error) {}
+  };
+
+  unhideComment = async (commentId: string) => {
+    try {
+      await agent.Comments.unHide(commentId);
     } catch (error) {}
   };
 
   getReplies = async (activityId: string, commentId: string) => {
+    this.isRepliesLoading = true;
     try {
       const replies = await agent.Replies.get(commentId);
-      console.log(replies);
       const comment = this.activities.get(activityId)?.comments.get(commentId);
       replies.forEach((item) => {
         comment?.replies.set(item.id, item);
       });
-    } catch (error) {}
+      this.isRepliesLoading = false;
+    } catch (error) {
+      this.isRepliesLoading = false;
+    }
   };
 
   createReply = async (
@@ -203,6 +210,7 @@ export default class AcitivtyStore {
         createdAt: response.createdAt,
         content,
         author: user,
+        isHidden: false,
       };
       this.setReply(activityId, commentId, reply);
     } catch (err) {}
@@ -231,20 +239,15 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  hideReply = async (
-    activityId: string,
-    commentId: string,
-    replyId: string
-  ) => {
-    this.isRepliesLoading = true;
+  hideReply = async (replyId: string) => {
     try {
       await agent.Replies.hide(replyId);
-      const replies = this.activities.get(activityId)?.comments.get(commentId)
-        ?.replies;
-      replies?.delete(replyId);
-      this.isRepliesLoading = false;
-    } catch (error) {
-      this.isRepliesLoading = false;
-    }
+    } catch (error) {}
+  };
+
+  unhideReply = async (replyId: string) => {
+    try {
+      await agent.Replies.unhide(replyId);
+    } catch (error) {}
   };
 }

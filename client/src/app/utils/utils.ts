@@ -4,7 +4,8 @@ import type { NextApiRequest } from "next";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
-import { Token, User } from "../models/authentication";
+import { Token } from "../models/authentication";
+import { Comment, CommentMap } from "../models/activity";
 import React from "react";
 
 export const navItems = [

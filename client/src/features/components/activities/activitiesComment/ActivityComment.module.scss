@@ -3,12 +3,28 @@
     position: relative;
   }
 
+  .hiddenAvatar {
+    filter: brightness(0.45);
+  }
+
   .form {
     margin-bottom: 0.7em;
   }
 
   .replyContainer {
     padding: 1em 0 0;
+  }
+
+  .username {
+    color: $primaryColor;
+  }
+
+  .usernameHidden {
+    color: $primaryGrey;
+  }
+
+  .hiddenContent {
+    color: $primaryGrey;
   }
 
   .container:hover .options {
@@ -30,6 +46,16 @@
 
   .replyIconActive {
     color: $primaryColor;
+  }
+  .hiddenReplies {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+  }
+
+  .hiddenRepliesIcon {
+    cursor: pointer;
   }
 
   .options {

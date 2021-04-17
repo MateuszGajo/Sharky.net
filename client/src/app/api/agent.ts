@@ -56,7 +56,6 @@ const Activities = {
       .then(responseBody);
   },
   edit: (activity: ActivityFormValues, activityId: string) => {
-    console.log(activity.content);
     let formData = new FormData();
     formData.append("File", activity.file);
     formData.append("Content", activity.content);
@@ -90,6 +89,7 @@ const Comments = {
       content,
     }),
   hide: (id: string) => requests.put<void>(`comment/${id}/hide`, {}),
+  unHide: (id: string) => requests.delete<void>(`comment/${id}/unhide`),
 };
 
 const Replies = {
@@ -102,6 +102,8 @@ const Replies = {
     }),
   delete: (replyId: string) => requests.delete<void>(`/reply/${replyId}`),
   hide: (replyId: string) => requests.put<void>(`/reply/${replyId}/hide`, {}),
+  unhide: (replyId: string) =>
+    requests.delete<void>(`/reply/${replyId}/unhide`),
 };
 
 const User = {

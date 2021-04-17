@@ -20,12 +20,14 @@
           "edit": "Edit post",
           "remove": "Remove post",
           "hide": "Hide post",
+          "unhide": "Unhide post",
           "block": "Block user"
         },
         "comment": {
           "edit": "Edit comment",
           "remove": "Remove comment",
-          "hide": "Hide comment"
+          "hide": "Hide comment",
+          "unhide": "Unhide comment"
         }
       }
     }

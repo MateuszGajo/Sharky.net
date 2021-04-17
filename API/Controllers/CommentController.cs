@@ -29,6 +29,12 @@ namespace API.Controllers
             return await _mediator.Send(new Hide.Command { Id = id });
         }
 
+        [HttpDelete("{id}/unhide")]
+        public async Task<ActionResult<Unit>> Unhide(Guid id)
+        {
+            return await _mediator.Send(new Unhide.Command { Id = id });
+        }
+
         [HttpPut("create")]
         public async Task<ActionResult<Create.Response>> CreateComment(Create.Command command)
         {

@@ -37,9 +37,15 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}/hide")]
-        public async Task<ActionResult<Unit>> hide(Guid id)
+        public async Task<ActionResult<Unit>> Hide(Guid id)
         {
             return await _mediator.Send(new Hide.Command { Id = id });
+        }
+
+        [HttpDelete("{id}/unhide")]
+        public async Task<ActionResult<Unit>> Unhide(Guid id)
+        {
+            return await _mediator.Send(new Unhide.Command { Id = id });
         }
     }
 }

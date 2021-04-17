@@ -11,7 +11,6 @@ import {
   useUserStore,
 } from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
-import agent from "~root/src/app/api/agent";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const {
@@ -145,7 +144,6 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                   activityId={item.id}
                   comments={item.comments}
                   user={item.user}
-                  isComments={item.commentsCount > 0}
                 />
               )}
             </Card.Content>

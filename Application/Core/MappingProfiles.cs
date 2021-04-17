@@ -15,9 +15,7 @@ namespace Application.Core
         public MappingProfiles()
         {
             string userId = null;
-            IEnumerable<Guid> excludedComments = new List<Guid>();
-            IEnumerable<Guid> excludedReplies = new List<Guid>();
-
+            IEnumerable<Guid> hiddenElements = new List<Guid>();
             CreateMap<ActivityDto, ActivityDto>();
 
             CreateMap<Activity, ActivityDto>()
@@ -28,10 +26,12 @@ namespace Application.Core
             CreateMap<User, UserDto>();
 
             CreateMap<Comment, CommentDto>()
-                 .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()));
+                 .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()))
+                 .ForMember(d => d.isHidden, o => o.MapFrom(s => hiddenElements.Contains(s.Id)));
 
             CreateMap<Reply, ReplyDto>()
-                  .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()));
+                  .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()))
+                  .ForMember(d => d.isHidden, o => o.MapFrom(s => hiddenElements.Contains(s.Id)));
         }
     }
 }

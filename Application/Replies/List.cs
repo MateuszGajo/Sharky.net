@@ -44,10 +44,10 @@ namespace Application.Replies
                 var excludedReplies = user.HiddenReplies.Count != 0 ? user.HiddenReplies.Select(x => x.Reply.Id) : Enumerable.Empty<Guid>();
 
                 return await _context.Replies
-                    .Where(x => x.Comment.Id == request.CommentId && !excludedReplies.Contains(x.Id))
+                    .Where(x => x.Comment.Id == request.CommentId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Take(10)
-                    .ProjectTo<ReplyDto>(_mapper.ConfigurationProvider)
+                    .ProjectTo<ReplyDto>(_mapper.ConfigurationProvider, new { hiddenElements = excludedReplies })
                     .ToListAsync();
             }
         }

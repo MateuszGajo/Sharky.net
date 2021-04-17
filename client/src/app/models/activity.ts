@@ -32,6 +32,7 @@ export interface Comment {
   createdAt: Date;
   replies: [];
   repliesCount: number;
+  isHidden: boolean;
 }
 
 export interface CommentMap extends Omit<Comment, "replies"> {
@@ -43,6 +44,7 @@ export interface Reply {
   content: string;
   createdAt: Date;
   author: User;
+  isHidden: boolean;
 }
 
 export interface CreateActResp {

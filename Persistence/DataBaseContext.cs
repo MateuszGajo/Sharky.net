@@ -16,6 +16,8 @@ namespace Persistence
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Reply> Replies { get; set; }
         public DbSet<HiddenActivity> HiddenActivites { get; set; }
+        public DbSet<HiddenComment> HiddenComments { get; set; }
+        public DbSet<HiddenReply> HiddenReplies { get; set; }
         public DbSet<BlockedUser> BlockedUsers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
