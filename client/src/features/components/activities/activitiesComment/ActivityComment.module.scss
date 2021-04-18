@@ -30,8 +30,12 @@
   .container:hover .options {
     visibility: visible;
   }
+  .icons {
+    display: flex;
+    justify-content: space-between;
+  }
 
-  .replyRef:hover .replyIcon {
+  .icons:hover .replyIcon {
     color: $primaryColor;
   }
 
@@ -47,6 +51,7 @@
   .replyIconActive {
     color: $primaryColor;
   }
+
   .hiddenReplies {
     display: flex;
     justify-content: center;
@@ -63,5 +68,20 @@
     position: absolute;
     top: 5px;
     right: 5px;
+  }
+  .like .icon {
+    color: #ff3d47;
+    opacity: 1;
+  }
+
+  .like:hover .icon {
+    color: #cf2029;
+  }
+
+  .icon.likeIconActive {
+    color: #cf2029;
+  }
+  .likeIconActive + .number {
+    color: #cf2029;
   }
 }

@@ -103,10 +103,10 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  likeHandle = async (isLiked: boolean, activityId: string) => {
+  activityLikeHandle = async (isLiked: boolean, activityId: string) => {
     try {
       if (!isLiked) await agent.Activities.like(activityId);
-      else await agent.Activities.unLike(activityId);
+      else await agent.Activities.unlike(activityId);
     } catch (error) {}
   };
 
@@ -143,6 +143,7 @@ export default class AcitivtyStore {
           replies: new Map<string, Reply>(),
           repliesCount: 0,
           isHidden: false,
+          isLiked: false,
         };
         this.setComment(activityId, comment);
       }
@@ -183,6 +184,13 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
+  commentLikeHandle = async (isLiked: boolean, commentId: string) => {
+    try {
+      if (!isLiked) await agent.Comments.like(commentId);
+      else await agent.Comments.unlike(commentId);
+    } catch (error) {}
+  };
+
   getReplies = async (activityId: string, commentId: string) => {
     this.isRepliesLoading = true;
     try {
@@ -211,6 +219,7 @@ export default class AcitivtyStore {
         content,
         author: user,
         isHidden: false,
+        isLiked: false,
       };
       this.setReply(activityId, commentId, reply);
     } catch (err) {}
@@ -248,6 +257,13 @@ export default class AcitivtyStore {
   unhideReply = async (replyId: string) => {
     try {
       await agent.Replies.unhide(replyId);
+    } catch (error) {}
+  };
+
+  replyLikeHandle = async (isLiked: boolean, commentId: string) => {
+    try {
+      if (!isLiked) await agent.Replies.like(commentId);
+      else await agent.Replies.unlike(commentId);
     } catch (error) {}
   };
 }

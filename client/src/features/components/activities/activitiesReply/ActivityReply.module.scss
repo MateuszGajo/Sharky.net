@@ -24,6 +24,32 @@
     color: $primaryGrey;
   }
 
+  .content {
+    margin: 0;
+  }
+
+  .icons {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .like .icon {
+    color: #ff3d47;
+    opacity: 1;
+  }
+
+  .like:hover .icon {
+    color: #cf2029;
+  }
+
+  .icon.likeIconActive {
+    color: #cf2029;
+  }
+
+  .likeIconActive + .number {
+    color: #cf2029;
+  }
+
   .options {
     visibility: hidden;
     position: absolute;

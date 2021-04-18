@@ -52,7 +52,7 @@ namespace Application.Comments
                 .Where(x => x.Activity.Id == request.ActivityId)
                 .OrderByDescending(c => c.CreatedAt)
                 .Take(10)
-                .ProjectTo<CommentDto>(_mapper.ConfigurationProvider, new { hiddenElements = excludedComments })
+                .ProjectTo<CommentDto>(_mapper.ConfigurationProvider, new { userId = userId, hiddenElements = excludedComments })
                 .ToListAsync();
             }
         }

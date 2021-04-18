@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
 import cx from "classnames";
 import { ActivityMap } from "~root/src/app/models/activity";
@@ -14,7 +14,7 @@ import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const {
-    likeHandle,
+    activityLikeHandle,
     deleteActivity,
     hideActivity,
     getComments,
@@ -30,17 +30,23 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   );
   const [isComments, setStatusOfComments] = useState(false);
   const [isEditting, setStatusOfEdit] = useState(false);
+  const [isSubmitting, setStatusOfSubmitting] = useState(false);
 
   const handleLikeClick = () => {
-    likeHandle(isLiked, item.id).then(() => {
-      if (isLiked) {
-        setNumberOfLikes(numberOfLikes - 1);
-        setStatusOfLike(false);
-      } else {
-        setNumberOfLikes(numberOfLikes + 1);
-        setStatusOfLike(true);
-      }
-    });
+    if (!isSubmitting) {
+      setStatusOfSubmitting(true);
+      activityLikeHandle(isLiked, item.id).then(() => {
+        if (isLiked) {
+          setNumberOfLikes(numberOfLikes - 1);
+          setStatusOfLike(false);
+          setStatusOfSubmitting(false);
+        } else {
+          setNumberOfLikes(numberOfLikes + 1);
+          setStatusOfLike(true);
+          setStatusOfSubmitting(false);
+        }
+      });
+    }
   };
 
   const handleDownbarClick = (type: string) => {
@@ -120,6 +126,15 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
             </Card.Content>
             <Card.Content extra>
               <Container className={styles.toolBar}>
+                <a className={styles.reply}>
+                  <Icon name="share" className={styles.icon} />
+                  22
+                </a>
+                <a className={styles.comment} onClick={handleCommentIconClick}>
+                  <Icon name="comment" className={styles.icon} />
+                  {numberOfComments}
+                </a>
+
                 <a className={styles.like} onClick={handleLikeClick}>
                   <Icon
                     name="like"
@@ -128,14 +143,6 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                     })}
                   />
                   <span className={styles.number}>{numberOfLikes}</span>
-                </a>
-                <a className={styles.comment} onClick={handleCommentIconClick}>
-                  <Icon name="comment" className={styles.icon} />
-                  {numberOfComments}
-                </a>
-                <a className={styles.reply}>
-                  <Icon name="share" className={styles.icon} />
-                  22
                 </a>
               </Container>
 

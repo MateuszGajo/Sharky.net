@@ -36,7 +36,7 @@ namespace Persistence
                 {
                     var activity = new Activity { Id = Guid.NewGuid(), User = new User { Email = "ruslav1@ruslav1.pl", FirstName = "Bob", LastName = "smith", UserName = "ruslavruslav1" }, Content = "ddd", Photo = null, CreatedAt = DateTime.Now };
                     var comments = new List<Comment>();
-                    for (int j = 0; j < 100000; j++)
+                    for (int j = 0; j < 10000; j++)
                     {
                         var comment = new Comment { Id = Guid.NewGuid(), Content = "lorem ipsu lorem ipsu lorem ipsu", Author = new User { Email = "ruslav1@ruslav1.pl", FirstName = "Bob", LastName = "smith", UserName = "ruslavruslav1" }, CreatedAt = DateTime.Now };
                         activity.CommentsCount += 1;

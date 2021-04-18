@@ -19,9 +19,23 @@ namespace Persistence
         public DbSet<HiddenComment> HiddenComments { get; set; }
         public DbSet<HiddenReply> HiddenReplies { get; set; }
         public DbSet<BlockedUser> BlockedUsers { get; set; }
+        public DbSet<Like> Likes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            modelBuilder.Entity<Like>()
+            .HasOne(u => u.Activity)
+            .WithMany(a => a.Likes);
+
+            modelBuilder.Entity<Like>()
+         .HasOne(u => u.Comment)
+         .WithMany(a => a.Likes);
+
+            modelBuilder.Entity<Like>()
+         .HasOne(u => u.Reply)
+         .WithMany(a => a.Likes);
+
             modelBuilder.Entity<HiddenActivity>()
                  .HasOne(p => p.User)
                  .WithMany(b => b.HiddenActivities);

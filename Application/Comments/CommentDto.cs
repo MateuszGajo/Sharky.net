@@ -14,5 +14,6 @@ namespace Application.Comments
 
         public bool isHidden { get; set; }
         public int RepliesCount { get; set; }
+        public bool isLiked { get; set; }
     }
 }

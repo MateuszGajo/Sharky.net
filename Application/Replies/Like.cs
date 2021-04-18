@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities
+namespace Application.Replies
 {
     public class Like
     {
@@ -31,37 +31,34 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var userId = _userAccessor.GetCurrentId();
+                string userId = _userAccessor.GetCurrentId();
                 User user = await _context.Users.FindAsync(userId);
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                var activity = await _context.Activities.Include(x => x.Likes).ThenInclude(x => x.User).FirstOrDefaultAsync(x => x.Id == request.Id);
-                if (activity == null)
-                    throw new RestException(HttpStatusCode.BadRequest, new { Error = "activity doesn't exist" });
+                Reply reply = await _context
+                    .Replies
+                    .Include(x => x.Likes)
+                        .ThenInclude(x => x.User)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
 
-                var like = activity.Likes.Where(x => x.User.Id == userId).FirstOrDefault();
+                Domain.Like like = reply.Likes.Where(x => x.User.Id == userId).FirstOrDefault();
                 if (like != null)
-                {
-                    System.Console.WriteLine(like.Activity.Id);
-                    throw new RestException(HttpStatusCode.Forbidden, new { Errors = "You have already liked this post" });
-                }
+                    throw new RestException(HttpStatusCode.Forbidden, new { Like = "You have already liked this comment" });
 
-                var newLike = new Domain.Like
+                Domain.Like newLike = new Domain.Like
                 {
                     User = user,
-                    Activity = activity
+                    Reply = reply
                 };
 
-                activity.Likes.Add(newLike);
-                activity.LikesCount += 1;
+                reply.Likes.Add(newLike);
+                reply.LikesCount += 1;
 
-                var result = await _context.SaveChangesAsync() > 0;
-
+                bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;
 
-                throw new RestException(HttpStatusCode.BadRequest, new { Errors = "Problem liking activity" });
-
+                throw new RestException(HttpStatusCode.BadGateway, new { SaveChanges = "Problem saving changes" });
             }
         }
     }

@@ -11,5 +11,6 @@ namespace Application.Replies
         public UserDto Author { get; set; }
         public int Likes { get; set; }
         public bool isHidden { get; set; }
+        public bool isLiked { get; set; }
     }
 }

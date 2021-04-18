@@ -73,7 +73,7 @@ const Activities = {
   get: () => requests.get<Activity[]>("/activity"),
   hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
-  unLike: (id: string) => requests.put<void>(`/activity/${id}/unlike`, {}),
+  unlike: (id: string) => requests.delete<void>(`/activity/${id}/unlike`),
 };
 
 const Comments = {
@@ -90,6 +90,8 @@ const Comments = {
     }),
   hide: (id: string) => requests.put<void>(`comment/${id}/hide`, {}),
   unHide: (id: string) => requests.delete<void>(`comment/${id}/unhide`),
+  like: (id: string) => requests.put<void>(`/comment/${id}/like`, {}),
+  unlike: (id: string) => requests.delete<void>(`/comment/${id}/unlike`),
 };
 
 const Replies = {
@@ -104,6 +106,8 @@ const Replies = {
   hide: (replyId: string) => requests.put<void>(`/reply/${replyId}/hide`, {}),
   unhide: (replyId: string) =>
     requests.delete<void>(`/reply/${replyId}/unhide`),
+  like: (id: string) => requests.put<void>(`/reply/${id}/like`, {}),
+  unlike: (id: string) => requests.delete<void>(`/reply/${id}/unlike`),
 };
 
 const User = {

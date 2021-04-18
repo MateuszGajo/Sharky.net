@@ -16,12 +16,16 @@ interface Props {
 }
 
 const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
+  console.log(item);
   const { t } = useTranslation("components");
 
   const [isReply, setStatusOfReply] = useState(false);
   const [isEditting, setStatusOfEdit] = useState(false);
   const [isHidden, setStatusOfHidden] = useState(item.isHidden);
   const [displayHiddenReply, setHiddenReplyVisible] = useState<any>({});
+  const [isSubmitting, setStatusOfSubmitting] = useState(false);
+  const [numberOfLikes, setNumberOfLikes] = useState(item.likes);
+  const [isLiked, setStatusOfLike] = useState(item.isLiked);
   const [content, setContent] = useState("");
 
   const {
@@ -31,6 +35,7 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
     unhideComment,
     getReplies,
     isRepliesLoading: isLoading,
+    commentLikeHandle,
   } = useActivityStore();
 
   const replyPlaceholder = t("activities.replyPlaceholder");
@@ -87,6 +92,23 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
       document.removeEventListener("click", handleDocumentClick);
     };
   }, [isEditting]);
+
+  const handleLikeClick = () => {
+    if (!isSubmitting) {
+      setStatusOfSubmitting(true);
+      commentLikeHandle(isLiked, item.id).then(() => {
+        if (isLiked) {
+          setNumberOfLikes(numberOfLikes - 1);
+          setStatusOfLike(false);
+          setStatusOfSubmitting(false);
+        } else {
+          setNumberOfLikes(numberOfLikes + 1);
+          setStatusOfLike(true);
+          setStatusOfSubmitting(false);
+        }
+      });
+    }
+  };
 
   const replies = Array.from(item.replies.values());
   let display = false;
@@ -173,18 +195,26 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
         )}
         {!isHidden && (
           <Comment.Actions>
-            <Comment.Action
-              className={styles.replyRef}
-              onClick={handleIconClick}
-            >
-              <Icon
-                name="reply"
-                className={cx(styles.replyIcon, {
-                  [styles.replyIconActive]: isReply,
-                })}
-              />
-              {item.repliesCount + " "}
-              {item.replies.size === 1 ? "reply" : "replies"}
+            <Comment.Action className={styles.icons}>
+              <a onClick={handleIconClick}>
+                <Icon
+                  name="reply"
+                  className={cx(styles.replyIcon, {
+                    [styles.replyIconActive]: isReply,
+                  })}
+                />
+                {item.repliesCount + " "}
+                {item.replies.size === 1 ? "reply" : "replies"}
+              </a>
+              <a className={styles.like} onClick={handleLikeClick}>
+                <Icon
+                  name="like"
+                  className={cx(styles.icon, {
+                    [styles.likeIconActive]: isLiked,
+                  })}
+                />
+                <span className={styles.number}>{numberOfLikes}</span>
+              </a>
             </Comment.Action>
           </Comment.Actions>
         )}

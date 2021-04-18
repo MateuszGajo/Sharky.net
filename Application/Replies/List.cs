@@ -47,7 +47,7 @@ namespace Application.Replies
                     .Where(x => x.Comment.Id == request.CommentId)
                     .OrderByDescending(x => x.CreatedAt)
                     .Take(10)
-                    .ProjectTo<ReplyDto>(_mapper.ConfigurationProvider, new { hiddenElements = excludedReplies })
+                    .ProjectTo<ReplyDto>(_mapper.ConfigurationProvider, new { userId = userId, hiddenElements = excludedReplies })
                     .ToListAsync();
             }
         }

@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210414172225_initialMigrations")]
-    partial class initialMigrations
+    [Migration("20210418065510_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -144,7 +144,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HiddenComment");
+                    b.ToTable("HiddenComments");
                 });
 
             modelBuilder.Entity("Domain.HiddenReply", b =>
@@ -165,7 +165,7 @@ namespace Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("HiddenReply");
+                    b.ToTable("HiddenReplies");
                 });
 
             modelBuilder.Entity("Domain.Like", b =>
@@ -194,7 +194,9 @@ namespace Persistence.Migrations
 
                     b.HasIndex("ReplyId");
 
-                    b.ToTable("Like");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -399,17 +401,29 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Like", b =>
                 {
-                    b.HasOne("Domain.Activity", null)
+                    b.HasOne("Domain.Activity", "Activity")
                         .WithMany("Likes")
                         .HasForeignKey("ActivityId");
 
-                    b.HasOne("Domain.Comment", null)
+                    b.HasOne("Domain.Comment", "Comment")
                         .WithMany("Likes")
                         .HasForeignKey("CommentId");
 
-                    b.HasOne("Domain.Reply", null)
+                    b.HasOne("Domain.Reply", "Reply")
                         .WithMany("Likes")
                         .HasForeignKey("ReplyId");
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("Reply");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>

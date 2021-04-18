@@ -10,7 +10,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Activities
+namespace Application.Comments
 {
     public class Unlike
     {
@@ -21,40 +21,39 @@ namespace Application.Activities
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly DataBaseContext _context;
             private readonly IUserAccessor _userAccessor;
+            private readonly DataBaseContext _context;
             public Handler(DataBaseContext context, IUserAccessor userAccessor)
             {
-                _userAccessor = userAccessor;
                 _context = context;
+                _userAccessor = userAccessor;
             }
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var userId = _userAccessor.GetCurrentId();
+                string userId = _userAccessor.GetCurrentId();
                 User user = await _context.Users.FindAsync(userId);
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                var activity = await _context.Activities.Include(x => x.Likes).ThenInclude(x => x.User).FirstOrDefaultAsync(x => x.Id == request.Id);
-                if (activity == null)
-                    throw new RestException(HttpStatusCode.BadRequest, new { Error = "activity doesn't exist" });
+                Comment comment = await _context.Comments
+                    .Include(x => x.Likes)
+                        .ThenInclude(x => x.User)
+                    .FirstOrDefaultAsync(x => x.Id == request.Id);
+                if (comment == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { Comment = "Comment doesn't exist" });
 
-                var like = activity.Likes.FirstOrDefault(x => x.User.Id == userId);
-
+                Domain.Like like = comment.Likes.FirstOrDefault(x => x.User.Id == userId);
                 if (like == null)
-                {
-                    throw new RestException(HttpStatusCode.BadRequest, new { Error = "Activity isn't liked" });
-                }
+                    throw new RestException(HttpStatusCode.Forbidden, new { Like = "Comment isn't liked" });
 
-                activity.Likes.Remove(like);
-                activity.LikesCount -= 1;
+                comment.Likes.Remove(like);
+                comment.LikesCount -= 1;
 
-                var result = await _context.SaveChangesAsync() > 0;
+                bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;
 
-                throw new RestException(HttpStatusCode.BadRequest, new { Errors = "Problem liking activity" });
-
+                throw new RestException(HttpStatusCode.BadGateway, new { SaveChanges = "Problem unliking comment" });
             }
         }
     }
