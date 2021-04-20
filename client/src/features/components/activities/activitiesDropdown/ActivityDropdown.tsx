@@ -1,12 +1,13 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
 import useTranslate from "next-translate/useTranslation";
-import { User } from "~root/src/app/models/authentication";
+import { User } from "~root/src/app/models/activity";
 import { useCommonStore } from "~root/src/app/providers/RootStoreProvider";
 
 interface Props {
   onClick: (type: string) => void;
   author: User;
+  sharingUser?: User;
   isActivity?: boolean;
   isHidden?: boolean;
 }
@@ -14,6 +15,7 @@ interface Props {
 const ActivityDropdown: React.FC<Props> = ({
   onClick,
   author,
+  sharingUser,
   isActivity = false,
   isHidden = false,
 }) => {
@@ -27,13 +29,15 @@ const ActivityDropdown: React.FC<Props> = ({
   const removeText = t(
     `activities.header.settings.${isActivity ? "activity" : "comment"}.remove`
   );
+  const unshareText = t("activities.header.settings.activity.unshare");
   const hideText = t(
     `activities.header.settings.${isActivity ? "activity" : "comment"}.hide`
   );
   const unhideText = t(
     `activities.header.settings.${isActivity ? "activity" : "comment"}.unhide`
   );
-  const blockText = t("activities.header.settings.activity.block");
+  const blockText = t("activities.header.settings.block");
+  const reportText = t(`activities.header.settings.report`);
   return (
     <Dropdown
       className=" icon"
@@ -42,7 +46,19 @@ const ActivityDropdown: React.FC<Props> = ({
       trigger={<></>}
     >
       <Dropdown.Menu>
-        {user.id === author.id ? (
+        {user.id === sharingUser?.id ? (
+          <Dropdown.Item
+            icon="remove"
+            text={unshareText}
+            onClick={() => onClick("unshare")}
+          ></Dropdown.Item>
+        ) : sharingUser?.id != undefined ? (
+          <Dropdown.Item
+            icon="exclamation"
+            text={reportText}
+            onClick={() => onClick("report")}
+          ></Dropdown.Item>
+        ) : user.id === author.id ? (
           <>
             <Dropdown.Item
               icon="edit"

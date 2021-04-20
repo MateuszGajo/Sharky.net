@@ -1,7 +1,6 @@
 import {
   ActivityFormValues,
   CreateActResp,
-  Comment,
   ActivityMap,
   Reply,
   CommentMap,
@@ -21,11 +20,14 @@ export default class AcitivtyStore {
 
   isSubmitting = false;
   isRepliesLoading = false;
+  commentId: string = "";
   isCommnetsLoading = false;
 
   get activitiesByDate() {
     return Array.from(this.activities.values()).sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return (
+        new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime()
+      );
     });
   }
 
@@ -78,12 +80,15 @@ export default class AcitivtyStore {
     const activity: ActivityMap = {
       ...formValues,
       id: resp.id,
+      activityId: resp.activityId,
       photo: resp.photo,
       createdAt: resp.createdAt,
+      modifiedAt: resp.createdAt,
       user: user,
       isLiked: false,
       comments: new Map<string, CommentMap>(),
       commentsCount: 0,
+      sharesCount: 0,
       likes: 0,
     };
     this.activities.set(activity.id, activity);
@@ -110,11 +115,51 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
-  getComments = async (activityId: string) => {
+  shareActivity = async (activityId: string, appActivityId: string) => {
+    try {
+      const resp = await agent.Activities.share(activityId);
+
+      const {
+        id: userId,
+        firstName,
+        lastName,
+        photo,
+      } = this.root.commonStore.user;
+      const user = {
+        id: userId,
+        firstName,
+        lastName,
+        photo,
+      };
+      const activity = this.activities.get(appActivityId);
+      if (activity) {
+        const newActivity = {
+          ...activity,
+          modifiedAt: resp.createdAt,
+          id: resp.id,
+          share: {
+            user,
+            createdAt: resp.createdAt,
+          },
+          SharesCount: activity.sharesCount + 1,
+        };
+        this.activities.set(newActivity.id, newActivity);
+      }
+    } catch (error) {}
+  };
+
+  unshareActivity = async (appActivityId: string) => {
+    try {
+      await agent.Activities.unshare(appActivityId);
+      this.activities.delete(appActivityId);
+    } catch (error) {}
+  };
+
+  getComments = async (activityId: string, appActivityId: string) => {
     this.isCommnetsLoading = true;
     try {
       const comments = await agent.Comments.get(activityId);
-      const activity = this.activities.get(activityId);
+      const activity = this.activities.get(appActivityId);
       comments.forEach((item) => {
         const newComment = {
           ...item,
@@ -128,10 +173,14 @@ export default class AcitivtyStore {
     }
   };
 
-  createComment = async (activityId: string, content: string) => {
+  createComment = async (
+    appActivityId: string,
+    activityId: string,
+    content: string
+  ) => {
     try {
       const response = await agent.Comments.create(activityId, content);
-      const activity = this.activities.get(activityId);
+      const activity = this.activities.get(appActivityId);
       if (activity) {
         const user = this.root.commonStore.user;
         const comment = {
@@ -145,7 +194,7 @@ export default class AcitivtyStore {
           isHidden: false,
           isLiked: false,
         };
-        this.setComment(activityId, comment);
+        this.setComment(appActivityId, comment);
       }
     } catch (eror) {}
   };
@@ -193,6 +242,7 @@ export default class AcitivtyStore {
 
   getReplies = async (activityId: string, commentId: string) => {
     this.isRepliesLoading = true;
+    this.commentId = commentId;
     try {
       const replies = await agent.Replies.get(commentId);
       const comment = this.activities.get(activityId)?.comments.get(commentId);
@@ -218,6 +268,7 @@ export default class AcitivtyStore {
         createdAt: response.createdAt,
         content,
         author: user,
+        likes: 0,
         isHidden: false,
         isLiked: false,
       };

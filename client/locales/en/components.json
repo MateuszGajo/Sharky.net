@@ -19,16 +19,18 @@
         "activity": {
           "edit": "Edit post",
           "remove": "Remove post",
+          "unshare": "Unshare",
           "hide": "Hide post",
-          "unhide": "Unhide post",
-          "block": "Block user"
+          "unhide": "Unhide post"
         },
         "comment": {
           "edit": "Edit comment",
           "remove": "Remove comment",
           "hide": "Hide comment",
           "unhide": "Unhide comment"
-        }
+        },
+        "block": "Block user",
+        "report": "Report user"
       }
     }
   }

@@ -32,11 +32,16 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
+                System.Console.WriteLine(request.Id);
+                // AppActivity appActivity = await _context.AppActivity.Include(x => x.Activity).FirstOrDefaultAsync(x => x.Activity.Id == request.Id);
+                // if (appActivity == null)
+                //     throw new RestException(HttpStatusCode.NotFound, new { Error = "Activity doesn't exist" });
+
                 Activity activity = await _context.Activities.Include(x => x.User).Include(x => x.Photo).FirstOrDefaultAsync(x => x.Id == request.Id);
-                if (activity == null) throw new RestException(HttpStatusCode.NotFound, new { Error = "Activity doesn't exist" });
+                if (activity == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { Error = "Activity doesn't exist" });
 
                 string userId = _userAccessor.GetCurrentId();
-                System.Console.WriteLine(activity.User);
                 if (activity.User.Id != userId) throw new RestException(HttpStatusCode.Forbidden, new { Error = "You aren't author of this activity" });
 
                 if (activity.Photo != null)
@@ -45,7 +50,7 @@ namespace Application.Activities
                     if (deletePhotoResult == null)
                         throw new RestException(HttpStatusCode.NotFound, new { Error = "Photo doesn't exist" });
                 }
-
+                // _context.AppActivity.Remove(appActivity);
                 _context.Activities.Remove(activity);
 
                 bool result = await _context.SaveChangesAsync() > 0;

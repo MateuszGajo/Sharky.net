@@ -1,10 +1,45 @@
 :global(#app) {
   .container {
+    position: relative;
+    display: flex;
     width: 500px;
+    margin: 0 100px;
   }
 
   .container + .container {
     margin-top: 3em;
+  }
+
+  .shareContainer {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    display: flex;
+    height: fit-content;
+  }
+
+  .sharingUsername {
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    padding-left: 0.8em;
+  }
+
+  .shareSegment {
+    width: 150px;
+    padding: 0.8em;
+  }
+
+  .shareIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 1.5rem;
+    color: #00cccc;
   }
 
   .header {
@@ -131,5 +166,19 @@
 
   .reply:hover .icon {
     color: #00cccc;
+  }
+
+  @media (max-width: 1918px) {
+    .container {
+      position: relative;
+      display: flex;
+      width: 450px;
+      margin: 0 100px;
+    }
+
+    .shareIcon {
+      padding: 0 8px;
+      font-size: 1.3rem;
+    }
   }
 }

@@ -43,19 +43,18 @@ namespace Application.Activities
                 .Include(x => x.HiddenActivities)
                     .ThenInclude(x => x.Activity)
                 .FirstOrDefaultAsync(x => x.Id == userId);
-                System.Console.WriteLine(userId);
 
                 if (user == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Error = "User doesn't exist" });
+                    throw new RestException(HttpStatusCode.Unauthorized, new { Error = "User doesn't exist" });
 
                 ICollection<BlockedUser> blockedUsers = user.BlockedUsers;
                 var excludedActivities = blockedUsers.SelectMany(x => x.Blocked.Activities.Select(x => x.Id)).ToList();
 
                 var hiddenActivity = user.HiddenActivities.Count != 0 ? user.HiddenActivities.Select(x => x.Activity.Id).ToList() : Enumerable.Empty<Guid>();
 
-                var activities = _context.Activities
+                var activities = _context.AppActivity
                     .AsSingleQuery()
-                    .Where(p => !excludedActivities.Contains(p.Id))
+                    .Where(p => !excludedActivities.Contains(p.Activity.Id))
                     .OrderByDescending(x => x.CreatedAt)
                     .Take(10)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = userId })

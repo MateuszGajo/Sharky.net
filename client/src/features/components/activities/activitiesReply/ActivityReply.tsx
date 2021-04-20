@@ -81,7 +81,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
         </Comment.Metadata>
         <Comment.Text
           className={cx(styles.content, {
-            [styles.hiddenContent]: item.isLiked,
+            [styles.hiddenContent]: item.isHidden,
           })}
         >
           {content}

@@ -10,7 +10,7 @@ import {
 import { observer } from "mobx-react";
 import useTranslation from "next-translate/useTranslation";
 import { CommentMap } from "~models/activity";
-import { User } from "~root/src/app/models/authentication";
+import { User } from "~root/src/app/models/activity";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 import { handleKeyDown } from "~root/src/app/utils/utils";
 import ActivityComment from "../activitiesComment/ActivityComment";
@@ -20,12 +20,18 @@ interface Props {
   activityId: string;
   comments: Map<string, CommentMap>;
   user: User;
+  setNumberOfComments: (number: number) => void;
+  numberOfComments: number;
+  appActivityId: string;
 }
 
 const ActivityDownbar: React.FC<Props> = ({
   activityId,
+  appActivityId,
   comments: initialComments,
   user,
+  setNumberOfComments,
+  numberOfComments,
 }) => {
   const { t } = useTranslation("components");
   const { createComment, isCommnetsLoading: isLoading } = useActivityStore();
@@ -37,7 +43,10 @@ const ActivityDownbar: React.FC<Props> = ({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    createComment(activityId, comment).then(() => setComment(""));
+    createComment(appActivityId, activityId, comment).then(() => {
+      setComment("");
+      setNumberOfComments(numberOfComments + 1);
+    });
   };
 
   let display = false;

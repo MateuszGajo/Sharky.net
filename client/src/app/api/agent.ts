@@ -74,6 +74,9 @@ const Activities = {
   hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unlike: (id: string) => requests.delete<void>(`/activity/${id}/unlike`),
+  share: (id: string) =>
+    requests.put<{ id: string; createdAt: Date }>(`/activity/${id}/share`, {}),
+  unshare: (id: string) => requests.delete<void>(`/activity/${id}/unshare`),
 };
 
 const Comments = {

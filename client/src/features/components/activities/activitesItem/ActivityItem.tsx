@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Card, Image, Feed, Container, Icon } from "semantic-ui-react";
+import {
+  Card,
+  Image,
+  Feed,
+  Container,
+  Icon,
+  Item,
+  Segment,
+} from "semantic-ui-react";
 import cx from "classnames";
 import { ActivityMap } from "~root/src/app/models/activity";
 import ActivityDownbar from "../activitesDownbar/ActivityDownbar";
@@ -11,6 +19,7 @@ import {
   useUserStore,
 } from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
+import { observer, Observer } from "mobx-react-lite";
 
 const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const {
@@ -18,6 +27,8 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
     deleteActivity,
     hideActivity,
     getComments,
+    shareActivity,
+    unshareActivity,
   } = useActivityStore();
   const { blockUser } = useUserStore();
 
@@ -25,9 +36,8 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
 
   const [isLiked, setStatusOfLike] = useState(item.isLiked);
   const [numberOfLikes, setNumberOfLikes] = useState<number>(item.likes);
-  const [numberOfComments, setNumberOfComments] = useState<number>(
-    item.commentsCount
-  );
+  const [numberOfComments, setNumberOfComments] = useState(item.commentsCount);
+  const [numberOfShares, setNumberOfShares] = useState(item.sharesCount);
   const [isComments, setStatusOfComments] = useState(false);
   const [isEditting, setStatusOfEdit] = useState(false);
   const [isSubmitting, setStatusOfSubmitting] = useState(false);
@@ -35,7 +45,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   const handleLikeClick = () => {
     if (!isSubmitting) {
       setStatusOfSubmitting(true);
-      activityLikeHandle(isLiked, item.id).then(() => {
+      activityLikeHandle(isLiked, item.activityId).then(() => {
         if (isLiked) {
           setNumberOfLikes(numberOfLikes - 1);
           setStatusOfLike(false);
@@ -55,20 +65,29 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
         setStatusOfEdit(true);
         break;
       case "delete":
-        deleteActivity(item.id);
+        deleteActivity(item.activityId);
         break;
       case "hide":
-        hideActivity(item.id);
+        hideActivity(item.activityId);
         break;
       case "block":
         blockUser(item.user.id);
+        break;
+      case "unshare":
+        unshareActivity(item.id);
         break;
     }
   };
 
   const handleCommentIconClick = () => {
-    if (!isComments) getComments(item.id);
+    if (!isComments) getComments(item.activityId, item.id);
     setStatusOfComments((prev) => !prev);
+  };
+
+  const handleShareIconClick = () => {
+    shareActivity(item.activityId, item.id).then(() =>
+      setNumberOfShares((prev) => prev + 1)
+    );
   };
 
   return (
@@ -78,10 +97,39 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
           content={item.content}
           photoUrl={item.photo?.url}
           setStatusOfEdit={setStatusOfEdit}
-          activityId={item.id}
+          activityId={item.activityId}
         />
       ) : (
         <Container className={styles.container}>
+          {!!item.share?.user && (
+            <div className={styles.shareContainer}>
+              <Segment compact className={styles.shareSegment}>
+                <Item.Group>
+                  <Item>
+                    <Item.Image
+                      size="mini"
+                      src={
+                        item.share.user.photo ||
+                        `https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png`
+                      }
+                    />
+
+                    <Item.Content
+                      verticalAlign="middle"
+                      className={styles.sharingUsername}
+                    >
+                      {item.share.user.firstName} {item.share.user.lastName}
+                      aaaaa
+                    </Item.Content>
+                  </Item>
+                </Item.Group>
+              </Segment>
+              <div className={styles.shareIcon}>
+                <Icon name="share" />
+              </div>
+            </div>
+          )}
+
           <Card fluid>
             <Card.Content className={styles.header}>
               <Container className={styles.headerContainer}>
@@ -106,6 +154,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                   <ActivityDropdown
                     onClick={handleDownbarClick}
                     author={item.user}
+                    sharingUser={item.share?.user}
                     isActivity
                   />
                 </div>
@@ -124,36 +173,44 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                 )}
               </Container>
             </Card.Content>
-            <Card.Content extra>
-              <Container className={styles.toolBar}>
-                <a className={styles.reply}>
-                  <Icon name="share" className={styles.icon} />
-                  22
-                </a>
-                <a className={styles.comment} onClick={handleCommentIconClick}>
-                  <Icon name="comment" className={styles.icon} />
-                  {numberOfComments}
-                </a>
+            {!item.share?.user && (
+              <Card.Content extra>
+                <Container className={styles.toolBar}>
+                  <a className={styles.reply} onClick={handleShareIconClick}>
+                    <Icon name="share" className={styles.icon} />
+                    {numberOfShares}
+                  </a>
+                  <a
+                    className={styles.comment}
+                    onClick={handleCommentIconClick}
+                  >
+                    <Icon name="comment" className={styles.icon} />
+                    {numberOfComments}
+                  </a>
 
-                <a className={styles.like} onClick={handleLikeClick}>
-                  <Icon
-                    name="like"
-                    className={cx(styles.icon, {
-                      [styles.likeIconActive]: isLiked,
-                    })}
+                  <a className={styles.like} onClick={handleLikeClick}>
+                    <Icon
+                      name="like"
+                      className={cx(styles.icon, {
+                        [styles.likeIconActive]: isLiked,
+                      })}
+                    />
+                    <span className={styles.number}>{numberOfLikes}</span>
+                  </a>
+                </Container>
+
+                {isComments && (
+                  <ActivityDownbar
+                    activityId={item.activityId}
+                    comments={item.comments}
+                    user={item.user}
+                    setNumberOfComments={setNumberOfComments}
+                    numberOfComments={numberOfComments}
+                    appActivityId={item.id}
                   />
-                  <span className={styles.number}>{numberOfLikes}</span>
-                </a>
-              </Container>
-
-              {isComments && (
-                <ActivityDownbar
-                  activityId={item.id}
-                  comments={item.comments}
-                  user={item.user}
-                />
-              )}
-            </Card.Content>
+                )}
+              </Card.Content>
+            )}
           </Card>
         </Container>
       )}
@@ -161,4 +218,4 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   );
 };
 
-export default ActivityItem;
+export default observer(ActivityItem);

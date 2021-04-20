@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using Application.Activities;
 using Application.Comments;
 using Application.Replies;
-using AutoMapper;
 using Domain;
 
 namespace Application.Core
@@ -16,11 +14,23 @@ namespace Application.Core
         {
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
-            CreateMap<ActivityDto, ActivityDto>();
 
-            CreateMap<Activity, ActivityDto>()
-            .ForMember(d => d.Likes, o => o.MapFrom(s => s.Likes.Count()))
-             .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Likes.FirstOrDefault(x => x.User.Id == userId) == null ? false : true));
+            CreateMap<AppActivity, ActivityDto>()
+            .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.Activity.Id))
+            .ForMember(d => d.User, o => o.MapFrom(s => s.Activity.User))
+            .ForMember(d => d.Content, o => o.MapFrom(s => s.Activity.Content))
+            .ForMember(d => d.Photo, o => o.MapFrom(s => s.Activity.Photo))
+            .ForMember(d => d.ModifiedAt, o => o.MapFrom(s => s.CreatedAt))
+            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.Activity.CreatedAt))
+            .ForMember(d => d.Likes, o => o.MapFrom(s => s.Activity.LikesCount))
+            .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Activity.Likes.FirstOrDefault(x => x.User.Id == userId) == null ? false : true))
+            .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Activity.CommentsCount))
+            .ForMember(d => d.SharesCount, o => o.MapFrom(s => s.Activity.SharesCount))
+            .ForMember(d => d.Share, o => o.MapFrom(s => s));
+
+            CreateMap<AppActivity, ShareDto>()
+            .ForMember(d => d.User, o => o.MapFrom(s => s.SharingUser))
+            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedAt));
 
             CreateMap<User, UserDto>();
 

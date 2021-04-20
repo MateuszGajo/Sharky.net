@@ -1,12 +1,19 @@
-import { User } from "./authentication";
+import { Photo } from "./authentication";
 
 export interface ActivityFormValues {
   content: string;
   file: Blob;
 }
+export interface User {
+  id: string;
+  firstName: string;
+  lastName: String;
+  photo: Photo | null;
+}
 
 export interface Activity {
   id: string;
+  activityId: string;
   user: User;
   photo?: {
     id: string;
@@ -14,10 +21,16 @@ export interface Activity {
   };
   content: string;
   createdAt: Date;
+  modifiedAt: Date;
   isLiked: boolean;
   likes: number;
   comments: [];
   commentsCount: number;
+  sharesCount: number;
+  share?: {
+    user: User;
+    createdAt: Date;
+  };
 }
 
 export interface ActivityMap extends Omit<Activity, "comments"> {
@@ -52,6 +65,7 @@ export interface Reply {
 
 export interface CreateActResp {
   id: string;
+  activityId: string;
   photo: {
     id: string;
     url: string;

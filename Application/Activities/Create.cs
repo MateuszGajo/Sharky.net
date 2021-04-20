@@ -21,6 +21,7 @@ namespace Application.Activities
             public DateTime CreatedAt { get; set; }
             public Photo Photo { get; set; }
             public Guid Id { get; set; }
+            public Guid ActivityId { get; set; }
         }
         public class Command : IRequest<Response>
         {
@@ -73,12 +74,19 @@ namespace Application.Activities
                     CreatedAt = date
                 };
 
-                _context.Activities.Add(activity);
+                AppActivity appActivity = new AppActivity
+                {
+                    Activity = activity,
+                    CreatedAt = date
+                };
+
+                _context.AppActivity.Add(appActivity);
 
                 var success = await _context.SaveChangesAsync() > 0;
                 var response = new Response
                 {
-                    Id = activity.Id,
+                    ActivityId = activity.Id,
+                    Id = appActivity.Id,
                     CreatedAt = date,
                     Photo = photo
                 };

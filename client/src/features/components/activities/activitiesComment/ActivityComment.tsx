@@ -16,7 +16,6 @@ interface Props {
 }
 
 const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
-  console.log(item);
   const { t } = useTranslation("components");
 
   const [isReply, setStatusOfReply] = useState(false);
@@ -36,6 +35,7 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
     getReplies,
     isRepliesLoading: isLoading,
     commentLikeHandle,
+    commentId,
   } = useActivityStore();
 
   const replyPlaceholder = t("activities.replyPlaceholder");
@@ -255,7 +255,7 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
               </Item.Content>
             </Item>
           </Item.Group>
-          {isLoading ? (
+          {isLoading && commentId == item.id ? (
             <Segment loading basic></Segment>
           ) : (
             replies.map((reply, index) => renderReplies(reply, index))

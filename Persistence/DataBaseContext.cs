@@ -20,33 +20,44 @@ namespace Persistence
         public DbSet<HiddenReply> HiddenReplies { get; set; }
         public DbSet<BlockedUser> BlockedUsers { get; set; }
         public DbSet<Like> Likes { get; set; }
+        public DbSet<AppActivity> AppActivity { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Activity>()
+            .HasMany(a => a.AppActivities)
+            .WithOne(a => a.Activity)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Like>()
-            .HasOne(u => u.Activity)
-            .WithMany(a => a.Likes);
+                .HasOne(u => u.Activity)
+                .WithMany(a => a.Likes)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Like>()
-         .HasOne(u => u.Comment)
-         .WithMany(a => a.Likes);
+                .HasOne(u => u.Comment)
+                .WithMany(a => a.Likes)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Like>()
-         .HasOne(u => u.Reply)
-         .WithMany(a => a.Likes);
+                .HasOne(u => u.Reply)
+                .WithMany(a => a.Likes)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HiddenActivity>()
-                 .HasOne(p => p.User)
-                 .WithMany(b => b.HiddenActivities);
+                .HasOne(p => p.User)
+                .WithMany(b => b.HiddenActivities)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HiddenComment>()
                 .HasOne(u => u.User)
-                .WithMany(h => h.HiddenComments);
+                .WithMany(h => h.HiddenComments)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HiddenReply>()
                 .HasOne(u => u.User)
-                .WithMany(h => h.HiddenReplies);
+                .WithMany(h => h.HiddenReplies)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<BlockedUser>()
                 .HasOne(u => u.User)
@@ -54,15 +65,18 @@ namespace Persistence
 
             modelBuilder.Entity<Activity>()
                 .HasOne(p => p.User)
-                .WithMany(b => b.Activities);
+                .WithMany(b => b.Activities)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Comment>()
                 .HasOne(p => p.Activity)
-                .WithMany(b => b.Comments);
+                .WithMany(b => b.Comments)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Reply>()
                 .HasOne(p => p.Comment)
-                .WithMany(b => b.Replies);
+                .WithMany(b => b.Replies)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
 
