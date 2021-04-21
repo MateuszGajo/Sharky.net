@@ -4,6 +4,7 @@ import {
   ActivityMap,
   Reply,
   CommentMap,
+  Activity,
 } from "./../models/activity";
 import { makeAutoObservable } from "mobx";
 import agent from "~api/agent";
@@ -17,10 +18,12 @@ export default class AcitivtyStore {
   }
 
   activities = new Map<string, ActivityMap>();
+  activity: ActivityMap | undefined = undefined;
 
   isSubmitting = false;
   isRepliesLoading = false;
   commentId: string = "";
+  activityId: string = "";
   isCommnetsLoading = false;
 
   get activitiesByDate() {
@@ -96,7 +99,7 @@ export default class AcitivtyStore {
 
   getActivities = async () => {
     try {
-      await agent.Activities.get().then((data) => {
+      await agent.Activities.list().then((data) => {
         data.forEach((activity) => {
           const newActivity = {
             ...activity,
@@ -108,6 +111,19 @@ export default class AcitivtyStore {
     } catch (error) {}
   };
 
+  getActivity = async (appActivityId: string) => {
+    const activity = this.activities.get(appActivityId);
+    if (activity) this.activity = activity;
+    else {
+      const getActivity = await agent.Activities.get(appActivityId);
+      const newActivity = {
+        ...getActivity,
+        comments: new Map<string, CommentMap>(),
+      };
+      this.activity = newActivity;
+    }
+  };
+
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {
     try {
       if (!isLiked) await agent.Activities.like(activityId);
@@ -117,7 +133,7 @@ export default class AcitivtyStore {
 
   shareActivity = async (activityId: string, appActivityId: string) => {
     try {
-      const resp = await agent.Activities.share(activityId);
+      const resp = await agent.Activities.share(activityId, appActivityId);
 
       const {
         id: userId,
@@ -140,6 +156,7 @@ export default class AcitivtyStore {
           share: {
             user,
             createdAt: resp.createdAt,
+            appActivityId,
           },
           SharesCount: activity.sharesCount + 1,
         };
@@ -157,6 +174,7 @@ export default class AcitivtyStore {
 
   getComments = async (activityId: string, appActivityId: string) => {
     this.isCommnetsLoading = true;
+    this.activityId = activityId;
     try {
       const comments = await agent.Comments.get(activityId);
       const activity = this.activities.get(appActivityId);

@@ -111,6 +111,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
                     SharingUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    AppActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

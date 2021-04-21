@@ -30,7 +30,8 @@ namespace Application.Core
 
             CreateMap<AppActivity, ShareDto>()
             .ForMember(d => d.User, o => o.MapFrom(s => s.SharingUser))
-            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedAt));
+            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedAt))
+            .ForMember(d => d.AppActivityId, o => o.MapFrom(s => s.AppActivityId));
 
             CreateMap<User, UserDto>();
 

@@ -19,7 +19,8 @@ namespace Application.Activities
         }
         public class Command : IRequest<Response>
         {
-            public Guid Id { get; set; }
+            public Guid ActivityId { get; set; }
+            public Guid AppActivityId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Response>
@@ -39,7 +40,7 @@ namespace Application.Activities
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                Activity activity = await _context.Activities.FindAsync(request.Id);
+                Activity activity = await _context.Activities.FindAsync(request.ActivityId);
                 if (activity == null)
                     throw new RestException(HttpStatusCode.NotFound, new { Activity = "Activity doesn't exsit" });
 
@@ -48,7 +49,8 @@ namespace Application.Activities
                 {
                     Activity = activity,
                     SharingUser = user,
-                    CreatedAt = date
+                    CreatedAt = date,
+                    AppActivityId = request.AppActivityId
                 };
 
                 _context.AppActivity.Add(shareActivity);

@@ -70,12 +70,16 @@ const Activities = {
       .then(responseBody);
   },
   delete: (id: string) => requests.delete<void>(`/activity/${id}`),
-  get: () => requests.get<Activity[]>("/activity"),
+  list: () => requests.get<Activity[]>("/activity"),
+  get: (id: string) => requests.get<Activity>(`/activity/${id}`),
   hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
   unlike: (id: string) => requests.delete<void>(`/activity/${id}/unlike`),
-  share: (id: string) =>
-    requests.put<{ id: string; createdAt: Date }>(`/activity/${id}/share`, {}),
+  share: (activityId: string, appActivityId: string) =>
+    requests.put<{ id: string; createdAt: Date }>(
+      `/activity/${activityId}/share`,
+      { appActivityId }
+    ),
   unshare: (id: string) => requests.delete<void>(`/activity/${id}/unshare`),
 };
 

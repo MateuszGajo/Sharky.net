@@ -51,4 +51,10 @@
     color: grey;
     margin: 0;
   }
+
+  @media (max-width: 1919px) {
+    .container {
+      width: 450px;
+    }
+  }
 }

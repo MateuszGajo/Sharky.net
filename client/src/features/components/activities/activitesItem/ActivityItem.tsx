@@ -19,9 +19,14 @@ import {
   useUserStore,
 } from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
-import { observer, Observer } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 
-const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
+const ActivityItem: React.FC<{
+  item: ActivityMap;
+  setOpen: (status: boolean) => void;
+  isShared: boolean;
+  isModal?: boolean;
+}> = ({ item, setOpen, isShared, isModal = false }) => {
   const {
     activityLikeHandle,
     deleteActivity,
@@ -29,6 +34,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
     getComments,
     shareActivity,
     unshareActivity,
+    getActivity,
   } = useActivityStore();
   const { blockUser } = useUserStore();
 
@@ -80,7 +86,8 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
   };
 
   const handleCommentIconClick = () => {
-    if (!isComments) getComments(item.activityId, item.id);
+    if (!isComments && item.commentsCount > 0)
+      getComments(item.activityId, item.id);
     setStatusOfComments((prev) => !prev);
   };
 
@@ -100,8 +107,12 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
           activityId={item.activityId}
         />
       ) : (
-        <Container className={styles.container}>
-          {!!item.share?.user && (
+        <Container
+          className={cx(styles.container, {
+            [styles.modalContainer]: isModal,
+          })}
+        >
+          {isShared && (
             <div className={styles.shareContainer}>
               <Segment compact className={styles.shareSegment}>
                 <Item.Group>
@@ -109,7 +120,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                     <Item.Image
                       size="mini"
                       src={
-                        item.share.user.photo ||
+                        item.share?.user.photo ||
                         `https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png`
                       }
                     />
@@ -118,7 +129,7 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
                       verticalAlign="middle"
                       className={styles.sharingUsername}
                     >
-                      {item.share.user.firstName} {item.share.user.lastName}
+                      {item.share?.user.firstName} {item.share?.user.lastName}
                       aaaaa
                     </Item.Content>
                   </Item>
@@ -130,26 +141,36 @@ const ActivityItem: React.FC<{ item: ActivityMap }> = ({ item }) => {
             </div>
           )}
 
-          <Card fluid>
+          <Card
+            fluid
+            {...(isShared && {
+              onClick: () => {
+                getActivity(item.share?.appActivityId!);
+                setOpen(true);
+              },
+            })}
+            className={styles.activityContainer}
+          >
             <Card.Content className={styles.header}>
               <Container className={styles.headerContainer}>
-                <Feed className={styles.noMargin}>
-                  <Feed.Event>
-                    <Feed.Label
+                <div className={styles.header}>
+                  <div className={styles.userPhotoContainer}>
+                    <img
                       className={styles.userPhoto}
-                      image={
+                      src={
                         item.user.photo?.url ||
                         "https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
                       }
+                      alt="user"
                     />
-                    <Feed.Content>
-                      <Feed.Date content={date} className={styles.date} />
-                      <Feed.Summary className={styles.userName}>
-                        {item.user.firstName + " " + item.user.lastName}
-                      </Feed.Summary>
-                    </Feed.Content>
-                  </Feed.Event>
-                </Feed>
+                  </div>
+                  <div className={styles.headerTitle}>
+                    <div className={styles.date}>{date}</div>
+                    <div className={styles.userName}>
+                      {item.user.firstName + " " + item.user.lastName}
+                    </div>
+                  </div>
+                </div>
                 <div className={styles.optionsContainer}>
                   <ActivityDropdown
                     onClick={handleDownbarClick}

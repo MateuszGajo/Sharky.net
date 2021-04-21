@@ -61,6 +61,9 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("AppActivityId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 

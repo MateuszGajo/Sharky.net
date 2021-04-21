@@ -2,8 +2,13 @@
   .container {
     position: relative;
     display: flex;
-    width: 500px;
+    width: inherit;
+    width: 1000px;
     margin: 0 100px;
+  }
+
+  .modalContainer {
+    margin: 0;
   }
 
   .container + .container {
@@ -42,13 +47,22 @@
     color: #00cccc;
   }
 
+  .activityContainer {
+    width: 100%;
+  }
+
   .header {
-    padding: 0.85em 0.85em;
+    display: flex;
+    padding: 0.5em;
   }
 
   .headerContainer {
     display: flex;
     justify-content: space-between;
+  }
+
+  .headerTitle {
+    margin-left: 15px;
   }
 
   .toolBar {
@@ -69,8 +83,16 @@
   .noMargin {
     margin: 0;
   }
+  .userPhotoContainer {
+    display: block;
+    height: fit-content;
+    width: 40px;
+  }
 
-  .userPhoto img {
+  .userPhoto {
+    display: block;
+    width: 100%;
+    object-fit: cover;
     border-radius: 3px;
   }
 
@@ -116,9 +138,6 @@
   .editContent::-webkit-scrollbar-track {
     background-color: transparent;
   }
-
-  // .previewContainer {
-  // }
 
   .preview {
     width: 100%;
@@ -168,12 +187,11 @@
     color: #00cccc;
   }
 
-  @media (max-width: 1918px) {
+  @media (max-width: 1919px) {
     .container {
       position: relative;
       display: flex;
       width: 450px;
-      margin: 0 100px;
     }
 
     .shareIcon {

@@ -30,6 +30,7 @@ export interface Activity {
   share?: {
     user: User;
     createdAt: Date;
+    appActivityId: string;
   };
 }
 

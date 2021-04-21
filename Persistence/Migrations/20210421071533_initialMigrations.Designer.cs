@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210420100926_initialMigrations")]
+    [Migration("20210421071533_initialMigrations")]
     partial class initialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,6 +61,9 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<Guid?>("ActivityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AppActivityId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")

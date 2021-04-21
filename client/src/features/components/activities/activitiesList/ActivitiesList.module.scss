@@ -1,3 +1,9 @@
-.container {
-  margin-top: 20px;
+:global(#app) {
+  .container {
+    margin-top: 20px;
+  }
+
+  .modal {
+    width: fit-content;
+  }
 }

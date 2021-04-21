@@ -24,7 +24,7 @@ const MessageBoxContext: React.FC<Props> = ({
   const textRef = useRef<HTMLElement>(null);
 
   const handleChange = (e: any) => {
-    setText(e.target.outerText);
+    setText(e.target.innerText);
   };
 
   useEffect(() => {

@@ -63,7 +63,7 @@ const MessageBoxItem: React.FC<Props> = ({
         .catch((err) => setError(err));
     }
   };
-
+  console.log(text);
   const closeModal = () => {
     setOpen(false);
     if (isEdit) {

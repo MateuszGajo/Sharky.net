@@ -25,15 +25,16 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Activity>> Details(Guid id)
+        public async Task<ActionResult<ActivityDto>> Details(Guid id)
         {
             return await _mediator.Send(new Details.Query { Id = id });
         }
 
         [HttpPut("{id}/share")]
-        public async Task<ActionResult<Share.Response>> Share(Guid id)
+        public async Task<ActionResult<Share.Response>> Share(Share.Command command, Guid id)
         {
-            return await _mediator.Send(new Share.Command { Id = id });
+            command.ActivityId = id;
+            return await _mediator.Send(command);
         }
 
         [HttpDelete("{id}/unshare")]

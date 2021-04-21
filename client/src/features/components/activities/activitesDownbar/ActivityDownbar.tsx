@@ -34,7 +34,11 @@ const ActivityDownbar: React.FC<Props> = ({
   numberOfComments,
 }) => {
   const { t } = useTranslation("components");
-  const { createComment, isCommnetsLoading: isLoading } = useActivityStore();
+  const {
+    createComment,
+    isCommnetsLoading: isLoading,
+    activityId: loadingActivityId,
+  } = useActivityStore();
 
   const [comment, setComment] = useState("");
   const [displayHiddenComments, setHiddenCommentsVisible] = useState<any>({});
@@ -105,7 +109,7 @@ const ActivityDownbar: React.FC<Props> = ({
           </Item.Content>
         </Item>
       </Item.Group>
-      {isLoading ? (
+      {isLoading && loadingActivityId == activityId ? (
         <>
           <Segment basic loading></Segment>
         </>
