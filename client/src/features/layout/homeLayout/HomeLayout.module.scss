@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  width: 100%;
+}
+
+.navbar {
+  display: block;
+  width: calc(100vw / 16 * 3);
+}
+
+.content {
+  flex-grow: 1;
+}
+
+.sidebar {
+  width: calc(100vw / 16 * 2);
+}
+
+@media (max-width: 1023px) {
+  .navbar {
+    display: none;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}

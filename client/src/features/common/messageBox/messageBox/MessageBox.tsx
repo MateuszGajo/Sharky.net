@@ -63,9 +63,10 @@ const MessageBoxItem: React.FC<Props> = ({
         .catch((err) => setError(err));
     }
   };
-  console.log(text);
+
   const closeModal = () => {
     setOpen(false);
+    setText("");
     if (isEdit) {
       isEdit(false);
     }
@@ -78,17 +79,22 @@ const MessageBoxItem: React.FC<Props> = ({
       className={styles.modalContainer}
       trigger={
         <Container className={styles.container}>
-          <Item.Group className={styles.item}>
-            <Item>
-              <Item.Image
+          <div className={styles.activityCreator}>
+            <div className={styles.photoContainer}>
+              <img
+                className={styles.photo}
                 src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
-                size="mini"
+                alt=""
               />
-              <Item.Content verticalAlign="middle">
-                <Input placeholder="What's up?" fluid />
-              </Item.Content>
-            </Item>
-          </Item.Group>
+            </div>
+            <div className={styles.creatorContent}>
+              <Input
+                placeholder="What's up?"
+                fluid
+                className={styles.creatorInput}
+              />
+            </div>
+          </div>
         </Container>
       }
     >

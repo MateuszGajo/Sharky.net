@@ -263,7 +263,9 @@ export default class AcitivtyStore {
     this.commentId = commentId;
     try {
       const replies = await agent.Replies.get(commentId);
+      console.log(replies);
       const comment = this.activities.get(activityId)?.comments.get(commentId);
+      console.log(comment);
       replies.forEach((item) => {
         comment?.replies.set(item.id, item);
       });

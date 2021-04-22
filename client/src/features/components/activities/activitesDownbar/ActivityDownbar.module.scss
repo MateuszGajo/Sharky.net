@@ -1,10 +1,68 @@
-.hiddenComments {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5px 0;
-}
+:global(#app) {
+  .hiddenComments {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+  }
 
-.hiddenCommentsIcon {
-  cursor: pointer;
+  .hiddenCommentsIcon {
+    cursor: pointer;
+  }
+
+  .photo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 130px;
+  }
+
+  .commentCreator {
+    display: flex;
+    align-items: center;
+    margin-top: 1em;
+  }
+
+  .commentCreatorContent {
+    width: 100%;
+    margin-left: 0.7em;
+  }
+
+  .photo img {
+    object-fit: cover;
+  }
+
+  .comments {
+    max-width: none;
+  }
+
+  @media (max-width: 3839px) {
+    .photo {
+      max-width: 100px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .photo {
+      max-width: 60px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .photo {
+      max-width: 45px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .photo {
+      max-width: 35px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .photo {
+      max-width: 45px;
+    }
+  }
 }

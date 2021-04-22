@@ -11,10 +11,6 @@
     margin-bottom: 0.7em;
   }
 
-  .replyContainer {
-    padding: 1em 0 0;
-  }
-
   .username {
     color: $primaryColor;
   }
@@ -69,6 +65,33 @@
     top: 5px;
     right: 5px;
   }
+
+  .replyContainer {
+    padding: 1em 0 0;
+    max-width: none;
+    font-size: 0.8rem;
+  }
+
+  .replyForm {
+    display: flex;
+  }
+
+  .replyFormPhotoContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 100px;
+  }
+
+  .replyFormPhoto {
+    object-fit: cover;
+  }
+
+  .replyFormContent {
+    margin-left: 0.5em;
+    width: 100%;
+  }
+
   .like .icon {
     color: #ff3d47;
     opacity: 1;
@@ -81,7 +104,38 @@
   .icon.likeIconActive {
     color: #cf2029;
   }
+
   .likeIconActive + .number {
     color: #cf2029;
+  }
+
+  @media (max-width: 3839px) {
+    .replyFormPhotoContainer {
+      max-width: 70px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .replyFormPhotoContainer {
+      max-width: 40px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .replyFormPhotoContainer {
+      max-width: 33px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .replyFormPhotoContainer {
+      max-width: 29px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .replyFormPhotoContainer {
+      max-width: 36px;
+    }
   }
 }

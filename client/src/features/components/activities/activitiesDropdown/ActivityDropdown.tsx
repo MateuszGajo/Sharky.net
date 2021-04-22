@@ -1,8 +1,10 @@
 import React from "react";
 import { Dropdown } from "semantic-ui-react";
+import cx from "classnames";
 import useTranslate from "next-translate/useTranslation";
 import { User } from "~root/src/app/models/activity";
 import { useCommonStore } from "~root/src/app/providers/RootStoreProvider";
+import styles from "./ActivityDropdown.module.scss";
 
 interface Props {
   onClick: (type: string) => void;
@@ -40,7 +42,7 @@ const ActivityDropdown: React.FC<Props> = ({
   const reportText = t(`activities.header.settings.report`);
   return (
     <Dropdown
-      className=" icon"
+      className={`${styles.icon} icon`}
       icon="ellipsis horizontal"
       direction="left"
       trigger={<></>}

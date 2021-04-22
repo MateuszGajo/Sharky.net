@@ -50,3 +50,9 @@
 .navbar__container__item__text {
   margin-left: 7px;
 }
+
+@media (max-width: 1023px) {
+  .navbar {
+    display: none;
+  }
+}

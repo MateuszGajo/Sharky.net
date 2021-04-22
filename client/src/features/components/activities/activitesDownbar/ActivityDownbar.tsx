@@ -64,7 +64,7 @@ const ActivityDownbar: React.FC<Props> = ({
 
     if (display || item.isHidden === false) {
       return (
-        <ActivityComment key={item.id} item={item} activityId={activityId} />
+        <ActivityComment key={item.id} item={item} activityId={appActivityId} />
       );
     } else if (prevEl?.isHidden != item.isHidden) {
       return (
@@ -87,28 +87,26 @@ const ActivityDownbar: React.FC<Props> = ({
 
   return (
     <>
-      <Item.Group>
-        <Item>
-          <Item.Image
-            size="mini"
+      <div className={styles.commentCreator}>
+        <div className={styles.photo}>
+          <img
             src={
               user.photo?.url ||
               "https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
             }
+            alt=""
           />
-          <Item.Content verticalAlign="middle">
-            <form onSubmit={handleSubmit}>
-              <Input
-                fluid
-                placeholder={commnetPlaceholder}
-                onChange={(e) => setComment(e.target.value)}
-                onKeyDown={handleKeyDown}
-                value={comment}
-              />
-            </form>
-          </Item.Content>
-        </Item>
-      </Item.Group>
+        </div>
+        <form onSubmit={handleSubmit} className={styles.commentCreatorContent}>
+          <Input
+            fluid
+            placeholder={commnetPlaceholder}
+            onChange={(e) => setComment(e.target.value)}
+            onKeyDown={handleKeyDown}
+            value={comment}
+          />
+        </form>
+      </div>
       {isLoading && loadingActivityId == activityId ? (
         <>
           <Segment basic loading></Segment>
@@ -117,7 +115,7 @@ const ActivityDownbar: React.FC<Props> = ({
         !!comments.length && (
           <>
             <Divider />
-            <Comment.Group>
+            <Comment.Group className={styles.comments}>
               {comments.map((item, index) => renderComments(item, index))}
             </Comment.Group>
           </>

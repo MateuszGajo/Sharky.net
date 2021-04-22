@@ -233,28 +233,25 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
       </Comment.Content>
       {isReply && (
         <Comment.Group className={styles.replyContainer}>
-          <Item.Group className={styles.form}>
-            <Item>
-              <Item.Image
-                size="mini"
-                src={
-                  "https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
-                }
+          <div className={styles.replyForm}>
+            <div className={styles.replyFormPhotoContainer}>
+              <img
+                className={styles.replyFormPhoto}
+                src="https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
+                alt=""
               />
-              <Item.Content verticalAlign="middle">
-                <form onSubmit={handleSubmit}>
-                  <Input
-                    size="mini"
-                    fluid
-                    placeholder={replyPlaceholder}
-                    onChange={(e) => setContent(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    value={content}
-                  />
-                </form>
-              </Item.Content>
-            </Item>
-          </Item.Group>
+            </div>
+            <form onSubmit={handleSubmit} className={styles.replyFormContent}>
+              <Input
+                className={styles.replyFormInput}
+                fluid
+                placeholder={replyPlaceholder}
+                onChange={(e) => setContent(e.target.value)}
+                onKeyDown={handleKeyDown}
+                value={content}
+              />
+            </form>
+          </div>
           {isLoading && commentId == item.id ? (
             <Segment loading basic></Segment>
           ) : (

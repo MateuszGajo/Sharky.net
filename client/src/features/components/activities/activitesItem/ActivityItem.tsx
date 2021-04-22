@@ -114,26 +114,28 @@ const ActivityItem: React.FC<{
         >
           {isShared && (
             <div className={styles.shareContainer}>
-              <Segment compact className={styles.shareSegment}>
-                <Item.Group>
-                  <Item>
-                    <Item.Image
-                      size="mini"
+              <Segment
+                compact
+                className={styles.shareSegment}
+                title={
+                  item.share?.user.firstName + " " + item.share?.user.lastName
+                }
+              >
+                <div className={styles.shareContent}>
+                  <div className={styles.sharingUserPhoto}>
+                    <img
                       src={
-                        item.share?.user.photo ||
+                        item.share?.user.photo?.url ||
                         `https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png`
                       }
+                      alt=""
                     />
+                  </div>
 
-                    <Item.Content
-                      verticalAlign="middle"
-                      className={styles.sharingUsername}
-                    >
-                      {item.share?.user.firstName} {item.share?.user.lastName}
-                      aaaaa
-                    </Item.Content>
-                  </Item>
-                </Item.Group>
+                  <div className={styles.sharingUsername}>
+                    {item.share?.user.firstName} {item.share?.user.lastName}
+                  </div>
+                </div>
               </Segment>
               <div className={styles.shareIcon}>
                 <Icon name="share" />
@@ -152,7 +154,7 @@ const ActivityItem: React.FC<{
             className={styles.activityContainer}
           >
             <Card.Content className={styles.header}>
-              <Container className={styles.headerContainer}>
+              <div className={styles.headerContainer}>
                 <div className={styles.header}>
                   <div className={styles.userPhotoContainer}>
                     <img
@@ -166,7 +168,7 @@ const ActivityItem: React.FC<{
                   </div>
                   <div className={styles.headerTitle}>
                     <div className={styles.date}>{date}</div>
-                    <div className={styles.userName}>
+                    <div className={styles.username}>
                       {item.user.firstName + " " + item.user.lastName}
                     </div>
                   </div>
@@ -179,7 +181,7 @@ const ActivityItem: React.FC<{
                     isActivity
                   />
                 </div>
-              </Container>
+              </div>
             </Card.Content>
 
             <Card.Content className={styles.content}>
@@ -188,15 +190,15 @@ const ActivityItem: React.FC<{
                   <span>{item.content}</span>
                 </Card.Description>
               )}
-              <Container>
+              <div>
                 {item.photo && (
                   <Image src={item.photo.url} className={styles.photo} />
                 )}
-              </Container>
+              </div>
             </Card.Content>
             {!item.share?.user && (
-              <Card.Content extra>
-                <Container className={styles.toolBar}>
+              <Card.Content extra className={styles.downbar}>
+                <div className={styles.toolBar}>
                   <a className={styles.reply} onClick={handleShareIconClick}>
                     <Icon name="share" className={styles.icon} />
                     {numberOfShares}
@@ -218,7 +220,7 @@ const ActivityItem: React.FC<{
                     />
                     <span className={styles.number}>{numberOfLikes}</span>
                   </a>
-                </Container>
+                </div>
 
                 {isComments && (
                   <ActivityDownbar

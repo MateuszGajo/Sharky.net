@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import { Grid } from "semantic-ui-react";
 import Navbar from "~components/nav/Navbar";
 import Sidebar from "~components/sidebar/Sidebar";
+import styles from "./HomeLayout.module.scss";
 
 interface Props {
   children: ReactNode;
@@ -10,17 +11,17 @@ interface Props {
 
 const HomeLayout: React.FC<Props> = ({ children, sidebar = true }) => {
   return (
-    <Grid padded className="full-height">
-      <Grid.Column width={3} className="grid-column-clear-space">
+    <div className={styles.container}>
+      <div className={styles.navbar}>
         <Navbar />
-      </Grid.Column>
-      <Grid.Column width={sidebar ? 11 : 13}>{children}</Grid.Column>
+      </div>
+      <div className={styles.content}>{children}</div>
       {sidebar && (
-        <Grid.Column width={2} className="grid-column-clear-space">
+        <div className={styles.sidebar}>
           <Sidebar />
-        </Grid.Column>
+        </div>
       )}
-    </Grid>
+    </div>
   );
 };
 

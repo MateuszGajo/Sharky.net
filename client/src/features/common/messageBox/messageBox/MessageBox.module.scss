@@ -1,9 +1,36 @@
 :global(#app) {
   .container {
-    width: 500px;
+    width: 1200px;
     padding: 10px;
     box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
     border-radius: 5px;
+    font-size: 0.85rem;
+  }
+
+  .activityCreator {
+    display: flex;
+    justify-content: stretch;
+  }
+
+  .creatorContent {
+    width: 100%;
+    align-self: initial;
+    margin-left: 0.7em;
+  }
+
+  .creatorInput {
+    height: 100%;
+  }
+
+  .photoContainer {
+    width: 100%;
+    max-width: 130px;
+  }
+
+  .photo {
+    display: block;
+    width: 100%;
+    object-fit: cover;
   }
 
   .modalContainer {
@@ -52,9 +79,55 @@
     margin: 0;
   }
 
+  @media (max-width: 3839px) {
+    .container {
+      width: 800px;
+    }
+
+    .photoContainer {
+      max-width: 100px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .container {
+      width: 600px;
+    }
+
+    .photoContainer {
+      max-width: 60px;
+    }
+  }
+
   @media (max-width: 1919px) {
     .container {
-      width: 450px;
+      width: 410px;
+    }
+
+    .photoContainer {
+      max-width: 45px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      width: 320px;
+    }
+
+    .photoContainer {
+      max-width: 35px;
+    }
+  }
+
+  @media (max-width: 1024px) and(orientation:portrait) {
+    .container {
+      width: 96%;
+    }
+  }
+
+  @media (max-width: 1024px) and(orientation:landscape) {
+    .container {
+      width: 85%;
     }
   }
 }
