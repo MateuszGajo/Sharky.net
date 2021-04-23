@@ -109,7 +109,7 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
                     SharingUserId = table.Column<string>(type: "TEXT", nullable: true),
                     AppActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)

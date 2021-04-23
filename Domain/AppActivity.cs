@@ -5,6 +5,7 @@ namespace Domain
     public class AppActivity
     {
         public Guid Id { get; set; }
+        public Guid ActivityId { get; set; }
         public Activity Activity { get; set; }
         public User SharingUser { get; set; }
         public Guid AppActivityId { get; set; }

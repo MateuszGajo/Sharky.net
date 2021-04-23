@@ -4,8 +4,8 @@ import cx from "classnames";
 import styles from "./ActivityReply.module.scss";
 import { Reply } from "~root/src/app/models/activity";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
-import { formatDate } from "~root/src/app/utils/utils";
-import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
+import { formatDate, likeClick } from "~root/src/app/utils/utils";
+import { useReplyStore } from "~root/src/app/providers/RootStoreProvider";
 
 interface Props {
   item: Reply;
@@ -21,11 +21,11 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
     hideReply,
     unhideReply,
     replyLikeHandle,
-  } = useActivityStore();
+  } = useReplyStore();
   const [isHidden, setStatusOfHidden] = useState(item.isHidden);
   const [isSubmitting, setStatusOfSubmitting] = useState(false);
   const [isLiked, setStatusOfLike] = useState(item.isLiked);
-  const [numberOfLikes, setNumberOfLikes] = useState(item.likes);
+  const [numberOfLikes, setNumberOfLikes] = useState<number>(item.likes);
 
   const handlerDropdownClick = (type: string) => {
     switch (type) {
@@ -42,22 +42,16 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
     }
   };
 
-  const handleLikeClick = () => {
-    if (!isSubmitting) {
-      setStatusOfSubmitting(true);
-      replyLikeHandle(isLiked, item.id).then(() => {
-        if (isLiked) {
-          setNumberOfLikes(numberOfLikes - 1);
-          setStatusOfLike(false);
-          setStatusOfSubmitting(false);
-        } else {
-          setNumberOfLikes(numberOfLikes + 1);
-          setStatusOfLike(true);
-          setStatusOfSubmitting(false);
-        }
-      });
-    }
-  };
+  const handleLikeClick = () =>
+    likeClick({
+      isSubmitting,
+      setStatusOfSubmitting,
+      setNumberOfLikes,
+      giveLike: replyLikeHandle,
+      setStatusOfLike,
+      isLiked,
+      id: item.id,
+    });
 
   return (
     <Comment className={styles.item}>
@@ -89,7 +83,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
       </Comment.Content>
       <Comment.Actions>
         <Comment.Action className={styles.icons}>
-          <a className={styles.like} onClick={handleLikeClick}>
+          <div className={styles.like} onClick={handleLikeClick}>
             <Icon
               name="like"
               className={cx(styles.icon, {
@@ -97,7 +91,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
               })}
             />
             <span className={styles.number}>{numberOfLikes}</span>
-          </a>
+          </div>
         </Comment.Action>
       </Comment.Actions>
       <div className={styles.options}>

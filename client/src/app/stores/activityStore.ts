@@ -6,7 +6,7 @@ import {
   CommentMap,
   Activity,
 } from "./../models/activity";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import agent from "~api/agent";
 import { RootStore } from "./rootStore";
 
@@ -21,10 +21,6 @@ export default class AcitivtyStore {
   activity: ActivityMap | undefined = undefined;
 
   isSubmitting = false;
-  isRepliesLoading = false;
-  commentId: string = "";
-  activityId: string = "";
-  isCommnetsLoading = false;
 
   get activitiesByDate() {
     return Array.from(this.activities.values()).sort((a, b) => {
@@ -39,42 +35,51 @@ export default class AcitivtyStore {
     try {
       const resp = await agent.Activities.create(activity);
       this.setActivity(activity, resp);
-      this.isSubmitting = false;
+      runInAction(() => {
+        this.isSubmitting = false;
+      });
     } catch (error) {
-      this.isSubmitting = false;
+      runInAction(() => {
+        this.isSubmitting = false;
+      });
     }
   };
 
   editActivity = async (
     editedActivity: ActivityFormValues,
-    activityId: string
+    activityId: string,
+    appActivityId: string
   ) => {
     this.isSubmitting = true;
     try {
       const resp = await agent.Activities.edit(editedActivity, activityId);
-      const activity = this.activities.get(activityId);
+      const activity = this.activities.get(appActivityId);
       if (activity) {
         const newActivity = {
           ...activity,
           photo: resp.photo ? resp.photo : activity?.photo,
           content: editedActivity.content,
         };
-        this.activities.set(activityId, newActivity);
+        this.activities.set(appActivityId, newActivity);
       }
     } catch (error) {}
   };
 
-  deleteActivity = async (id: string) => {
+  deleteActivity = async (activityId: string, appActivityId: string) => {
     try {
-      await agent.Activities.delete(id);
-      this.activities.delete(id);
+      await agent.Activities.delete(activityId);
+      this.activities.delete(appActivityId);
     } catch (error) {}
   };
 
-  hideActivity = async (id: string) => {
+  hideActivity = async (activityId: string, appActivityId: string) => {
     try {
-      await agent.Activities.hide(id);
-      this.activities.delete(id);
+      await agent.Activities.hide(activityId);
+      runInAction(() => {
+        console.log(appActivityId);
+        console.log(activityId);
+        this.activities.delete(appActivityId);
+      });
     } catch (error) {}
   };
 
@@ -105,7 +110,9 @@ export default class AcitivtyStore {
             ...activity,
             comments: new Map<string, CommentMap>(),
           };
-          this.activities.set(activity.id, newActivity);
+          runInAction(() => {
+            this.activities.set(activity.id, newActivity);
+          });
         });
       });
     } catch (error) {}
@@ -160,7 +167,9 @@ export default class AcitivtyStore {
           },
           SharesCount: activity.sharesCount + 1,
         };
-        this.activities.set(newActivity.id, newActivity);
+        runInAction(() => {
+          this.activities.set(newActivity.id, newActivity);
+        });
       }
     } catch (error) {}
   };
@@ -168,173 +177,9 @@ export default class AcitivtyStore {
   unshareActivity = async (appActivityId: string) => {
     try {
       await agent.Activities.unshare(appActivityId);
-      this.activities.delete(appActivityId);
-    } catch (error) {}
-  };
-
-  getComments = async (activityId: string, appActivityId: string) => {
-    this.isCommnetsLoading = true;
-    this.activityId = activityId;
-    try {
-      const comments = await agent.Comments.get(activityId);
-      const activity = this.activities.get(appActivityId);
-      comments.forEach((item) => {
-        const newComment = {
-          ...item,
-          replies: new Map<string, Reply>(),
-        };
-        activity?.comments.set(item.id, newComment);
+      runInAction(() => {
+        this.activities.delete(appActivityId);
       });
-      this.isCommnetsLoading = false;
-    } catch (error) {
-      this.isCommnetsLoading = false;
-    }
-  };
-
-  createComment = async (
-    appActivityId: string,
-    activityId: string,
-    content: string
-  ) => {
-    try {
-      const response = await agent.Comments.create(activityId, content);
-      const activity = this.activities.get(appActivityId);
-      if (activity) {
-        const user = this.root.commonStore.user;
-        const comment = {
-          content,
-          id: response.id,
-          createdAt: response.createdAt,
-          author: user,
-          likes: 0,
-          replies: new Map<string, Reply>(),
-          repliesCount: 0,
-          isHidden: false,
-          isLiked: false,
-        };
-        this.setComment(appActivityId, comment);
-      }
-    } catch (eror) {}
-  };
-
-  setComment = async (activityId: string, comment: CommentMap) => {
-    const activity = this.activities.get(activityId);
-    if (comment && activity) {
-      activity.comments.set(comment.id, comment);
-    }
-  };
-
-  editComment = async (
-    activityId: string,
-    commentId: string,
-    content: string
-  ) => {
-    try {
-      await agent.Comments.edit(commentId, content);
-      const comment = this.activities.get(activityId)?.comments.get(commentId);
-      if (comment) {
-        comment.content = content;
-        this.setComment(activityId, comment);
-      }
-    } catch (error) {}
-  };
-
-  hideComment = async (commentId: string) => {
-    try {
-      await agent.Comments.hide(commentId);
-    } catch (error) {}
-  };
-
-  unhideComment = async (commentId: string) => {
-    try {
-      await agent.Comments.unHide(commentId);
-    } catch (error) {}
-  };
-
-  commentLikeHandle = async (isLiked: boolean, commentId: string) => {
-    try {
-      if (!isLiked) await agent.Comments.like(commentId);
-      else await agent.Comments.unlike(commentId);
-    } catch (error) {}
-  };
-
-  getReplies = async (activityId: string, commentId: string) => {
-    this.isRepliesLoading = true;
-    this.commentId = commentId;
-    try {
-      const replies = await agent.Replies.get(commentId);
-      console.log(replies);
-      const comment = this.activities.get(activityId)?.comments.get(commentId);
-      console.log(comment);
-      replies.forEach((item) => {
-        comment?.replies.set(item.id, item);
-      });
-      this.isRepliesLoading = false;
-    } catch (error) {
-      this.isRepliesLoading = false;
-    }
-  };
-
-  createReply = async (
-    activityId: string,
-    commentId: string,
-    content: string
-  ) => {
-    try {
-      const response = await agent.Replies.create(commentId, content);
-      const user = this.root.commonStore.user;
-      var reply = {
-        id: response.id,
-        createdAt: response.createdAt,
-        content,
-        author: user,
-        likes: 0,
-        isHidden: false,
-        isLiked: false,
-      };
-      this.setReply(activityId, commentId, reply);
-    } catch (err) {}
-  };
-
-  setReply = (activityId: string, commentId: string, reply: Reply) => {
-    const activity = this.activities.get(activityId);
-    const comments = activity?.comments;
-    const comment = comments?.get(commentId);
-    const replies = comment?.replies;
-    if (replies && comments && comment) {
-      replies.set(reply.id, reply);
-    }
-  };
-
-  deleteReply = async (
-    activityId: string,
-    commentId: string,
-    replyId: string
-  ) => {
-    try {
-      await agent.Replies.delete(replyId);
-      const replies = this.activities.get(activityId)?.comments.get(commentId)
-        ?.replies;
-      replies?.delete(replyId);
-    } catch (error) {}
-  };
-
-  hideReply = async (replyId: string) => {
-    try {
-      await agent.Replies.hide(replyId);
-    } catch (error) {}
-  };
-
-  unhideReply = async (replyId: string) => {
-    try {
-      await agent.Replies.unhide(replyId);
-    } catch (error) {}
-  };
-
-  replyLikeHandle = async (isLiked: boolean, commentId: string) => {
-    try {
-      if (!isLiked) await agent.Replies.like(commentId);
-      else await agent.Replies.unlike(commentId);
     } catch (error) {}
   };
 }

@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
 import { Token } from "../models/authentication";
 import { Comment, CommentMap } from "../models/activity";
-import React from "react";
+import React, { Dispatch } from "react";
 
 export const navItems = [
   {
@@ -259,5 +259,42 @@ export const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     new Event("submit");
+  }
+};
+
+interface handleLikeClickI {
+  isSubmitting: boolean;
+  setStatusOfSubmitting: (status: boolean) => void;
+  giveLike: (isLiked: boolean, id: string) => Promise<void>;
+  setNumberOfLikes: (value: number | ((prevVar: number) => number)) => void;
+  setStatusOfLike: (status: boolean) => void;
+  isLiked: boolean;
+  id: string;
+}
+
+export const likeClick = ({
+  isSubmitting,
+  setStatusOfSubmitting,
+  giveLike,
+  setNumberOfLikes,
+  setStatusOfLike,
+  isLiked,
+  id,
+}: handleLikeClickI) => {
+  console.log(id);
+  if (!isSubmitting) {
+    setStatusOfSubmitting(true);
+    giveLike(isLiked, id).then(() => {
+      if (isLiked) {
+        console.log("Halo");
+        setNumberOfLikes((prev) => prev - 1);
+        setStatusOfLike(false);
+        setStatusOfSubmitting(false);
+      } else {
+        setNumberOfLikes((prev) => prev + 1);
+        setStatusOfLike(true);
+        setStatusOfSubmitting(false);
+      }
+    });
   }
 };

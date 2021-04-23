@@ -51,10 +51,11 @@ namespace Application.Activities
                 var excludedActivities = blockedUsers.SelectMany(x => x.Blocked.Activities.Select(x => x.Id)).ToList();
 
                 var hiddenActivity = user.HiddenActivities.Count != 0 ? user.HiddenActivities.Select(x => x.Activity.Id).ToList() : Enumerable.Empty<Guid>();
+                excludedActivities.AddRange(hiddenActivity);
 
                 var activities = _context.AppActivity
                     .AsSingleQuery()
-                    .Where(p => !excludedActivities.Contains(p.Activity.Id))
+                    .Where(p => !excludedActivities.Contains(p.ActivityId))
                     .OrderByDescending(x => x.CreatedAt)
                     .Take(10)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = userId })

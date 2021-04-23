@@ -5,48 +5,245 @@ import { CommentMap, Reply } from "~root/src/app/models/activity";
 import ActivityReply from "../activitiesReply/ActivityReply";
 import styles from "./ActivityComment.module.scss";
 import useTranslation from "next-translate/useTranslation";
-import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
-import { formatDate, handleKeyDown } from "~root/src/app/utils/utils";
+import {
+  useCommentStore,
+  useReplyStore,
+} from "~root/src/app/providers/RootStoreProvider";
+import {
+  formatDate,
+  handleKeyDown,
+  likeClick,
+} from "~root/src/app/utils/utils";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
 import { observer } from "mobx-react-lite";
 
-interface Props {
+interface RepliesWrapperI {
+  index: number;
+  replies: Reply[];
+  item: Reply;
+  activityId: string;
+}
+
+const RepliesWrapper: React.FC<RepliesWrapperI> = ({
+  index,
+  replies,
+  item,
+  activityId,
+}) => {
+  const [displayHiddenReply, setHiddenReplyVisible] = useState<any>({});
+  let display = false;
+  const prevEl = replies[index - 1];
+  if (prevEl?.isHidden != item.isHidden) {
+    display = displayHiddenReply[item.id] ? true : false;
+  }
+
+  if (display || item.isHidden === false) {
+    return (
+      <ActivityReply
+        key={item.id}
+        item={item}
+        activityId={activityId}
+        commentId={item.id}
+      />
+    );
+  } else if (prevEl?.isHidden != item.isHidden) {
+    return (
+      <div className={styles.hiddenReplies}>
+        <div
+          className={styles.hiddenRepliesIcon}
+          onClick={() =>
+            setHiddenReplyVisible((prev: any) => ({
+              ...prev,
+              [item.id]: true,
+            }))
+          }
+        >
+          <Icon name="ellipsis horizontal" />
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+interface RepliesLoaderI {
   item: CommentMap;
   activityId: string;
 }
 
-const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
-  const { t } = useTranslation("components");
+const RepliesLoader: React.FC<RepliesLoaderI> = observer(
+  ({ item, activityId }) => {
+    const { isLoading, commentId } = useReplyStore();
+    const replies = Array.from(item.replies.values());
 
-  const [isReply, setStatusOfReply] = useState(false);
-  const [isEditting, setStatusOfEdit] = useState(false);
-  const [isHidden, setStatusOfHidden] = useState(item.isHidden);
-  const [displayHiddenReply, setHiddenReplyVisible] = useState<any>({});
-  const [isSubmitting, setStatusOfSubmitting] = useState(false);
-  const [numberOfLikes, setNumberOfLikes] = useState(item.likes);
-  const [isLiked, setStatusOfLike] = useState(item.isLiked);
-  const [content, setContent] = useState("");
+    if (isLoading && commentId == item.id)
+      return (
+        <Segment loading basic>
+          <div></div>
+        </Segment>
+      );
+    else if (item.replies.size > 0)
+      return (
+        <>
+          {replies.map((reply, index) => (
+            <RepliesWrapper
+              index={index}
+              item={reply}
+              activityId={activityId}
+              replies={replies}
+            />
+          ))}
+        </>
+      );
+    return null;
+  }
+);
 
-  const {
-    createReply,
-    editComment,
-    hideComment,
-    unhideComment,
-    getReplies,
-    isRepliesLoading: isLoading,
-    commentLikeHandle,
-    commentId,
-  } = useActivityStore();
+interface RepliesComponentI {
+  isReply: boolean;
+  item: CommentMap;
+  content: string;
+  activityId: string;
+  setContent: (text: string) => void;
+}
 
-  const replyPlaceholder = t("activities.replyPlaceholder");
+const RepliesComponent: React.FC<RepliesComponentI> = ({
+  isReply,
+  item,
+  content,
+  activityId,
+  setContent,
+}) => {
+  if (isReply) {
+    const { t } = useTranslation("components");
+    const { createReply } = useReplyStore();
 
+    const replyPlaceholder = t("activities.replyPlaceholder");
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      createReply(activityId, item.id, content).then(() => setContent(""));
+    };
+
+    return (
+      <Comment.Group className={styles.replyContainer}>
+        <div className={styles.replyForm}>
+          <div className={styles.replyFormPhotoContainer}>
+            <img
+              className={styles.replyFormPhoto}
+              src="https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
+              alt=""
+            />
+          </div>
+          <form onSubmit={handleSubmit} className={styles.replyFormContent}>
+            <Input
+              className={styles.replyFormInput}
+              fluid
+              placeholder={replyPlaceholder}
+              onChange={(e) => setContent(e.target.value)}
+              onKeyDown={handleKeyDown}
+              value={content}
+            />
+          </form>
+        </div>
+        <RepliesLoader item={item} activityId={activityId} />
+      </Comment.Group>
+    );
+  }
+  return null;
+};
+
+interface IconsBarI {
+  isHidden: boolean;
+  item: CommentMap;
+  isReply: boolean;
+  activityId: string;
+  setStatusOfReply: (status: boolean) => void;
+}
+
+const IconsBar: React.FC<IconsBarI> = ({
+  isHidden,
+  item,
+  isReply,
+  setStatusOfReply,
+  activityId,
+}) => {
+  if (!isHidden) {
+    const { commentLikeHandle } = useCommentStore();
+    const { getReplies } = useReplyStore();
+
+    const [isSubmitting, setStatusOfSubmitting] = useState(false);
+    const [numberOfLikes, setNumberOfLikes] = useState(item.likes);
+    const [isLiked, setStatusOfLike] = useState(item.isLiked);
+
+    const handleIconClick = () => {
+      if (item.repliesCount > 0 && item.replies.size == 0) {
+        getReplies(activityId, item.id);
+      }
+      setStatusOfReply(!isReply);
+    };
+
+    const handleLikeClick = () =>
+      likeClick({
+        isSubmitting,
+        setStatusOfSubmitting,
+        setNumberOfLikes,
+        giveLike: commentLikeHandle,
+        setStatusOfLike,
+        isLiked,
+        id: item.id,
+      });
+
+    return (
+      <Comment.Actions>
+        <Comment.Action className={styles.icons}>
+          <div onClick={handleIconClick}>
+            <Icon
+              name="reply"
+              className={cx(styles.replyIcon, {
+                [styles.replyIconActive]: isReply,
+              })}
+            />
+            {item.repliesCount + " "}
+            {item.replies.size === 1 ? "reply" : "replies"}
+          </div>
+          <div className={styles.like} onClick={handleLikeClick}>
+            <Icon
+              name="like"
+              className={cx(styles.icon, {
+                [styles.likeIconActive]: isLiked,
+              })}
+            />
+            <span className={styles.number}>{numberOfLikes}</span>
+          </div>
+        </Comment.Action>
+      </Comment.Actions>
+    );
+  }
+  return null;
+};
+
+interface CommentContentI {
+  item: CommentMap;
+  isEditting: boolean;
+  content: string;
+  activityId: string;
+  isHidden: boolean;
+  setContent: (text: string) => void;
+  setStatusOfEdit: (status: boolean) => void;
+}
+
+const CommentContent: React.FC<CommentContentI> = ({
+  item,
+  isEditting,
+  content,
+  activityId,
+  isHidden,
+  setContent,
+  setStatusOfEdit,
+}) => {
+  const { editComment } = useCommentStore();
   const date = formatDate(new Date(item.createdAt));
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    createReply(activityId, item.id, content).then(() => setContent(""));
-  };
-
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (item.content == content) {
@@ -57,6 +254,62 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
       });
     }
   };
+
+  if (isEditting)
+    return (
+      <Item.Group className={styles.form}>
+        <Item>
+          <Item.Content verticalAlign="middle">
+            <form onSubmit={handleEditSubmit}>
+              <Input
+                onClick={(e: MouseEvent) => e.stopPropagation()}
+                fluid
+                onChange={(e) => setContent(e.target.value)}
+                onKeyDown={handleKeyDown}
+                value={content}
+              />
+            </form>
+          </Item.Content>
+        </Item>
+      </Item.Group>
+    );
+  return (
+    <>
+      <Comment.Author
+        as="a"
+        className={cx(styles.username, {
+          [styles.usernameHidden]: isHidden,
+        })}
+      >
+        {" "}
+        Matt
+      </Comment.Author>
+      <Comment.Metadata>
+        <div>{date}</div>
+      </Comment.Metadata>
+      <Comment.Text
+        className={cx({
+          [styles.hiddenContent]: isHidden,
+        })}
+      >
+        {item.content}
+      </Comment.Text>
+    </>
+  );
+};
+
+interface Props {
+  item: CommentMap;
+  activityId: string;
+}
+
+const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
+  const [isReply, setStatusOfReply] = useState(false);
+  const [isEditting, setStatusOfEdit] = useState(false);
+  const [isHidden, setStatusOfHidden] = useState(item.isHidden);
+  const [content, setContent] = useState("");
+
+  const { hideComment, unhideComment } = useCommentStore();
 
   const handleDownbarClick = (type: string) => {
     switch (type) {
@@ -79,11 +332,6 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
     setStatusOfEdit(false);
   };
 
-  const handleIconClick = () => {
-    if (!isReply && item.replies.size == 0) getReplies(activityId, item.id);
-    setStatusOfReply(!isReply);
-  };
-
   useEffect(() => {
     if (isEditting) {
       document.addEventListener("click", handleDocumentClick);
@@ -93,58 +341,6 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
     };
   }, [isEditting]);
 
-  const handleLikeClick = () => {
-    if (!isSubmitting) {
-      setStatusOfSubmitting(true);
-      commentLikeHandle(isLiked, item.id).then(() => {
-        if (isLiked) {
-          setNumberOfLikes(numberOfLikes - 1);
-          setStatusOfLike(false);
-          setStatusOfSubmitting(false);
-        } else {
-          setNumberOfLikes(numberOfLikes + 1);
-          setStatusOfLike(true);
-          setStatusOfSubmitting(false);
-        }
-      });
-    }
-  };
-
-  const replies = Array.from(item.replies.values());
-  let display = false;
-  const renderReplies = (item: Reply, index: number) => {
-    const prevEl = replies[index - 1];
-    if (prevEl?.isHidden != item.isHidden) {
-      display = displayHiddenReply[item.id] ? true : false;
-    }
-
-    if (display || item.isHidden === false) {
-      return (
-        <ActivityReply
-          key={item.id}
-          item={item}
-          activityId={activityId}
-          commentId={item.id}
-        />
-      );
-    } else if (prevEl?.isHidden != item.isHidden) {
-      return (
-        <div className={styles.hiddenReplies}>
-          <div
-            className={styles.hiddenRepliesIcon}
-            onClick={() =>
-              setHiddenReplyVisible((prev: any) => ({
-                ...prev,
-                [item.id]: true,
-              }))
-            }
-          >
-            <Icon name="ellipsis horizontal" />
-          </div>
-        </div>
-      );
-    }
-  };
   return (
     <Comment>
       <Comment.Avatar
@@ -154,70 +350,15 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
         })}
       />
       <Comment.Content className={styles.container}>
-        {isEditting ? (
-          <Item.Group className={styles.form}>
-            <Item>
-              <Item.Content verticalAlign="middle">
-                <form onSubmit={handleEditSubmit}>
-                  <Input
-                    onClick={(e: MouseEvent) => e.stopPropagation()}
-                    fluid
-                    onChange={(e) => setContent(e.target.value)}
-                    onKeyDown={handleKeyDown}
-                    value={content}
-                  />
-                </form>
-              </Item.Content>
-            </Item>
-          </Item.Group>
-        ) : (
-          <>
-            <Comment.Author
-              as="a"
-              className={cx(styles.username, {
-                [styles.usernameHidden]: isHidden,
-              })}
-            >
-              {" "}
-              Matt
-            </Comment.Author>
-            <Comment.Metadata>
-              <div>{date}</div>
-            </Comment.Metadata>
-            <Comment.Text
-              className={cx({
-                [styles.hiddenContent]: isHidden,
-              })}
-            >
-              {item.content}
-            </Comment.Text>
-          </>
-        )}
-        {!isHidden && (
-          <Comment.Actions>
-            <Comment.Action className={styles.icons}>
-              <a onClick={handleIconClick}>
-                <Icon
-                  name="reply"
-                  className={cx(styles.replyIcon, {
-                    [styles.replyIconActive]: isReply,
-                  })}
-                />
-                {item.repliesCount + " "}
-                {item.replies.size === 1 ? "reply" : "replies"}
-              </a>
-              <a className={styles.like} onClick={handleLikeClick}>
-                <Icon
-                  name="like"
-                  className={cx(styles.icon, {
-                    [styles.likeIconActive]: isLiked,
-                  })}
-                />
-                <span className={styles.number}>{numberOfLikes}</span>
-              </a>
-            </Comment.Action>
-          </Comment.Actions>
-        )}
+        <CommentContent
+          item={item}
+          isEditting={isEditting}
+          content={content}
+          activityId={activityId}
+          isHidden={isHidden}
+          setContent={setContent}
+          setStatusOfEdit={setStatusOfEdit}
+        />
 
         <div
           className={cx(styles.options, {
@@ -231,34 +372,20 @@ const ActivityComment: React.FC<Props> = ({ item, activityId }) => {
           />
         </div>
       </Comment.Content>
-      {isReply && (
-        <Comment.Group className={styles.replyContainer}>
-          <div className={styles.replyForm}>
-            <div className={styles.replyFormPhotoContainer}>
-              <img
-                className={styles.replyFormPhoto}
-                src="https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
-                alt=""
-              />
-            </div>
-            <form onSubmit={handleSubmit} className={styles.replyFormContent}>
-              <Input
-                className={styles.replyFormInput}
-                fluid
-                placeholder={replyPlaceholder}
-                onChange={(e) => setContent(e.target.value)}
-                onKeyDown={handleKeyDown}
-                value={content}
-              />
-            </form>
-          </div>
-          {isLoading && commentId == item.id ? (
-            <Segment loading basic></Segment>
-          ) : (
-            replies.map((reply, index) => renderReplies(reply, index))
-          )}
-        </Comment.Group>
-      )}
+      <IconsBar
+        isHidden={isHidden}
+        item={item}
+        isReply={isReply}
+        setStatusOfReply={setStatusOfReply}
+        activityId={activityId}
+      />
+      <RepliesComponent
+        isReply={isReply}
+        item={item}
+        content={content}
+        activityId={activityId}
+        setContent={setContent}
+      />
     </Comment>
   );
 };

@@ -1,20 +1,89 @@
 import React, { useState } from "react";
-import {
-  Comment,
-  Divider,
-  Icon,
-  Input,
-  Item,
-  Segment,
-} from "semantic-ui-react";
+import { Comment, Divider, Icon, Input, Segment } from "semantic-ui-react";
 import { observer } from "mobx-react";
 import useTranslation from "next-translate/useTranslation";
 import { CommentMap } from "~models/activity";
 import { User } from "~root/src/app/models/activity";
-import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
+import { useCommentStore } from "~root/src/app/providers/RootStoreProvider";
 import { handleKeyDown } from "~root/src/app/utils/utils";
 import ActivityComment from "../activitiesComment/ActivityComment";
 import styles from "./ActivityDownbar.module.scss";
+
+interface CommentWrapperI {
+  appActivityId: string;
+  item: CommentMap;
+  comments: CommentMap[];
+  index: number;
+}
+
+const CommentWrapper: React.FC<CommentWrapperI> = ({
+  item,
+  index,
+  comments,
+  appActivityId,
+}) => {
+  const [displayHiddenComments, setHiddenCommentsVisible] = useState<any>({});
+  let display = false;
+  const prevEl = comments[index - 1];
+  if (prevEl?.isHidden != item.isHidden) {
+    display = displayHiddenComments[item.id] ? true : false;
+  }
+
+  if (display || item.isHidden === false) {
+    return (
+      <ActivityComment key={item.id} item={item} activityId={appActivityId} />
+    );
+  } else if (prevEl?.isHidden != item.isHidden) {
+    return (
+      <div className={styles.hiddenComments}>
+        <div
+          className={styles.hiddenCommentsIcon}
+          onClick={() =>
+            setHiddenCommentsVisible((prev: any) => ({
+              ...prev,
+              [item.id]: true,
+            }))
+          }
+        >
+          <Icon name="ellipsis horizontal" />
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+interface CommentsComponentI {
+  comments: CommentMap[];
+  activityId: string;
+  appActivityId: string;
+}
+
+const CommentsComponent: React.FC<CommentsComponentI> = observer(
+  ({ comments, activityId, appActivityId }) => {
+    const { isLoading, activityId: loadingActivityId } = useCommentStore();
+
+    if (isLoading && loadingActivityId == activityId)
+      return <Segment basic loading></Segment>;
+    else if (comments.length)
+      return (
+        <>
+          <Divider />
+          <Comment.Group className={styles.comments}>
+            {comments.map((item, index) => (
+              <CommentWrapper
+                item={item}
+                index={index}
+                appActivityId={appActivityId}
+                comments={comments}
+              />
+            ))}
+          </Comment.Group>
+        </>
+      );
+    return null;
+  }
+);
 
 interface Props {
   activityId: string;
@@ -34,14 +103,9 @@ const ActivityDownbar: React.FC<Props> = ({
   numberOfComments,
 }) => {
   const { t } = useTranslation("components");
-  const {
-    createComment,
-    isCommnetsLoading: isLoading,
-    activityId: loadingActivityId,
-  } = useActivityStore();
+  const { createComment } = useCommentStore();
 
   const [comment, setComment] = useState("");
-  const [displayHiddenComments, setHiddenCommentsVisible] = useState<any>({});
 
   const commnetPlaceholder = t("activities.commentPlaceholder");
 
@@ -53,48 +117,15 @@ const ActivityDownbar: React.FC<Props> = ({
     });
   };
 
-  let display = false;
   const comments = Array.from(initialComments.values());
-
-  const renderComments = (item: CommentMap, index: number) => {
-    const prevEl = comments[index - 1];
-    if (prevEl?.isHidden != item.isHidden) {
-      display = displayHiddenComments[item.id] ? true : false;
-    }
-
-    if (display || item.isHidden === false) {
-      return (
-        <ActivityComment key={item.id} item={item} activityId={appActivityId} />
-      );
-    } else if (prevEl?.isHidden != item.isHidden) {
-      return (
-        <div className={styles.hiddenComments}>
-          <div
-            className={styles.hiddenCommentsIcon}
-            onClick={() =>
-              setHiddenCommentsVisible((prev: any) => ({
-                ...prev,
-                [item.id]: true,
-              }))
-            }
-          >
-            <Icon name="ellipsis horizontal" />
-          </div>
-        </div>
-      );
-    }
-  };
 
   return (
     <>
       <div className={styles.commentCreator}>
         <div className={styles.photo}>
           <img
-            src={
-              user.photo?.url ||
-              "https://res.cloudinary.com/dqcup3ujq/image/upload/v1613718046/ubijj2hn4y8nuwe1twtg.png"
-            }
-            alt=""
+            src={user.photo?.url || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
+            alt="avatar"
           />
         </div>
         <form onSubmit={handleSubmit} className={styles.commentCreatorContent}>
@@ -107,20 +138,11 @@ const ActivityDownbar: React.FC<Props> = ({
           />
         </form>
       </div>
-      {isLoading && loadingActivityId == activityId ? (
-        <>
-          <Segment basic loading></Segment>
-        </>
-      ) : (
-        !!comments.length && (
-          <>
-            <Divider />
-            <Comment.Group className={styles.comments}>
-              {comments.map((item, index) => renderComments(item, index))}
-            </Comment.Group>
-          </>
-        )
-      )}
+      <CommentsComponent
+        comments={comments}
+        activityId={activityId}
+        appActivityId={appActivityId}
+      />
     </>
   );
 };

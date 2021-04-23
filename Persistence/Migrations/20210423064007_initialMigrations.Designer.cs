@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210421071533_initialMigrations")]
+    [Migration("20210423064007_initialMigrations")]
     partial class initialMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,7 +60,7 @@ namespace Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ActivityId")
+                    b.Property<Guid>("ActivityId")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("AppActivityId")
@@ -360,7 +360,8 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Activity", "Activity")
                         .WithMany("AppActivities")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.User", "SharingUser")
                         .WithMany()

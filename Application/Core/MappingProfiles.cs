@@ -15,6 +15,9 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
+            // CreateMap<AppActivity, AppActivity>()
+            // .ForMember(d => d.Activity, o => o.MapFrom(s => !hiddenElements.Contains(s.Activity.Id)));
+
             CreateMap<AppActivity, ActivityDto>()
             .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.Activity.Id))
             .ForMember(d => d.User, o => o.MapFrom(s => s.Activity.User))

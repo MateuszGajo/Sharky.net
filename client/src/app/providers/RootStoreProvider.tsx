@@ -21,6 +21,16 @@ export const useActivityStore = () => {
   return activityStore;
 };
 
+export const useCommentStore = () => {
+  const { commentStore } = useRootStore();
+  return commentStore;
+};
+
+export const useReplyStore = () => {
+  const { replyStore } = useRootStore();
+  return replyStore;
+};
+
 export const useCommonStore = () => {
   const { commonStore } = useRootStore();
   return commonStore;
