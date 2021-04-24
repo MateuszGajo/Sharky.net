@@ -1,27 +1,79 @@
-.container {
-  display: flex;
-  width: 100%;
-}
+:global(#app) {
+  .container {
+    display: flex;
+    width: 100%;
+  }
 
-.navbar {
-  display: block;
-  width: calc(100vw / 16 * 3);
-}
-
-.content {
-  flex-grow: 1;
-}
-
-.sidebar {
-  width: calc(100vw / 16 * 2);
-}
-
-@media (max-width: 1023px) {
-  .navbar {
+  .mobileBar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    padding: 5px 10px;
     display: none;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    box-shadow: 0 0 2px 1px grey;
+    z-index: 21;
+    background-color: #fff;
+  }
+
+  .brand {
+    margin: 0;
+    color: $primaryColor;
+  }
+
+  .brandMix {
+    color: black;
+  }
+
+  .hamburgerIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+  }
+
+  .navbar {
+    display: block;
+    width: calc(100vw / 16 * 3);
+  }
+
+  .content {
+    flex-grow: 1;
   }
 
   .sidebar {
-    display: none;
+    width: calc(100vw / 16 * 2);
+  }
+
+  @media (max-width: 1023px) {
+    .mobileBar {
+      display: flex;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      position: fixed;
+      z-index: 20;
+      top: 70px;
+      left: 0;
+      right: 0;
+      background-color: white;
+      width: 100%;
+      height: calc(100vh - 70px);
+    }
+    .content {
+      margin-top: 20px;
+    }
+
+    .sidebar {
+      display: none;
+    }
   }
 }

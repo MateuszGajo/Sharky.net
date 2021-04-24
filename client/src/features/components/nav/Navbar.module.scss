@@ -9,7 +9,7 @@
   overflow-y: overlay;
 }
 
-.navbar__container {
+.navbarContainer {
   padding: 10px;
   margin: auto;
   display: flex;
@@ -19,7 +19,7 @@
   height: 100vh;
 }
 
-.navbar__container__item {
+.item {
   width: fit-content;
   padding: 5px 10px;
   border-radius: 30px;
@@ -27,32 +27,32 @@
   cursor: pointer;
 }
 
-.navbar__container__item + .navbar__container__item {
+.item + .item {
   margin-top: 80px;
 }
 
-.navbar__container__item:hover {
+.item:hover {
   background-color: $hover;
 }
 
-.navbar__container__item:hover > * {
+.item:hover > * {
   color: $primaryColor;
 }
 
-.navbar__container__item--active {
+.itemActive {
   background-color: $hover;
 }
 
-.navbar__container__item--active > * {
+.itemActive > * {
   color: $primaryColor;
 }
 
-.navbar__container__item__text {
+.itemText {
   margin-left: 7px;
 }
 
 @media (max-width: 1023px) {
   .navbar {
-    display: none;
+    position: inherit;
   }
 }

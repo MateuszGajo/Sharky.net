@@ -15,6 +15,8 @@ interface Props {
 
 const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
   const { author, createdAt, content } = item;
+  const { firstName, lastName } = author;
+
   const date = formatDate(new Date(createdAt));
   const {
     deleteReply,
@@ -22,6 +24,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
     unhideReply,
     replyLikeHandle,
   } = useReplyStore();
+
   const [isHidden, setStatusOfHidden] = useState(item.isHidden);
   const [isSubmitting, setStatusOfSubmitting] = useState(false);
   const [isLiked, setStatusOfLike] = useState(item.isLiked);
@@ -56,7 +59,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
   return (
     <Comment className={styles.item}>
       <Comment.Avatar
-        src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
+        src={item.author.photo?.url || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
         className={cx({
           [styles.hiddenAvatar]: isHidden,
         })}
@@ -68,7 +71,7 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
             [styles.usernameHidden]: isHidden,
           })}
         >
-          {author.firstName + " " + author.lastName}
+          {firstName + " " + lastName}
         </Comment.Author>
         <Comment.Metadata>
           <div>{date}</div>

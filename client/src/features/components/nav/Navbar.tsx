@@ -3,7 +3,7 @@ import { Icon } from "semantic-ui-react";
 import cx from "classnames";
 import styles from "./Navbar.module.scss";
 import { navItems } from "~utils/utils";
-import { Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import agent from "~root/src/app/api/agent";
 
@@ -58,23 +58,19 @@ const Navbar = () => {
       })}
       ref={navbar}
     >
-      <div className={styles.navbar__container}>
+      <div className={styles.navbarContainer}>
         {navItems.map((item: any) => (
           <div
-            className={
-              activeItem == item.name
-                ? styles.navbar__container__item +
-                  " " +
-                  styles["navbar__container__item--active"]
-                : styles.navbar__container__item
-            }
+            className={cx(styles.item, {
+              [styles.itemActive]: activeItem == item.name,
+            })}
             key={item.id}
             onClick={() =>
               handleItemClick({ name: item.name, linkTo: item.linkTo })
             }
           >
             <Icon name={item.icon} />
-            <span className={styles.navbar__container__item__text}>
+            <span className={styles.itemText}>
               {t(`components:navbar.${item.name}`)}
             </span>
           </div>
