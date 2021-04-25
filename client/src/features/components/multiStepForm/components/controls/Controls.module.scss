@@ -14,8 +14,8 @@
     background-color: white;
     &:hover {
       background-color: #f5f5f5;
-      color: $primaryHoverColor;
-      border-color: $primaryHoverColor;
+      color: $primaryColorTint;
+      border-color: $primaryColorTint;
     }
   }
   .errorContainer + .button {
@@ -44,8 +44,8 @@
       margin-top: 60px;
       &:hover {
         background-color: #f5f5f5;
-        color: $primaryHoverColor;
-        border-color: $primaryHoverColor;
+        color: $primaryColorTint;
+        border-color: $primaryColorTint;
       }
     }
   }

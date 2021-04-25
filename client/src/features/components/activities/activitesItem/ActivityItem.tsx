@@ -13,6 +13,7 @@ import {
 } from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 import { observer } from "mobx-react-lite";
+import ReportModal from "../activitiesReportModal/ActivitiesReportModal";
 
 interface shareComponentI {
   isShared: boolean;
@@ -186,6 +187,7 @@ const ActivityItem: React.FC<{
   const date = formatDate(new Date(item.createdAt));
 
   const [isEditting, setStatusOfEdit] = useState(false);
+  const [isReportOpen, setStatusOfReport] = useState(false);
 
   const handleDownbarClick = (type: string) => {
     switch (type) {
@@ -203,6 +205,9 @@ const ActivityItem: React.FC<{
         break;
       case "unshare":
         unshareActivity(item.id);
+        break;
+      case "report":
+        setStatusOfReport(true);
         break;
     }
   };
@@ -222,6 +227,7 @@ const ActivityItem: React.FC<{
         [styles.modalContainer]: isModal,
       })}
     >
+      <ReportModal isActive={isReportOpen} userId={item.user.id} />
       <ShareComponent item={item} isShared={isShared} />
       <Card fluid {...cardProps} className={styles.activityContainer}>
         <Card.Content className={styles.header}>

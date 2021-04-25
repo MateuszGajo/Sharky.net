@@ -1,0 +1,39 @@
+:global(#app) {
+  .container {
+    width: 35vw;
+  }
+
+  .listContainerSecondRow {
+    margin-top: 1em;
+  }
+
+  .item {
+    display: inline-flex;
+    padding: 10px;
+    background-color: $secondaryGrey;
+    border-radius: 2em;
+    cursor: pointer;
+    &:hover {
+      background-color: $primaryGrey;
+    }
+  }
+
+  .itemActive {
+    background-color: $primaryRed;
+    color: white;
+    &:hover {
+      background-color: $primaryRedTint;
+    }
+  }
+
+  .item + .item {
+    margin-left: 15px;
+  }
+
+  .toolbar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}

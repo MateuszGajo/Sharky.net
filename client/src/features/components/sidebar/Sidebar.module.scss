@@ -1,22 +1,37 @@
 :global(#app) {
   .container {
-    padding-left: 10px;
-    padding-top: 10px;
+    position: fixed;
+    width: inherit;
     height: 100vh;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
+    font-size: 0.8rem;
   }
 
   .element {
     cursor: pointer;
+    margin: 0;
+    padding: 0 0 0 0.5em;
+    &:hover {
+      background-color: $secondaryGrey;
+    }
+  }
+
+  .element:first-child {
+    padding-top: 0.1em;
+  }
+
+  .element + .element {
+    padding-top: 0.25em;
   }
 
   .username {
-    color: $primaryColor;
+    color: $primaryBlack;
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     word-break: break-all;
     overflow: hidden;
+    line-height: normal;
   }
 }

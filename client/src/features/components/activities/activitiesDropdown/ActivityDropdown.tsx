@@ -55,11 +55,18 @@ const ActivityDropdown: React.FC<Props> = ({
             onClick={() => onClick("unshare")}
           ></Dropdown.Item>
         ) : sharingUser?.id != undefined ? (
-          <Dropdown.Item
-            icon="exclamation"
-            text={reportText}
-            onClick={() => onClick("report")}
-          ></Dropdown.Item>
+          <>
+            <Dropdown.Item
+              icon={isHidden ? "unhide" : "hide"}
+              text={isHidden ? unhideText : hideText}
+              onClick={() => onClick(isHidden ? "unhide" : "hide")}
+            ></Dropdown.Item>
+            <Dropdown.Item
+              icon="exclamation"
+              text={reportText}
+              onClick={() => onClick("report")}
+            ></Dropdown.Item>
+          </>
         ) : user.id === author.id ? (
           <>
             <Dropdown.Item
@@ -87,6 +94,11 @@ const ActivityDropdown: React.FC<Props> = ({
                 onClick={() => onClick("block")}
               ></Dropdown.Item>
             )}
+            <Dropdown.Item
+              icon="exclamation"
+              text={reportText}
+              onClick={() => onClick("report")}
+            ></Dropdown.Item>
           </>
         )}
       </Dropdown.Menu>

@@ -240,6 +240,25 @@ namespace Persistence.Migrations
                     b.ToTable("Photos");
                 });
 
+            modelBuilder.Entity("Domain.Reason", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ReportId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("Reason");
+                });
+
             modelBuilder.Entity("Domain.Reply", b =>
                 {
                     b.Property<Guid>("Id")
@@ -268,6 +287,30 @@ namespace Persistence.Migrations
                     b.HasIndex("CommentId");
 
                     b.ToTable("Replies");
+                });
+
+            modelBuilder.Entity("Domain.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReportedUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportedUserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reports");
                 });
 
             modelBuilder.Entity("Domain.User", b =>
@@ -479,6 +522,13 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Reason", b =>
+                {
+                    b.HasOne("Domain.Report", null)
+                        .WithMany("Reasons")
+                        .HasForeignKey("ReportId");
+                });
+
             modelBuilder.Entity("Domain.Reply", b =>
                 {
                     b.HasOne("Domain.User", "Author")
@@ -493,6 +543,21 @@ namespace Persistence.Migrations
                     b.Navigation("Author");
 
                     b.Navigation("Comment");
+                });
+
+            modelBuilder.Entity("Domain.Report", b =>
+                {
+                    b.HasOne("Domain.User", "ReportedUser")
+                        .WithMany()
+                        .HasForeignKey("ReportedUserId");
+
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("ReportedUser");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Domain.Activity", b =>
@@ -514,6 +579,11 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Reply", b =>
                 {
                     b.Navigation("Likes");
+                });
+
+            modelBuilder.Entity("Domain.Report", b =>
+                {
+                    b.Navigation("Reasons");
                 });
 
             modelBuilder.Entity("Domain.User", b =>

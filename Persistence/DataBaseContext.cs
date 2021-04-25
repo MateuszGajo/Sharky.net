@@ -21,9 +21,11 @@ namespace Persistence
         public DbSet<BlockedUser> BlockedUsers { get; set; }
         public DbSet<Like> Likes { get; set; }
         public DbSet<AppActivity> AppActivity { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             modelBuilder.Entity<Activity>()
             .HasMany(a => a.AppActivities)
             .WithOne(a => a.Activity)

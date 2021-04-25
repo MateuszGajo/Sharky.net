@@ -104,9 +104,9 @@ const MessageBoxItem: React.FC<Props> = ({
         <Segment>
           <Modal.Header>
             <Container textAlign="center" className={styles.title}>
-              {isEdit ? "Edit Post" : "Create Post"}
+              <h1>{isEdit ? "Edit Post" : "Create Post"}</h1>
             </Container>
-            <Divider />
+            <Divider className={styles.divider} />
           </Modal.Header>
           <MessageBoxContext
             content={content}

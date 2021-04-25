@@ -91,7 +91,7 @@
   }
 
   .optionsContainer {
-    margin-top: 0.5em;
+    margin-top: 1em;
   }
 
   .toolBar {
@@ -106,7 +106,6 @@
 
   .description {
     margin-left: 1em;
-    margin-bottom: 0.7rem;
     color: black;
   }
 
@@ -211,7 +210,7 @@
   }
 
   .comment:hover .icon {
-    color: $primaryHoverColor;
+    color: $primaryColorTint;
   }
 
   .reply .icon {

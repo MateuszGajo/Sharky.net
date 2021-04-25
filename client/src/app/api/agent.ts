@@ -119,6 +119,8 @@ const Replies = {
 
 const User = {
   block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
+  report: (id: string, reasons: string[]) =>
+    requests.post(`/user/${id}/report`, { reasons }),
 };
 
 export default { Account, Activities, Comments, Replies, User };

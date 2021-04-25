@@ -12,14 +12,6 @@ interface Props {
 const HomeLayout: React.FC<Props> = ({ children, sidebar = false }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.mobileBar}>
-        <h1 className={styles.brand}>
-          Sha<span className={styles.brandMix}>rky</span>
-        </h1>
-        <div className={styles.hamburger}>
-          <Icon name="bars" className={styles.hamburgerIcon} />
-        </div>
-      </div>
       <div className={styles.navbar}>
         <Navbar />
       </div>

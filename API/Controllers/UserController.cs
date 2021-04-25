@@ -57,6 +57,13 @@ namespace API.Controllers
         {
             return await _mediator.Send(new Details.Query { Id = id });
         }
+
+        [HttpPost("{id}/report")]
+        public async Task<ActionResult<Unit>> Report(Application.Users.Report.Command command, string id)
+        {
+            command.UserId = id;
+            return await _mediator.Send(command);
+        }
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<Unit>> Register(Register.Command command)

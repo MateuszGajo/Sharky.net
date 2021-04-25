@@ -15,6 +15,8 @@ interface redirectProps {
 const Navbar = () => {
   const { t } = useTranslation("components");
   const [activeItem, setActiveItem] = useState<string>("home");
+  const [isActive, setStatusOfActive] = useState(false);
+
   const router = useRouter();
 
   const handleItemClick = ({ name, linkTo }: redirectProps) => {
@@ -52,31 +54,48 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div
-      className={cx(styles.navbar + " primary-scroll", {
-        "primary-scroll--active": isNavbarScrolling,
-      })}
-      ref={navbar}
-    >
-      <div className={styles.navbarContainer}>
-        {navItems.map((item: any) => (
-          <div
-            className={cx(styles.item, {
-              [styles.itemActive]: activeItem == item.name,
-            })}
-            key={item.id}
-            onClick={() =>
-              handleItemClick({ name: item.name, linkTo: item.linkTo })
-            }
-          >
-            <Icon name={item.icon} />
-            <span className={styles.itemText}>
-              {t(`components:navbar.${item.name}`)}
-            </span>
-          </div>
-        ))}
+    <>
+      <div className={styles.mobileBar}>
+        <h1 className={styles.brand}>
+          Sha<span className={styles.brandMix}>rky</span>
+        </h1>
+        <div
+          className={styles.hamburger}
+          onClick={() => setStatusOfActive(!isActive)}
+        >
+          <Icon
+            name={isActive ? "close" : "bars"}
+            className={styles.hamburgerIcon}
+          />
+        </div>
       </div>
-    </div>
+      <div
+        className={cx(styles.navbar + " primary-scroll", {
+          "primary-scroll--active": isNavbarScrolling,
+          [styles.navbarActive]: isActive,
+        })}
+        ref={navbar}
+      >
+        <div className={styles.navbarContainer}>
+          {navItems.map((item: any) => (
+            <div
+              className={cx(styles.item, {
+                [styles.itemActive]: activeItem == item.name,
+              })}
+              key={item.id}
+              onClick={() =>
+                handleItemClick({ name: item.name, linkTo: item.linkTo })
+              }
+            >
+              <Icon name={item.icon} className={styles.icon} />
+              <span className={styles.itemText}>
+                {t(`components:navbar.${item.name}`)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

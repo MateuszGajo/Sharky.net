@@ -5,8 +5,7 @@ import * as Yup from "yup";
 import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
 import { Token } from "../models/authentication";
-import { Comment, CommentMap } from "../models/activity";
-import React, { Dispatch } from "react";
+import React from "react";
 
 export const navItems = [
   {
