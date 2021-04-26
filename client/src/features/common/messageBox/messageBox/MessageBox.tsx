@@ -69,6 +69,7 @@ const MessageBoxItem: React.FC<Props> = ({
   const closeModal = () => {
     setOpen(false);
     setText("");
+    setFile([]);
     if (isEdit) {
       isEdit(false);
     }
@@ -80,7 +81,7 @@ const MessageBoxItem: React.FC<Props> = ({
       open={open}
       className={styles.modalContainer}
       trigger={
-        <Container className={styles.container}>
+        <div className={styles.container}>
           <div className={styles.activityCreator}>
             <div className={styles.photoContainer}>
               <img
@@ -97,7 +98,7 @@ const MessageBoxItem: React.FC<Props> = ({
               />
             </div>
           </div>
-        </Container>
+        </div>
       }
     >
       <Form onSubmit={handleSubmit}>
@@ -128,15 +129,20 @@ const MessageBoxItem: React.FC<Props> = ({
                 onDrop: (event) => event.stopPropagation(),
               })}
             >
-              <Button positive icon="plus" type="button" />
+              <Button
+                positive
+                icon="plus"
+                type="button"
+                className={styles.button}
+              />
               <input {...getInputProps()} accept="image/*" />
             </span>
             <Button
               content={isEdit ? "save" : "send"}
               positive
-              floated="right"
               loading={isSubmitting}
               disabled={!text.trim() && !file.length}
+              className={styles.button}
             />
           </Modal.Actions>
         </Segment>

@@ -187,7 +187,7 @@ const ActivityItem: React.FC<{
   const date = formatDate(new Date(item.createdAt));
 
   const [isEditting, setStatusOfEdit] = useState(false);
-  const [isReportOpen, setStatusOfReport] = useState(false);
+  const [isOpen, setReportOpen] = useState(false);
 
   const handleDownbarClick = (type: string) => {
     switch (type) {
@@ -207,7 +207,7 @@ const ActivityItem: React.FC<{
         unshareActivity(item.id);
         break;
       case "report":
-        setStatusOfReport(true);
+        setReportOpen(true);
         break;
     }
   };
@@ -222,12 +222,16 @@ const ActivityItem: React.FC<{
   };
 
   const noEditContent = (
-    <Container
+    <div
       className={cx(styles.container, {
         [styles.modalContainer]: isModal,
       })}
     >
-      <ReportModal isActive={isReportOpen} userId={item.user.id} />
+      <ReportModal
+        isOpen={isOpen}
+        setOpen={setReportOpen}
+        userId={item.user.id}
+      />
       <ShareComponent item={item} isShared={isShared} />
       <Card fluid {...cardProps} className={styles.activityContainer}>
         <Card.Content className={styles.header}>
@@ -265,7 +269,7 @@ const ActivityItem: React.FC<{
         </Card.Content>
         <IconBar item={item} />
       </Card>
-    </Container>
+    </div>
   );
 
   if (isEditting) {

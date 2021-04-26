@@ -14,7 +14,7 @@ const ActivitiesList = () => {
   }, []);
   return (
     <div>
-      <Container className={styles.container}>
+      <div className={styles.container}>
         <Modal
           centered={false}
           open={open}
@@ -42,7 +42,7 @@ const ActivitiesList = () => {
             />
           );
         })}
-      </Container>
+      </div>
     </div>
   );
 };

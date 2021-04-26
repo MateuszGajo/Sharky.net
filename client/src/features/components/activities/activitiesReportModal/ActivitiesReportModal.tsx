@@ -4,6 +4,7 @@ import {
   Container,
   Divider,
   Form,
+  Icon,
   Modal,
   Segment,
 } from "semantic-ui-react";
@@ -12,18 +13,22 @@ import styles from "./ActivitiesReportModal.module.scss";
 import agent from "~root/src/app/api/agent";
 
 interface Props {
-  isActive: boolean;
+  isOpen: boolean;
+  setOpen: (status: boolean) => void;
   userId: string;
 }
 
-const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
-  const [open, setOpen] = useState(false);
+const ActivitiesReportModal: React.FC<Props> = ({
+  isOpen,
+  setOpen,
+  userId,
+}) => {
   const [reportList, setReportList] = useState<any>({});
 
   const firstRowlist = [
     {
-      name: "offensiveContent",
-      description: "Offenstive Content",
+      name: "scam",
+      description: "scam",
     },
     {
       name: "spam",
@@ -36,20 +41,15 @@ const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
   ];
   const secondRowList = [
     {
-      name: "scam",
-      description: "scam",
+      name: "offensiveContent",
+      description: "Offenstive Content",
     },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(Object.keys(reportList));
     agent.User.report(userId, Object.keys(reportList));
   };
-
-  useEffect(() => {
-    if (open != isActive) setOpen(isActive);
-  }, [isActive]);
 
   const handleItemClick = (item: any) => {
     let report = reportList[item.name];
@@ -68,11 +68,11 @@ const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
     <Modal
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
-      open={open}
+      open={isOpen}
       className={styles.container}
     >
       <Form onSubmit={handleSubmit}>
-        <Segment>
+        <Segment className={styles.segment}>
           <Modal.Header>
             <Container textAlign="center" className={styles.title}>
               <h1>Report</h1>
@@ -80,7 +80,7 @@ const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
             <Divider />
           </Modal.Header>
           <div className={styles.listContainer}>
-            <div>
+            <div className={styles.rows}>
               {firstRowlist.map((item) => (
                 <div
                   className={cx(styles.item, {
@@ -94,7 +94,7 @@ const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
                 </div>
               ))}
             </div>
-            <div className={styles.listContainerSecondRow}>
+            <div className={cx(styles.listContainerSecondRow, styles.rows)}>
               {secondRowList.map((item) => (
                 <div
                   className={cx(styles.item, {
@@ -111,8 +111,11 @@ const ActivitiesReportModal: React.FC<Props> = ({ isActive, userId }) => {
           </div>
           <Divider />
           <Modal.Actions className={styles.toolbar} c>
-            <Button content={"submit"} positive />
+            <Button content={"submit"} positive className={styles.button} />
           </Modal.Actions>
+          <div className={styles.iconContainer} onClick={() => setOpen(false)}>
+            <Icon name="close" className={styles.icon} />
+          </div>
         </Segment>
       </Form>
     </Modal>
