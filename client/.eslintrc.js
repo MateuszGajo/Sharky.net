@@ -1,5 +1,3 @@
-import path from "path";
-
 module.exports = {
   env: {
     browser: true,
@@ -73,8 +71,7 @@ module.exports = {
     "react/jsx-curly-newline": "off",
     "no-param-reassign": ["error", { props: false }],
     indent: "off",
-    "no-use-before-define": "off",
-    // "@typescript-eslint/no-use-before-define": ["error"],
+    "no-use-before-define": "off",,
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -86,7 +83,6 @@ module.exports = {
         mjs: "never",
       },
     ],
-    // "react/prop-types": "off",
   },
 
   globals: {
@@ -95,6 +91,10 @@ module.exports = {
   settings: {
     "import/resolver": {
       "babel-module": {},
+      node: {
+        extensions: [".ts", ".tsx", ".native.js"],
+        paths: ["src"]
+      }
     },
     node: {
       extensions: [".js", ".jsx", ".ts", ".tsx"],

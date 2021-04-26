@@ -1,0 +1,43 @@
+:global(#app) {
+  .container {
+    display: flex;
+    width: 100%;
+  }
+
+  .navbar {
+    display: block;
+    width: calc(100vw / 16 * 3);
+  }
+
+  .content {
+    flex-grow: 1;
+  }
+
+  .sidebar {
+    width: calc(100vw / 16 * 2);
+  }
+
+  @media (max-width: 1023px) {
+    .mobileBar {
+      display: flex;
+    }
+
+    .container {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      position: fixed;
+      z-index: 20;
+    }
+    .content {
+      margin-top: 20px;
+    }
+
+    .sidebar {
+      display: none;
+    }
+  }
+}

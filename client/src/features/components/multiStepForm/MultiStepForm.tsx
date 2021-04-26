@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, useFormikContext } from "formik";
 import { observer } from "mobx-react-lite";
-import { SignupFormValues as FormValue } from "~root/src/app/models/user";
+import { SignupFormValues as FormValue } from "~root/src/app/models/authentication";
 import StepWrapper from "./components/stepWrapper/StepWrrapper";
 import Step from "./components/step/Step";
 import Controls from "./components/controls/Controls";
 import CredsForm from "./components/credsForm/CredsForm";
 import PersonalForm from "./components/personalForm/PersonalForm";
 import { registerValidationSchema as validationSchema } from "~utils/utils";
-import { useStore } from "~root/src/app/stores/store";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 const SaveValues: React.FC<{ saveValues: boolean }> = ({ saveValues }) => {
   const { values, errors } = useFormikContext<FormValue>();
@@ -30,12 +30,11 @@ interface Props {
 }
 
 const Wizzard: React.FC<Props> = observer(({ children }) => {
-  const { authenticationStore } = useStore();
   const {
     initialFormValues: initialValues,
     touchedFields,
     register,
-  } = authenticationStore;
+  } = useAuthenticationStore();
 
   const [saveValues, setStatusOfSaveValues] = useState(true);
 

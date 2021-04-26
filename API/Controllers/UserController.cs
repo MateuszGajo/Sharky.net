@@ -47,16 +47,22 @@ namespace API.Controllers
             _httpClient = new HttpClient();
         }
 
-        [HttpGet("auth")]
-        public ActionResult Auth()
+        [HttpPut("{id}/block")]
+        public async Task<ActionResult<Unit>> Block(string id)
         {
-            return Ok();
+            return await _mediator.Send(new Block.Command { UserId = id });
         }
-
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Details(string id)
         {
             return await _mediator.Send(new Details.Query { Id = id });
+        }
+
+        [HttpPost("{id}/report")]
+        public async Task<ActionResult<Unit>> Report(Application.Users.Report.Command command, string id)
+        {
+            command.UserId = id;
+            return await _mediator.Send(command);
         }
         [AllowAnonymous]
         [HttpPost("register")]
@@ -228,8 +234,8 @@ namespace API.Controllers
 
             User newUser = new User
             {
-                Firstname = name,
-                Lastname = name,
+                FirstName = name,
+                LastName = name,
                 UserName = $"{name + name + userCount}",
                 TwitterId = userId
             };
@@ -314,8 +320,8 @@ namespace API.Controllers
 
             var newUser = new User
             {
-                Firstname = firstName,
-                Lastname = lastName,
+                FirstName = firstName,
+                LastName = lastName,
                 UserName = $"{userNameLowerCase + userCount}",
                 FacebookId = userId
 
@@ -403,8 +409,8 @@ namespace API.Controllers
 
             var newUser = new User
             {
-                Firstname = firstName,
-                Lastname = lastName,
+                FirstName = firstName,
+                LastName = lastName,
                 UserName = $"{userName + nameCount}",
                 GoogleId = userId
             };

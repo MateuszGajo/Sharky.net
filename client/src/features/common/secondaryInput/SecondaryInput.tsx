@@ -19,7 +19,9 @@ const SecondaryInput: React.FC<Props> = ({
   const [isActive, setActive] = useState(false);
 
   const [field, meta] = useField(name);
+
   const input = useRef<HTMLInputElement | null>(null);
+
   const { onChange, ...fieldsProperty } = field;
 
   const property = {
@@ -51,13 +53,13 @@ const SecondaryInput: React.FC<Props> = ({
       >
         {placeholder}
       </h2>
-      {meta.touched && meta.error ? (
+      {meta.touched && meta.error && (
         <div className={styles.error}>
           <Label basic color="red" size="small" className={styles.errorLabel}>
             {meta.error}
           </Label>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };

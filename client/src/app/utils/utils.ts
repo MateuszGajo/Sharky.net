@@ -3,7 +3,9 @@ import setLanguage from "next-translate/setLanguage";
 import type { NextApiRequest } from "next";
 import * as Yup from "yup";
 import jwt from "jsonwebtoken";
-import { url } from "node:inspector";
+import cookies from "js-cookie";
+import { Token } from "../models/authentication";
+import React from "react";
 
 export const navItems = [
   {
@@ -135,17 +137,68 @@ export const signinValidationSchema = () => {
   });
 };
 
-const verifyJWT = (token: string) => {
-  return new Promise((resolve) => {
-    resolve(jwt.verify(token, String(process.env.TOKEN_KEY)));
+const englishMonthNames = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const polishMonthNames = [
+  "Styczeń",
+  "Luty",
+  "Marzec",
+  "Kwiecień",
+  "Maj",
+  "Czerwiec",
+  "Lipiec",
+  "Sierpień",
+  "Wrzesień",
+  "Październik",
+  "Listopad",
+  "Grudzień",
+];
+
+export const formatDate = (date: Date) => {
+  let d = new Date(date),
+    monthNumber = d.getMonth() + 1,
+    day = "" + d.getDate(),
+    year = d.getFullYear();
+
+  const monthNames =
+    cookies.get("NEXT_LOCALE") == "pl" ? polishMonthNames : englishMonthNames;
+
+  const month = monthNames[monthNumber - 1];
+  if (day.length < 2) day = "0" + day;
+
+  return [day, month, year].join(" ");
+};
+
+export const verifyJWT = (token: string) => {
+  return new Promise<Token>((resolve) => {
+    const user = jwt.verify(token, String(process.env.TOKEN_KEY)) as Token;
+    resolve(user);
   });
 };
 
 export const isLoggedIn = async (req: NextApiRequest) => {
   try {
-    await verifyJWT(req.cookies["Token"]);
+    const resp = await verifyJWT(req.cookies["Token"]);
+    const user = {
+      id: resp.id,
+      firstName: resp.firstName,
+      lastName: resp.lastName,
+    };
     return {
-      props: {},
+      props: { user },
     };
   } catch (err) {
     return {
@@ -154,6 +207,33 @@ export const isLoggedIn = async (req: NextApiRequest) => {
         permanent: false,
       },
     };
+  }
+};
+
+interface verifyPhotoProps {
+  setError: (err: string) => void;
+  setFile: (file: object[]) => void;
+  acceptedFiles: any;
+}
+
+export const verifyPhoto = ({
+  setError,
+  setFile,
+  acceptedFiles,
+}: verifyPhotoProps) => {
+  if (!acceptedFiles[0]) {
+    setError("You can only upload a picture");
+  } else if (acceptedFiles[0].size > 5242880) {
+    setError("You can't upload picture larger than 5mb");
+  } else {
+    setError("");
+    setFile(
+      acceptedFiles.map((file: object) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      )
+    );
   }
 };
 
@@ -170,5 +250,50 @@ export const isNotLoggedIn = async (req: NextApiRequest) => {
     return {
       props: {},
     };
+  }
+};
+
+export const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+  if (e.key === "enter") {
+    e.preventDefault();
+    e.stopPropagation();
+    new Event("submit");
+  }
+};
+
+interface handleLikeClickI {
+  isSubmitting: boolean;
+  setStatusOfSubmitting: (status: boolean) => void;
+  giveLike: (isLiked: boolean, id: string) => Promise<void>;
+  setNumberOfLikes: (value: number | ((prevVar: number) => number)) => void;
+  setStatusOfLike: (status: boolean) => void;
+  isLiked: boolean;
+  id: string;
+}
+
+export const likeClick = ({
+  isSubmitting,
+  setStatusOfSubmitting,
+  giveLike,
+  setNumberOfLikes,
+  setStatusOfLike,
+  isLiked,
+  id,
+}: handleLikeClickI) => {
+  console.log(id);
+  if (!isSubmitting) {
+    setStatusOfSubmitting(true);
+    giveLike(isLiked, id).then(() => {
+      if (isLiked) {
+        console.log("Halo");
+        setNumberOfLikes((prev) => prev - 1);
+        setStatusOfLike(false);
+        setStatusOfSubmitting(false);
+      } else {
+        setNumberOfLikes((prev) => prev + 1);
+        setStatusOfLike(true);
+        setStatusOfSubmitting(false);
+      }
+    });
   }
 };

@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import * as MultiStepForm from "~components/multiStepForm/MultiStepForm";
-import { useStore } from "~root/src/app/stores/store";
 import Loading from "~common/Loading/Loading";
 import { observer } from "mobx-react-lite";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 const SignUp = () => {
-  const { authenticationStore } = useStore();
-  const { loading, loadRegisterValues } = authenticationStore;
+  const { loading, loadRegisterValues } = useAuthenticationStore();
 
   useEffect(() => {
     loadRegisterValues();

@@ -1,14 +1,14 @@
 import type { AppProps } from "next/app";
 import "semantic-ui-css/semantic.min.css";
-import { store, StoreContext } from "~root/src/app/stores/store";
+import { RootStoreProvider } from "~root/src/app/providers/RootStoreProvider";
 import "~styles/global.scss";
 import "~styles/reset.scss";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <StoreContext.Provider value={store}>
+    <RootStoreProvider hydrationData={{ user: pageProps.user }}>
       <Component {...pageProps} />
-    </StoreContext.Provider>
+    </RootStoreProvider>
   );
 };
 

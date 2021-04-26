@@ -1,4 +1,4 @@
-
+using System.Threading.Tasks;
 using Application.Interface;
 using Application.Photos;
 using CloudinaryDotNet;
@@ -27,14 +27,15 @@ namespace Infrastructure.Photos
         {
             var uploadResult = new ImageUploadResult();
 
-            if(file.Length >0){
+            if (file.Length > 0)
+            {
 
-                using(var stream = file.OpenReadStream())
+                using (var stream = file.OpenReadStream())
                 {
                     var uploadParams = new ImageUploadParams
                     {
                         File = new FileDescription(file.FileName, stream),
-                         Transformation = new Transformation().Quality("50").FetchFormat("auto")
+                        Transformation = new Transformation().Quality("50").FetchFormat("auto")
                     };
                     uploadResult = _cloudinary.Upload(uploadParams);
                 }
@@ -45,6 +46,14 @@ namespace Infrastructure.Photos
                 PublicId = uploadResult.PublicId,
                 Url = uploadResult.SecureUrl.AbsoluteUri
             };
+        }
+
+        public async Task<string> DeletePhoto(string publicId)
+        {
+            var deleteParams = new DeletionParams(publicId);
+            var result = await _cloudinary.DestroyAsync(deleteParams);
+
+            return result.Result == "ok" ? result.Result : null;
         }
     }
 }

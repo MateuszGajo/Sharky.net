@@ -90,8 +90,8 @@
     margin: 70px auto 0 auto;
     &:hover {
       background-color: #f2f2f2;
-      color: $primaryHoverColor;
-      border-color: $primaryHoverColor;
+      color: $primaryColorTint;
+      border-color: $primaryColorTint;
     }
   }
 

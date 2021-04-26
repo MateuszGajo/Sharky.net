@@ -1,13 +1,12 @@
 import React, { useEffect } from "react";
-import { useStore } from "~root/src/app/stores/store";
+import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 interface Props {
   children: any;
 }
 
 const StepWrapper: React.FC<Props> = ({ children }) => {
-  const { authenticationStore } = useStore();
-  const { setNumberOfPages } = authenticationStore;
+  const { setNumberOfPages } = useAuthenticationStore();
 
   let amountOfPages = 0;
   const childrenCloned = children?.map((item: any) => {

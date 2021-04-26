@@ -20,7 +20,7 @@
     @include arrow;
     right: -200px;
     &:hover {
-      color: $primaryHoverColor;
+      color: $primaryColorTint;
     }
   }
 
@@ -28,7 +28,7 @@
     @include arrow;
     left: -200px;
     &:hover {
-      color: $primaryHoverColor;
+      color: $primaryColorTint;
     }
   }
 

@@ -1,0 +1,59 @@
+:global(#app) {
+  .item {
+    position: relative;
+    font-size: 0.8rem;
+  }
+
+  .item:hover .options {
+    visibility: visible;
+  }
+
+  .hiddenAvatar {
+    filter: brightness(0.45);
+  }
+
+  .username {
+    color: $primaryColor;
+  }
+
+  .usernameHidden {
+    color: $primaryGrey;
+  }
+
+  .hiddenContent {
+    color: $primaryGrey;
+  }
+
+  .content {
+    margin: 0;
+  }
+
+  .icons {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .like .icon {
+    color: #ff3d47;
+    opacity: 1;
+  }
+
+  .like:hover .icon {
+    color: #cf2029;
+  }
+
+  .icon.likeIconActive {
+    color: #cf2029;
+  }
+
+  .likeIconActive + .number {
+    color: #cf2029;
+  }
+
+  .options {
+    visibility: hidden;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}

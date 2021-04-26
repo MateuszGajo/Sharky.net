@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,11 +19,12 @@ namespace API
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            using(var serviceScope= host.Services.CreateScope())
+            using (var serviceScope = host.Services.CreateScope())
             {
-                 var context = serviceScope.ServiceProvider.GetRequiredService<DataBaseContext>();
-                 context.Database.Migrate();
-                 Seed.SeedData(context);
+                var context = serviceScope.ServiceProvider.GetRequiredService<DataBaseContext>();
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                context.Database.Migrate();
+                Seed.SeedData(context, userManager);
             }
             host.Run();
         }

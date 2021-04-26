@@ -5,6 +5,9 @@ namespace Domain
     public class Like
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
+        public User User { get; set; }
+        public Activity Activity { get; set; }
+        public Comment Comment { get; set; }
+        public Reply Reply { get; set; }
     }
 }

@@ -1,0 +1,40 @@
+:global(#app) {
+  .container {
+    position: relative;
+  }
+
+  .hiddenAvatar {
+    filter: brightness(0.45);
+  }
+
+  .form {
+    margin-bottom: 0.7em;
+  }
+
+  .username {
+    color: $primaryColor;
+  }
+
+  .usernameHidden {
+    color: $primaryGrey;
+  }
+
+  .hiddenContent {
+    color: $primaryGrey;
+  }
+
+  .container:hover .options {
+    visibility: visible;
+  }
+
+  .container .options.hidden {
+    visibility: hidden;
+  }
+
+  .options {
+    visibility: hidden;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+}

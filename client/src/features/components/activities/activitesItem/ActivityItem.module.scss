@@ -1,0 +1,370 @@
+:global(#app) {
+  .container {
+    position: relative;
+    display: flex;
+    width: inherit;
+    width: 1200px;
+    margin: 0 auto;
+  }
+
+  .modalContainer {
+    margin: 0;
+  }
+
+  .container + .container {
+    margin-top: 3em;
+  }
+
+  .shareContainer {
+    position: absolute;
+    right: 100%;
+    top: 0;
+    display: flex;
+    height: fit-content;
+  }
+
+  .sharingUserPhoto {
+    width: 100%;
+    max-width: 110px;
+  }
+
+  .sharingUserPhoto img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .shareSegment {
+    width: 530px;
+    height: 150px;
+    padding: 0.6em;
+  }
+
+  .shareContent {
+    display: flex;
+  }
+
+  .sharingUsername {
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    padding-left: 0.5em;
+    font-size: 0.85rem;
+    line-height: normal;
+    text-align: center;
+    width: 100%;
+    align-self: center;
+  }
+
+  .shareIcon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 1.3rem;
+    color: #00cccc;
+  }
+
+  .activityContainer {
+    width: 100%;
+  }
+
+  .header {
+    display: flex;
+    padding: 0.75em;
+  }
+
+  .headerContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .headerTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-left: 0.8em;
+  }
+
+  .optionsContainer {
+    margin-top: 1em;
+  }
+
+  .toolBar {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .content {
+    font-size: 1rem;
+    padding: 1em 0 0 0;
+  }
+
+  .description {
+    margin-left: 1em;
+    color: black;
+  }
+
+  .noMargin {
+    margin: 0;
+  }
+
+  .userPhotoContainer {
+    display: block;
+    height: fit-content;
+    max-width: 130px;
+  }
+
+  .userPhoto {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 3px;
+  }
+
+  .date {
+    color: #647c7ce8;
+    font-size: 0.85rem;
+  }
+
+  .username {
+    color: $primaryColor;
+    font-size: 0.95rem;
+  }
+
+  .editContainer {
+    margin: 0px 10px 10px 10px;
+  }
+
+  .textEdit {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    resize: both;
+    min-height: 40px;
+    line-height: 20px;
+    resize: none;
+  }
+
+  .editButtons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+
+  .photo {
+    width: 100%;
+  }
+
+  .editContent {
+    max-height: 40vh;
+    overflow-y: scroll;
+  }
+
+  .editContent::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .preview {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    margin-top: 15px;
+    overflow-y: scroll;
+  }
+
+  .downbar {
+    font-size: 1rem;
+  }
+
+  .like .icon {
+    color: #ff3d47;
+    opacity: 1;
+  }
+
+  .like:hover .icon {
+    color: #cf2029;
+  }
+
+  .icon.likeIconActive {
+    color: #cf2029;
+  }
+  .likeIconActive + .number {
+    color: #cf2029;
+  }
+
+  .number {
+    color: grey;
+  }
+
+  .icon {
+    transition: color 0.2s;
+  }
+
+  .comment .icon {
+    color: $primaryColor;
+  }
+
+  .comment:hover .icon {
+    color: $primaryColorTint;
+  }
+
+  .reply .icon {
+    color: #00ffff;
+  }
+
+  .reply:hover .icon {
+    color: #00cccc;
+  }
+
+  @media (max-width: 3839px) {
+    .container {
+      width: 800px;
+    }
+
+    .sharingUserPhoto {
+      max-width: 90px;
+    }
+
+    .shareSegment {
+      width: 350px;
+      height: 130px;
+    }
+
+    .userPhotoContainer {
+      max-width: 100px;
+    }
+  }
+  @media (max-width: 2559px) {
+    .container {
+      width: 600px;
+    }
+
+    .sharingUserPhoto {
+      max-width: 50px;
+    }
+    .shareSegment {
+      width: 240px;
+      height: 70px;
+      padding: 0.5em;
+    }
+
+    .sharingUsername {
+      font-size: 0.92rem;
+    }
+
+    .userPhotoContainer {
+      max-width: 60px;
+    }
+    .header {
+      padding: 0.5em;
+    }
+
+    .date {
+      font-size: 0.92rem;
+    }
+    .username {
+      font-size: 1.1rem;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      width: 410px;
+    }
+    .sharingUserPhoto {
+      max-width: 40px;
+    }
+    .shareSegment {
+      width: 190px;
+      height: 60px;
+    }
+
+    .userPhotoContainer {
+      max-width: 45px;
+    }
+    .header {
+      padding: 0.45em;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      width: 320px;
+    }
+
+    .sharingUserPhoto {
+      max-width: 30px;
+    }
+
+    .shareSegment {
+      width: 140px;
+      height: 50px;
+    }
+
+    .userPhotoContainer {
+      max-width: 35px;
+    }
+
+    .header {
+      padding: 0.4em;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .shareContainer {
+      position: initial;
+      max-width: 80%;
+    }
+
+    .shareSegment {
+      margin-bottom: 0.5em;
+      width: auto;
+    }
+
+    .shareIcon {
+      align-self: end;
+    }
+
+    .shareIcon i {
+      transform: rotate(90deg);
+    }
+
+    .userPhotoContainer {
+      max-width: 45px;
+    }
+  }
+
+  @media (max-width: 1024px) and(orientation:portrait) {
+    .container {
+      width: 96%;
+      margin: 0 auto;
+    }
+
+    .shareContainer {
+      max-width: 60%;
+    }
+  }
+
+  @media (max-width: 1024px) and(orientation:landscape) {
+    .container {
+      width: 85%;
+      margin: 0 auto;
+    }
+
+    .shareContainer {
+      max-width: 60%;
+    }
+  }
+}

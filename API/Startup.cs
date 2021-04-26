@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using API.Middleware;
 using Application.Interface;
@@ -10,25 +8,22 @@ using FluentValidation.AspNetCore;
 using Infrastructure.Photos;
 using Infrastructure.Security;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Persistence;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Application.Core;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace API
 {
@@ -46,7 +41,9 @@ namespace API
         {
             services.AddDbContext<DataBaseContext>(opt =>
             {
+                opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+                opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             });
 
             services.AddMediatR(typeof(Details.Handler).Assembly);
@@ -54,7 +51,10 @@ namespace API
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
-            }).AddFluentValidation(cfg =>
+            }).AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                )
+            .AddFluentValidation(cfg =>
             {
                 cfg.RegisterValidatorsFromAssemblyContaining<Register>();
             });
@@ -104,6 +104,7 @@ namespace API
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
             services.AddScoped<IUserAccessor, UserAccessor>();
+            services.AddAutoMapper(typeof(MappingProfiles).Assembly);
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });

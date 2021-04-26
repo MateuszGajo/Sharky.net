@@ -1,0 +1,155 @@
+:global(#app) {
+  .modalContainer {
+    position: relative;
+    width: 35vw;
+  }
+
+  .container {
+    width: 1200px;
+    padding: 10px;
+    margin: 0 auto;
+    box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+    border-radius: 5px;
+    font-size: 0.85rem;
+  }
+
+  .activityCreator {
+    display: flex;
+    justify-content: stretch;
+  }
+
+  .creatorContent {
+    width: 100%;
+    align-self: initial;
+    margin-left: 0.7em;
+  }
+
+  .creatorInput {
+    height: 100%;
+  }
+
+  .photoContainer {
+    width: 100%;
+    max-width: 130px;
+  }
+
+  .photo {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .title {
+    padding: 5px 0;
+  }
+
+  .divider {
+    margin-bottom: 0;
+  }
+
+  .error {
+    display: flex;
+    justify-content: center;
+  }
+
+  .toolbar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .iconContainer {
+    position: absolute;
+    width: 1.1em;
+    height: 1.1em;
+    top: 0.7em;
+    right: 0.7em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3em;
+    padding: 0.3em;
+    font-size: 1.5rem;
+    background-color: #d2d2d2;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    transform: scale(1.1);
+    &:hover {
+      background-color: #c3c3c3;
+    }
+  }
+
+  .closeIcon {
+    color: grey;
+    margin: 0;
+  }
+
+  .button {
+    font-size: 1.2rem;
+    margin: 0;
+  }
+
+  @media (max-width: 3839px) {
+    .container {
+      width: 800px;
+    }
+
+    .photoContainer {
+      max-width: 100px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .container {
+      width: 600px;
+    }
+
+    .photoContainer {
+      max-width: 60px;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      width: 410px;
+    }
+
+    .photoContainer {
+      max-width: 45px;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      width: 320px;
+    }
+
+    .photoContainer {
+      max-width: 35px;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .messageBoxContainer .ui.dimmer {
+      padding: 0;
+    }
+
+    .modalContainer {
+      width: 100vw;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 1023px) and(orientation:portrait) {
+    .container {
+      width: 96%;
+    }
+  }
+
+  @media (max-width: 1023px) and(orientation:landscape) {
+    .container {
+      width: 85%;
+    }
+  }
+}

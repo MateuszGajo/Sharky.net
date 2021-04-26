@@ -2,16 +2,38 @@
   outline: none;
 }
 
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+}
+
+.ui.form textarea:focus {
+  border-color: rgba(34, 36, 38, 0.15);
+}
+
 .ui.checkbox input:checked ~ .box:after,
 .ui.checkbox input:checked ~ label:after,
 .ui.checkbox input:checked:focus ~ label:after {
   color: $primaryColor;
 }
 
-a {
+#app a {
   color: inherit;
 }
 
-a:hover {
+#app a:hover {
   color: inherit;
 }
+
+[contentEditable="true"]:empty:not(:focus):before {
+  content: attr(placeholder);
+  color: grey;
+  font-style: italic;
+}
+
+// [contenteditable="true"]:empty:before {
+//   content: attr(placeholder);
+//   pointer-events: none;
+//   display: block; /* For Firefox */
+// }

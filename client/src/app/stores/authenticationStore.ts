@@ -1,12 +1,14 @@
-import { store } from "./store";
 import agent from "~api/agent";
 import { makeAutoObservable } from "mobx";
-import { SignupFormValues as SignupValues } from "~root/src/app/models/user";
-import { SigninFormValues as SigninValues } from "~root/src/app/models/user";
+import { SignupFormValues as SignupValues } from "~root/src/app/models/authentication";
+import { SigninFormValues as SigninValues } from "~root/src/app/models/authentication";
 import router from "next/router";
+import { RootStore } from "./rootStore";
 
 export default class AuthenticationStore {
-  constructor() {
+  root: RootStore;
+  constructor(root: RootStore) {
+    this.root = root;
     makeAutoObservable(this);
   }
 
@@ -55,9 +57,7 @@ export default class AuthenticationStore {
         }
         this.touchedFields = touchedFields;
         this.initialFormValues = { ...this.initialFormValues, ...valuesParsed };
-      } catch (e) {
-        console.log("catch");
-      }
+      } catch (e) {}
     }
     this.setLoading(false);
   };
@@ -79,11 +79,9 @@ export default class AuthenticationStore {
         const errors = err.response.data.errors;
         const touched: typeof errors = {};
         const initialFormExtend: typeof errors = this.initialFormValues;
-        console.log(errors);
+
         for (const [key, value] of Object.entries(errors)) {
           const lower = key.toLocaleLowerCase();
-          console.log(initialFormExtend[lower]);
-          console.log(initialFormExtend["Das"]);
           touched[lower] = value ? true : false;
           if (initialFormExtend[lower] == "undefined") {
             setStatus("serverError");
@@ -123,7 +121,7 @@ export default class AuthenticationStore {
   getCreds = () => {
     if (localStorage.getItem("creds")) {
       agent.Account.creds()
-        .then(({ data }) => {
+        .then((data) => {
           this.creds = data;
           this.remebermeStatus = true;
         })

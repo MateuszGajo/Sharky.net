@@ -1,0 +1,141 @@
+:global(#app) {
+  .segment {
+    position: relative;
+  }
+
+  .container {
+    width: 35vw;
+  }
+
+  .listContainerSecondRow {
+    margin-top: 1.5em;
+  }
+
+  .rows {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: inline-flex;
+    padding: 1em;
+    background-color: $secondaryGrey;
+    border-radius: 1em;
+    font-size: 1.3rem;
+    cursor: pointer;
+    &:hover {
+      background-color: $primaryGrey;
+    }
+  }
+
+  .itemActive {
+    background-color: $primaryRed;
+    color: white;
+    &:hover {
+      background-color: $primaryRedTint;
+    }
+  }
+
+  .item + .item {
+    margin-left: 15px;
+  }
+
+  .toolbar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  .iconContainer {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.1em;
+    height: 1.1em;
+    background-color: $primaryGrey;
+    padding: 0.6em;
+    border-radius: 0.3em;
+    font-size: 1.7rem;
+    cursor: pointer;
+  }
+
+  .icon {
+    margin: 0;
+    color: grey;
+  }
+
+  .button {
+    font-size: 1.5rem;
+  }
+
+  @media (max-width: 2559px) {
+    .container {
+      width: 32vw;
+    }
+    .item {
+      padding: 1.1em;
+      border-radius: 1.1em;
+      font-size: 1.4rem;
+    }
+
+    .button {
+      font-size: 1.4rem;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      width: 35vw;
+    }
+    .item {
+      padding: 1em;
+      border-radius: 1em;
+      font-size: 1.3rem;
+    }
+    .button {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (max-width: 1023px) and(orientation:landscape) {
+    .container {
+      width: 90vw;
+    }
+
+    .item {
+      padding: 20px;
+      border-radius: 2.5em;
+      font-size: 1.5rem;
+    }
+
+    .item + .item {
+      margin-left: 25px;
+    }
+    .listContainerSecondRow {
+      margin-top: 1.5em;
+    }
+  }
+
+  @media (max-width: 1023px) and(orientation:portrait) {
+    .container {
+      width: 100vw;
+    }
+
+    .item {
+      padding: 15px;
+      border-radius: 2em;
+      font-size: 1.3rem;
+    }
+
+    .listContainerSecondRow {
+      margin-top: 1.5em;
+    }
+    .segment {
+      padding: 1em 0.5em;
+    }
+  }
+}
