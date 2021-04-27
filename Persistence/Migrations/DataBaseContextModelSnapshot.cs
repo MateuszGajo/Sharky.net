@@ -133,6 +133,62 @@ namespace Persistence.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("Domain.Conversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("LastMessageId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecipientId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.HasIndex("RecipientId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("Domain.Friend", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FriendRequestFlag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("RequestTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RequestedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RequestedToId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("conversationId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RequestedById");
+
+                    b.HasIndex("RequestedToId");
+
+                    b.HasIndex("conversationId");
+
+                    b.ToTable("Friends");
+                });
+
             modelBuilder.Entity("Domain.HiddenActivity", b =>
                 {
                     b.Property<Guid>("Id")
@@ -225,6 +281,33 @@ namespace Persistence.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("Domain.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ConversationId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("ConversationId");
+
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -444,6 +527,42 @@ namespace Persistence.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Domain.Conversation", b =>
+                {
+                    b.HasOne("Domain.User", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId");
+
+                    b.HasOne("Domain.User", "Recipient")
+                        .WithMany()
+                        .HasForeignKey("RecipientId");
+
+                    b.Navigation("Creator");
+
+                    b.Navigation("Recipient");
+                });
+
+            modelBuilder.Entity("Domain.Friend", b =>
+                {
+                    b.HasOne("Domain.User", "RequestedBy")
+                        .WithMany()
+                        .HasForeignKey("RequestedById");
+
+                    b.HasOne("Domain.User", "RequestedTo")
+                        .WithMany()
+                        .HasForeignKey("RequestedToId");
+
+                    b.HasOne("Domain.Conversation", "conversation")
+                        .WithMany()
+                        .HasForeignKey("conversationId");
+
+                    b.Navigation("conversation");
+
+                    b.Navigation("RequestedBy");
+
+                    b.Navigation("RequestedTo");
+                });
+
             modelBuilder.Entity("Domain.HiddenActivity", b =>
                 {
                     b.HasOne("Domain.Activity", "Activity")
@@ -522,6 +641,22 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Message", b =>
+                {
+                    b.HasOne("Domain.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.HasOne("Domain.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Conversation");
+                });
+
             modelBuilder.Entity("Domain.Reason", b =>
                 {
                     b.HasOne("Domain.Report", null)
@@ -574,6 +709,11 @@ namespace Persistence.Migrations
                     b.Navigation("Likes");
 
                     b.Navigation("Replies");
+                });
+
+            modelBuilder.Entity("Domain.Conversation", b =>
+                {
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>

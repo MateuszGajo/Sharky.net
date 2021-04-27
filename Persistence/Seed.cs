@@ -13,8 +13,11 @@ namespace Persistence
             if (!context.Users.Any())
             {
                 var users = new List<User>{
-                    new User {Id = "adebacba-4986-44c4-b4eb-0c66afda9d7b",Email="example@example.com",FirstName="Bob",LastName="smith", UserName="ruslavruslav1"},
-                    new User {Id ="80f1dab6-7aa0-4693-98c3-232e6aec16bb",Email="example1@example1.com",FirstName="Tom",LastName="Musk", UserName="ruslavruslav15"}
+                    new User {Id = "adebacba-4986-44c4-b4eb-0c66afda9d7b",Email="example@example.com",FirstName="Bob",LastName="Smith", UserName="bobsmith1"},
+                    new User {Id ="80f1dab6-7aa0-4693-98c3-232e6aec16bb",Email="example1@example1.com",FirstName="Tom",LastName="Musk", UserName="tommusk1"},
+                    new User {Id ="06228c34-9c71-4c68-9493-ab13e0a30bd4",Email="example2@example2.com",FirstName="John",LastName="John", UserName="johnjohn1"},
+                    new User {Id ="32257ce4-7c32-48a9-ab16-9e4be1633cdb",Email="example3@example3.com",FirstName="Harry",LastName="Brown", UserName="harrybrown1"},
+                    new User {Id ="a997f083-7dab-45de-b45d-224520a2a29f",Email="example3@example3.com",FirstName="Charlie",LastName="William", UserName="charliewilliam1"},
                 };
 
                 foreach (var user in users)
@@ -22,6 +25,79 @@ namespace Persistence
                     await userManager.CreateAsync(user, "Pa$$w0rd");
                 }
             }
+
+            if (!context.Friends.Any())
+            {
+                var bob = await context.Users.FindAsync("adebacba-4986-44c4-b4eb-0c66afda9d7b");
+                var tom = await context.Users.FindAsync("80f1dab6-7aa0-4693-98c3-232e6aec16bb");
+                var john = await context.Users.FindAsync("06228c34-9c71-4c68-9493-ab13e0a30bd4");
+                var harry = await context.Users.FindAsync("32257ce4-7c32-48a9-ab16-9e4be1633cdb");
+                var charlie = await context.Users.FindAsync("a997f083-7dab-45de-b45d-224520a2a29f");
+
+                Friend friendshipBobTom = new Friend
+                {
+                    RequestedBy = bob,
+                    RequestedTo = tom,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+                Friend friendshipBobJohn = new Friend
+                {
+                    RequestedBy = john,
+                    RequestedTo = bob,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+                Friend friendshipJohnHarry = new Friend
+                {
+                    RequestedBy = harry,
+                    RequestedTo = john,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+
+                Friend friendshipTomHarry = new Friend
+                {
+                    RequestedBy = tom,
+                    RequestedTo = harry,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+                Friend friendshipTomJohn = new Friend
+                {
+                    RequestedBy = tom,
+                    RequestedTo = john,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+
+                Friend friendshipTomCharlie = new Friend
+                {
+                    RequestedBy = tom,
+                    RequestedTo = charlie,
+                    RequestTime = DateTime.Now,
+                    FriendRequestFlag = FriendRequestFlag.Approved
+                };
+
+
+                List<Friend> friendss = new List<Friend>(){
+                        friendshipBobJohn,
+                        friendshipBobTom,
+                        friendshipJohnHarry,
+                        friendshipTomCharlie,
+                        friendshipTomHarry,
+                        friendshipTomJohn
+                };
+
+                context.AddRange(friendss);
+                await context.SaveChangesAsync();
+            }
+
 
 
             // if (!context.Activities.Any())

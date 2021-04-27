@@ -22,14 +22,16 @@ namespace Persistence
         public DbSet<Like> Likes { get; set; }
         public DbSet<AppActivity> AppActivity { get; set; }
         public DbSet<Report> Reports { get; set; }
+        public DbSet<Friend> Friends { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Activity>()
-            .HasMany(a => a.AppActivities)
-            .WithOne(a => a.Activity)
-            .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Message>()
+                .HasOne(c => c.Conversation)
+                .WithMany(m => m.Messages)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Like>()
                 .HasOne(u => u.Activity)
