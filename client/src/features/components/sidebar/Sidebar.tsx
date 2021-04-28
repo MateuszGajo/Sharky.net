@@ -9,10 +9,10 @@ import styles from "./Sidebar.module.scss";
 
 const Sidebar = () => {
   const { openMessenger } = useMessagesStore();
-  const { getFriends, friends } = useFriendStore();
-
+  const { getFriends, friends, createHubConnection } = useFriendStore();
   useEffect(() => {
     getFriends();
+    createHubConnection();
   }, []);
   return (
     <Container className={styles.container}>

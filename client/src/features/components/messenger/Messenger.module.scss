@@ -122,11 +122,11 @@
     display: flex;
   }
 
-  .message + .message {
+  .bigMargin:not(:first-child) {
     margin-top: 1.1em;
   }
 
-  .friendMessage + .friendMessage {
+  .littleMargin {
     margin-top: 0.7em;
   }
 
@@ -147,16 +147,19 @@
   .messageTextContainer {
     display: flex;
     flex-direction: column;
+    width: 100%;
   }
 
   .messageText {
     margin-left: 0.5em;
     max-width: 60%;
+    width: max-content;
     border-radius: 1em;
     padding: 0.4em;
     font-size: 0.5em;
     background-color: $secondaryGrey;
     color: $primaryBlack;
+    word-break: break-all;
   }
 
   .authorMessage {

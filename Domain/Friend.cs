@@ -10,6 +10,7 @@ namespace Domain
         public DateTime? RequestTime { get; set; }
 
         public FriendRequestFlag FriendRequestFlag { get; set; }
+#nullable enable
         public Conversation? conversation { get; set; }
     }
 

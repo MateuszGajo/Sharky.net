@@ -141,6 +141,11 @@ const Conversation = {
     ),
   getMessages: (conversationId: string) =>
     requests.get<Message[]>(`/conversation/${conversationId}/messages`),
+  addMessage: (conversationId: string, message: string) =>
+    requests.put<{ id: string; createdAt: Date }>(
+      `conversation/${conversationId}/message/add`,
+      { message }
+    ),
 };
 
 export default {

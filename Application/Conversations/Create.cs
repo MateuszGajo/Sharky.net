@@ -53,6 +53,11 @@ namespace Application.Conversations
                 if (friendship == null)
                     throw new RestException(HttpStatusCode.NotFound, new { Friendship = "You aren't friends" });
 
+                Conversation conversation = await _context.Conversations.AsNoTracking().Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x =>
+                (x.Creator.Id == user.Id && x.Recipient.Id == recipient.Id) || (x.Creator.Id == recipient.Id && x.Recipient.Id == user.Id));
+                if (conversation != null)
+                    throw new RestException(HttpStatusCode.Forbidden, new { conversationId = conversation.Id, Conversation = "Conversation already exist" });
+
                 DateTime createdAt = DateTime.Now;
                 Guid messageId = Guid.NewGuid();
                 Guid conversationId = Guid.NewGuid();
@@ -63,7 +68,7 @@ namespace Application.Conversations
                     Body = request.Message,
                     Author = user,
                 };
-                Conversation conversation = new Conversation
+                conversation = new Conversation
                 {
                     Id = Guid.NewGuid(),
                     Creator = user,

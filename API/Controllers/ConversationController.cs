@@ -22,16 +22,24 @@ namespace API.Controllers
 
         [HttpPost("create")]
 
-        public async Task<ActionResult<Create.Response>> create(Create.Command command)
+        public async Task<ActionResult<Create.Response>> Create(Create.Command command)
         {
             return await _mediator.Send(command);
         }
 
         [HttpGet("{id}/messages")]
 
-        public async Task<ActionResult<List<MessageDto>>> messagesList(Guid id)
+        public async Task<ActionResult<List<MessageDto>>> MessagesList(Guid id)
         {
             return await _mediator.Send(new ListMessages.Query { ConversationId = id });
+        }
+
+        [HttpPut("{id}/message/add")]
+
+        public async Task<ActionResult<AddMessage.Response>> MessageAdd(AddMessage.Command command, Guid id)
+        {
+            command.ConversationId = id;
+            return await _mediator.Send(command);
         }
 
     }

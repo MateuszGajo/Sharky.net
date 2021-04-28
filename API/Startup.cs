@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application.Core;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using API.SignalR;
 
 namespace API
 {
@@ -70,7 +71,12 @@ namespace API
             // .AddDefaultTokenProviders(); 
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+            )
                    .AddJwtBearer(options =>
                    {
                        options.TokenValidationParameters = new TokenValidationParameters
@@ -87,11 +93,13 @@ namespace API
                        {
                            OnMessageReceived = context =>
                            {
+                               System.Console.WriteLine(context);
                                context.Token = context.Request.Cookies["Token"];
                                return Task.CompletedTask;
                            }
                        };
                    });
+            services.AddSignalR();
 
             services.AddCors(opt =>
             {
@@ -135,6 +143,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ConversationHub>("/conversationHub");
             });
         }
     }

@@ -2,7 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Divider, Icon, Input } from "semantic-ui-react";
 import styles from "./Messenger.module.scss";
 import cx from "classnames";
-import { useMessagesStore } from "~root/src/app/providers/RootStoreProvider";
+import {
+  useCommonStore,
+  useMessagesStore,
+} from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 
 const Messenger = () => {
@@ -13,7 +16,10 @@ const Messenger = () => {
     messages,
     newConversation,
     getMessages,
+    addMessage,
+    hubSend,
   } = useMessagesStore();
+  const { user } = useCommonStore();
 
   const [text, setText] = useState("");
 
@@ -24,9 +30,11 @@ const Messenger = () => {
   };
 
   useEffect(() => {
+    console.log(conversationId);
     if (conversationId) {
-      getMessages(conversationId);
+      getMessages();
     }
+
     textRef.current?.addEventListener("input", handleChange);
     textRef.current?.focus();
     return () => {
@@ -37,13 +45,18 @@ const Messenger = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (conversationId) {
+      addMessage(text);
     } else {
-      console.log(text);
       newConversation(text);
     }
   };
+
+  const handleClick = () => {
+    hubSend();
+  };
   return (
     <div className={styles.container}>
+      <button onClick={handleClick}>xD</button>
       <div className={styles.header}>
         <div className={styles.user}>
           <div className={styles.photoContainer}>
@@ -68,28 +81,41 @@ const Messenger = () => {
       </div>
       <div className={styles.content}>
         <div className={styles.messagesContainer}>
-          {Array.from(messages.values()).map((message) => (
-            <div
-              className={cx(styles.message, {
-                [styles.friendMessage]: message.author.id == converser?.id,
-              })}
-            >
-              <div className={styles.messageUser}>
-                <img
-                  src={process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
-                  alt=""
-                  className={styles.messageUserPhoto}
-                />
-              </div>
+          {Array.from(messages.values()).map((message, index, array) => {
+            const authorMessage =
+              array[index - 1]?.author.id == message.author.id;
+            const lastRecipientMessage =
+              message.author.id == converser?.id &&
+              array[index + 1]?.author.id == user.id;
+            return (
               <div
-                className={cx(styles.messageTextContainer, {
-                  [styles.authorMessage]: message.author.id != converser?.id,
+                className={cx(styles.message, {
+                  [styles.littleMargin]: authorMessage,
                 })}
               >
-                <div className={styles.messageText}>{message.body}</div>
+                {lastRecipientMessage && (
+                  <div className={styles.messageUser}>
+                    <img
+                      src={process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
+                      alt=""
+                      className={styles.messageUserPhoto}
+                    />
+                  </div>
+                )}
+
+                <div className={cx(styles.messageTextContainer)}>
+                  <div
+                    className={cx(styles.messageText, {
+                      [styles.authorMessage]:
+                        message.author.id != converser?.id,
+                    })}
+                  >
+                    {message.body}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
       <Divider className={styles.divider} />

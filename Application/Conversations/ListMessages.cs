@@ -38,9 +38,7 @@ namespace Application.Conversations
             {
                 string userId = _userAccessor.GetCurrentId();
 
-                Conversation conversation = await _context.Conversations.Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x => x.Id == request.ConversationId);
-                System.Console.WriteLine(conversation.Creator.Id);
-                System.Console.WriteLine(conversation.Recipient.Id);
+                Conversation conversation = await _context.Conversations.AsNoTracking().Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x => x.Id == request.ConversationId);
                 if (conversation.Creator.Id != userId && conversation.Recipient.Id != userId)
                     throw new RestException(HttpStatusCode.Unauthorized, new { Conversation = "You're not a member of this conversation" });
 
