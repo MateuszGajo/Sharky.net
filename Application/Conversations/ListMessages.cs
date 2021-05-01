@@ -19,6 +19,7 @@ namespace Application.Conversations
     {
         public class Query : IRequest<List<MessageDto>>
         {
+            public int? Start { get; set; }
             public Guid ConversationId { get; set; }
         }
 
@@ -42,7 +43,13 @@ namespace Application.Conversations
                 if (conversation.Creator.Id != userId && conversation.Recipient.Id != userId)
                     throw new RestException(HttpStatusCode.Unauthorized, new { Conversation = "You're not a member of this conversation" });
 
-                return _context.Messages.Where(x => x.Conversation.Id == request.ConversationId).ProjectTo<MessageDto>(_mapper.ConfigurationProvider).ToList();
+                return _context.Messages
+                    .Where(x => x.Conversation.Id == request.ConversationId)
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Skip(request.Start ?? 0)
+                    .Take(10)
+                    .ProjectTo<MessageDto>(_mapper.ConfigurationProvider)
+                    .ToList();
             }
         }
     }

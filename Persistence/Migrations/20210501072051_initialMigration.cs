@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class intialMigraion : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -105,26 +105,28 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Conversations",
+                name: "Friends",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatorId = table.Column<string>(type: "TEXT", nullable: true),
-                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
-                    LastMessageId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    RequestedById = table.Column<string>(type: "TEXT", nullable: true),
+                    RequestedToId = table.Column<string>(type: "TEXT", nullable: true),
+                    RequestTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    FriendRequestFlag = table.Column<int>(type: "INTEGER", nullable: false),
+                    MessageToUser = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.PrimaryKey("PK_Friends", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Conversations_Users_CreatorId",
-                        column: x => x.CreatorId,
+                        name: "FK_Friends_Users_RequestedById",
+                        column: x => x.RequestedById,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Conversations_Users_RecipientId",
-                        column: x => x.RecipientId,
+                        name: "FK_Friends_Users_RequestedToId",
+                        column: x => x.RequestedToId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -238,61 +240,34 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Friends",
+                name: "Conversations",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RequestedById = table.Column<string>(type: "TEXT", nullable: true),
-                    RequestedToId = table.Column<string>(type: "TEXT", nullable: true),
-                    RequestTime = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    FriendRequestFlag = table.Column<int>(type: "INTEGER", nullable: false),
-                    conversationId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    CreatorId = table.Column<string>(type: "TEXT", nullable: true),
+                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    LastMessageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MessageTo = table.Column<string>(type: "TEXT", nullable: true),
+                    FriendId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Friends", x => x.Id);
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Friends_Conversations_conversationId",
-                        column: x => x.conversationId,
-                        principalTable: "Conversations",
+                        name: "FK_Conversations_Friends_FriendId",
+                        column: x => x.FriendId,
+                        principalTable: "Friends",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Friends_Users_RequestedById",
-                        column: x => x.RequestedById,
+                        name: "FK_Conversations_Users_CreatorId",
+                        column: x => x.CreatorId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Friends_Users_RequestedToId",
-                        column: x => x.RequestedToId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Body = table.Column<string>(type: "TEXT", nullable: true),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
-                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_AuthorId",
-                        column: x => x.AuthorId,
+                        name: "FK_Conversations_Users_RecipientId",
+                        column: x => x.RecipientId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -364,6 +339,33 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Replies_Users_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Body = table.Column<string>(type: "TEXT", nullable: true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Conversations_ConversationId",
+                        column: x => x.ConversationId,
+                        principalTable: "Conversations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_AuthorId",
                         column: x => x.AuthorId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -480,14 +482,15 @@ namespace Persistence.Migrations
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Conversations_FriendId",
+                table: "Conversations",
+                column: "FriendId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Conversations_RecipientId",
                 table: "Conversations",
                 column: "RecipientId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Friends_conversationId",
-                table: "Friends",
-                column: "conversationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Friends_RequestedById",
@@ -594,9 +597,6 @@ namespace Persistence.Migrations
                 name: "BlockedUsers");
 
             migrationBuilder.DropTable(
-                name: "Friends");
-
-            migrationBuilder.DropTable(
                 name: "HiddenActivites");
 
             migrationBuilder.DropTable(
@@ -625,6 +625,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "Activities");

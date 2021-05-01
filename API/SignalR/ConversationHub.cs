@@ -21,24 +21,14 @@ namespace API.SignalR
             _mediator = mediator;
         }
 
-        public async Task<ActionResult<Create.Response>> Create(Create.Command command)
+
+        public async Task<ActionResult<AddMessage.Response>> AddMessage(AddMessage.Command command)
         {
-            return await _mediator.Send(command);
-        }
+            var resp = await _mediator.Send(command);
 
-        // [HttpGet("{id}/messages")]
-
-        public async Task<ActionResult<List<MessageDto>>> MessagesList(Guid id)
-        {
-            return await _mediator.Send(new ListMessages.Query { ConversationId = id });
-        }
-
-        // [HttpPut("{id}/message/add")]
-
-        public async Task<ActionResult<AddMessage.Response>> MessageAdd(AddMessage.Command command, Guid id)
-        {
-            command.ConversationId = id;
-            return await _mediator.Send(command);
+            await Clients.OthersInGroup("Conversation" + command.ConversationId.ToString())
+           .SendAsync("ReciveMessage", resp.Id, command.Message, command.ConversationId, resp.CreatedAt, resp.User, resp.FriendId);
+            return resp;
         }
 
         public override async Task OnConnectedAsync()
@@ -49,8 +39,7 @@ namespace API.SignalR
                 var conversationId = friend.Conversation?.Id;
                 if (conversationId != null)
                 {
-                    System.Console.WriteLine(friend.Conversation.Id);
-                    await Groups.AddToGroupAsync(Context.ConnectionId, Convert.ToString(friend.Conversation.Id));
+                    await Groups.AddToGroupAsync(Context.ConnectionId, "Conversation" + Convert.ToString(friend.Conversation.Id));
                 }
 
             }
@@ -58,9 +47,7 @@ namespace API.SignalR
 
         public async Task SendMessage(string message, Guid conversationId)
         {
-            // System.Console.WriteLine(aa);
-            // System.Console.WriteLine(bb);
-            // System.Console.WriteLine(conversationId);
+
             DateTime createdAt = DateTime.Now;
             User user = new User
             {
@@ -68,7 +55,7 @@ namespace API.SignalR
                 FirstName = "aaa",
                 LastName = "bb"
             };
-            await Clients.Group(conversationId.ToString()).SendAsync("ReciveMessage", message, conversationId, createdAt, user);
+            await Clients.OthersInGroup("Conversation" + conversationId.ToString()).SendAsync("ReciveMessage", message, conversationId, createdAt, user);
         }
     }
 }

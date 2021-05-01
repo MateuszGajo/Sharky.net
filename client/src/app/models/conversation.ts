@@ -4,6 +4,7 @@ export interface Conversation {
   id: string;
   creator: User;
   recipient: User;
+  messageTo: string | null;
 }
 
 export interface Message {

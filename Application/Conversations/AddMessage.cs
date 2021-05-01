@@ -2,8 +2,10 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Activities;
 using Application.Errors;
 using Application.Interface;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,8 @@ namespace Application.Conversations
         {
             public DateTime CreatedAt { get; set; }
             public Guid Id { get; set; }
+            public UserDto User { get; set; }
+            public Guid? FriendId { get; set; }
         }
         public class Command : IRequest<Response>
         {
@@ -31,8 +35,10 @@ namespace Application.Conversations
         {
             private readonly IUserAccessor _userAccessor;
             private readonly DataBaseContext _context;
-            public Handler(DataBaseContext context, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+            public Handler(DataBaseContext context, IUserAccessor userAccessor, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
                 _userAccessor = userAccessor;
             }
@@ -65,11 +71,16 @@ namespace Application.Conversations
 
                 conversation.Messages.Add(message);
 
+                string messageTo = conversation.Recipient.Id == user.Id ? conversation.Creator.Id : conversation.Recipient.Id;
+                conversation.MessageTo = messageTo;
+
                 bool result = await _context.SaveChangesAsync() > 0;
                 Response response = new Response
                 {
                     Id = message.Id,
-                    CreatedAt = createdAt
+                    CreatedAt = createdAt,
+                    User = _mapper.Map<UserDto>(user),
+                    FriendId = conversation.FriendId
                 };
 
                 if (result) return response;

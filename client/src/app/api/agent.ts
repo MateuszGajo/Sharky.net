@@ -139,13 +139,17 @@ const Conversation = {
         message,
       }
     ),
-  getMessages: (conversationId: string) =>
-    requests.get<Message[]>(`/conversation/${conversationId}/messages`),
+  getMessages: (conversationId: string, start: number) =>
+    requests.get<Message[]>(
+      `/conversation/${conversationId}/messages?start=${start}`
+    ),
   addMessage: (conversationId: string, message: string) =>
-    requests.put<{ id: string; createdAt: Date }>(
+    requests.put<{ id: string; createdAt: Date; friendId: string }>(
       `conversation/${conversationId}/message/add`,
       { message }
     ),
+  readMessages: (conversationId: String) =>
+    requests.put<void>(`/conversation/${conversationId}/messages/read`, {}),
 };
 
 export default {

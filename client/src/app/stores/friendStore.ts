@@ -5,6 +5,7 @@ import {
 } from "@microsoft/signalr";
 import { makeAutoObservable } from "mobx";
 import agent from "../api/agent";
+import { User } from "../models/activity";
 import { Friend } from "../models/user";
 import { RootStore } from "./rootStore";
 
@@ -29,10 +30,42 @@ export default class FriendStore {
       .start()
       .catch((err) => console.log("Error establishing the connection: ", err));
 
-    this.hubConnection.on("ReciveMessage", (aa: string, bb: string) => {
-      console.log(aa);
-      console.log(bb);
-    });
+    this.hubConnection.on(
+      "ReciveMessage",
+      (
+        id: string,
+        message: string,
+        conversationId: string,
+        createdAt: Date,
+        user: User,
+        friendId: string
+      ) => {
+        if (
+          this.root.messageStore.isMessengerOpen &&
+          this.root.messageStore.conversationId == conversationId
+        ) {
+          const newMessage = {
+            id,
+            createdAt,
+            body: message,
+            author: user,
+          };
+          this.root.messageStore.messages.set(newMessage.id, newMessage);
+        } else {
+          const friend = this.friends.get(friendId);
+          if (friend) {
+            const newFriendObject: Friend = {
+              ...friend,
+              conversation: {
+                ...friend.conversation!,
+                messageTo: this.root.commonStore.user.id,
+              },
+            };
+            this.friends.set(newFriendObject.id, newFriendObject);
+          }
+        }
+      }
+    );
   };
 
   stopHubConnection = () => {

@@ -43,7 +43,6 @@ namespace Application.Activities
                 var like = activity.Likes.Where(x => x.User.Id == userId).FirstOrDefault();
                 if (like != null)
                 {
-                    System.Console.WriteLine(like.Activity.Id);
                     throw new RestException(HttpStatusCode.Forbidden, new { Errors = "You have already liked this post" });
                 }
 

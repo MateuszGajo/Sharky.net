@@ -44,20 +44,6 @@ const Signin = (props: any) => {
       setError(true);
       router.replace("/signin?error", "/signin", { shallow: true });
     }
-    const hubConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/conversationHub")
-      .withAutomaticReconnect()
-      .configureLogging(LogLevel.Information)
-      .build();
-
-    hubConnection
-      .start()
-      .catch((err) => console.log("Error establishing the connection: ", err));
-
-    hubConnection.on("ReciveMessage", (aa: string, bb: string) => {
-      console.log(aa);
-      console.log(bb);
-    });
   }, []);
 
   const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;

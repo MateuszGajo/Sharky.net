@@ -64,6 +64,7 @@
     width: auto;
     height: auto;
   }
+
   .closeIcon {
     color: $primaryRed;
   }
@@ -71,50 +72,43 @@
   .content {
     position: relative;
     flex-grow: 1;
-    overflow: hidden;
-    margin-bottom: 0.3em;
-  }
-
-  .messagesContainer {
-    padding: 0.5em 0.75em;
-    height: 100%;
     overflow-y: scroll;
   }
 
-  .content::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 0.5em;
-    margin: 0 1em 0 0;
-    background-color: white;
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5em 0;
+    overflow: hidden;
+  }
+
+  .messagesContainer {
+    padding: 0.5em 0.75em 0.5em 0;
   }
 
   @-moz-document url-prefix() {
-    .messagesContainer {
-      overflow-y: scroll;
+    .content {
       scrollbar-width: thin;
       scrollbar-color: white white;
     }
 
-    .messagesContainer {
+    .content {
       scrollbar-color: $primaryColor white;
     }
   }
 
-  .messagesContainer::-webkit-scrollbar {
+  .content::-webkit-scrollbar {
     width: 5px;
     border-radius: 0.5em;
   }
 
-  .messagesContainer::-webkit-scrollbar-thumb {
+  .content::-webkit-scrollbar-thumb {
     background-color: $primaryColor;
     border-radius: 20px;
   }
 
-  .messagesContainer::-webkit-scrollbar-track {
+  .content::-webkit-scrollbar-track {
     background-color: white;
   }
 
@@ -123,18 +117,19 @@
   }
 
   .bigMargin:not(:first-child) {
-    margin-top: 1.1em;
+    margin-top: 0.8em;
   }
 
   .littleMargin {
-    margin-top: 0.7em;
+    margin-top: 0.2em;
   }
 
   .messageUser {
     flex-shrink: 0;
-    width: 1.2em;
-    height: 1.2em;
+    width: 1.25em;
+    height: 1.25em;
     align-self: flex-end;
+    margin-left: 0.3em;
   }
 
   .messageUserPhoto {
@@ -155,7 +150,7 @@
     max-width: 60%;
     width: max-content;
     border-radius: 1em;
-    padding: 0.4em;
+    padding: 0.4em 0.6em;
     font-size: 0.5em;
     background-color: $secondaryGrey;
     color: $primaryBlack;

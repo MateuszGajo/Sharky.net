@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210427180550_intialMigraion")]
-    partial class intialMigraion
+    [Migration("20210501072051_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -144,7 +144,13 @@ namespace Persistence.Migrations
                     b.Property<string>("CreatorId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("FriendId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("LastMessageId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("MessageTo")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RecipientId")
@@ -153,6 +159,9 @@ namespace Persistence.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatorId");
+
+                    b.HasIndex("FriendId")
+                        .IsUnique();
 
                     b.HasIndex("RecipientId");
 
@@ -168,6 +177,9 @@ namespace Persistence.Migrations
                     b.Property<int>("FriendRequestFlag")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("MessageToUser")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime?>("RequestTime")
                         .HasColumnType("TEXT");
 
@@ -177,16 +189,11 @@ namespace Persistence.Migrations
                     b.Property<string>("RequestedToId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("conversationId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("RequestedById");
 
                     b.HasIndex("RequestedToId");
-
-                    b.HasIndex("conversationId");
 
                     b.ToTable("Friends");
                 });
@@ -535,6 +542,10 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
+                    b.HasOne("Domain.Friend", null)
+                        .WithOne("conversation")
+                        .HasForeignKey("Domain.Conversation", "FriendId");
+
                     b.HasOne("Domain.User", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId");
@@ -553,12 +564,6 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.User", "RequestedTo")
                         .WithMany()
                         .HasForeignKey("RequestedToId");
-
-                    b.HasOne("Domain.Conversation", "conversation")
-                        .WithMany()
-                        .HasForeignKey("conversationId");
-
-                    b.Navigation("conversation");
 
                     b.Navigation("RequestedBy");
 
@@ -716,6 +721,11 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Conversation", b =>
                 {
                     b.Navigation("Messages");
+                });
+
+            modelBuilder.Entity("Domain.Friend", b =>
+                {
+                    b.Navigation("conversation");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>

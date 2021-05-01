@@ -7,4 +7,5 @@ export interface Friend {
   requestTime: Date;
   friendRequestFlag: number;
   conversation?: Conversation;
+  isMessage?: boolean;
 }

@@ -74,6 +74,8 @@ namespace Application.Conversations
                     Creator = user,
                     Recipient = recipient,
                     LastMessageId = messageId,
+                    MessageTo = recipient.Id,
+                    FriendId = friendship.Id
                 };
                 conversation.Messages.Add(message);
                 _context.Conversations.Add(conversation);

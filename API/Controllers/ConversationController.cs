@@ -29,17 +29,17 @@ namespace API.Controllers
 
         [HttpGet("{id}/messages")]
 
-        public async Task<ActionResult<List<MessageDto>>> MessagesList(Guid id)
+        public async Task<ActionResult<List<MessageDto>>> MessagesList(Guid id, int start)
         {
-            return await _mediator.Send(new ListMessages.Query { ConversationId = id });
+            System.Console.WriteLine(start);
+            return await _mediator.Send(new ListMessages.Query { ConversationId = id, Start = start });
         }
 
-        [HttpPut("{id}/message/add")]
+        [HttpPut("{id}/messages/read")]
 
-        public async Task<ActionResult<AddMessage.Response>> MessageAdd(AddMessage.Command command, Guid id)
+        public async Task<ActionResult<Unit>> readMessages(Guid id)
         {
-            command.ConversationId = id;
-            return await _mediator.Send(command);
+            return await _mediator.Send(new ReadMessage.Command { ConversationId = id });
         }
 
     }

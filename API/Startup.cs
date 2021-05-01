@@ -93,7 +93,6 @@ namespace API
                        {
                            OnMessageReceived = context =>
                            {
-                               System.Console.WriteLine(context);
                                context.Token = context.Request.Cookies["Token"];
                                return Task.CompletedTask;
                            }
