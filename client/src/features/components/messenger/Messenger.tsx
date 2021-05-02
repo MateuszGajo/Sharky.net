@@ -1,12 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  Button,
-  Divider,
-  Icon,
-  Input,
-  Loader,
-  Segment,
-} from "semantic-ui-react";
+import React, { FormEvent, useEffect, useRef, useState } from "react";
+import { Button, Divider, Icon, Loader } from "semantic-ui-react";
 import styles from "./Messenger.module.scss";
 import cx from "classnames";
 import {
@@ -15,7 +8,6 @@ import {
 } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import Loading from "~common/Loading/Loading";
 
 const Messenger = () => {
   const {
@@ -28,18 +20,32 @@ const Messenger = () => {
     getInitialMessages,
     addMessage,
     isLoading,
+    messagesCount,
+    getMesangesByDate,
   } = useMessagesStore();
   const { user } = useCommonStore();
 
   const [text, setText] = useState("");
+  const [isScrolling, setScrollingStatus] = useState(false);
 
   const textRef = useRef<HTMLElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textContainerRef = useRef<HTMLDivElement>(null);
   const contentContainerRef = useRef<HTMLDivElement>(null);
+  const myFormRef = useRef<HTMLFormElement>(null);
 
   const handleChange = (e: any) => {
     setText(e.target.innerText);
+  };
+
+  const handleKeyPress = (e: any) => {
+    if (e.key === "Enter") {
+      if (text) {
+        myFormRef.current?.dispatchEvent(
+          new Event("submit", { bubbles: true, cancelable: true })
+        );
+      }
+    }
   };
 
   useEffect(() => {
@@ -54,18 +60,25 @@ const Messenger = () => {
   }, [conversationId]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (!isScrolling)
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.size]);
 
-  useEffect(() => {
-    if (isLoading == false) {
-      console.log(textContainerRef.current?.offsetHeight);
-      if (contentContainerRef.current && textContainerRef.current)
-        contentContainerRef.current.scrollTop =
-          textContainerRef.current?.offsetHeight;
-      console.log(contentContainerRef?.current?.scrollTop);
+  let timeOut: ReturnType<typeof setTimeout>;
+
+  const handleScroll = (e: any) => {
+    if (e.deltaY < 0) {
+      clearTimeout(timeOut);
+      setScrollingStatus(true);
+      timeOut = setTimeout(() => {
+        setScrollingStatus(false);
+      }, 10000);
     }
-  }, [isLoading, messages.size == 10]);
+  };
+
+  useEffect(() => {
+    contentContainerRef.current?.addEventListener("mousewheel", handleScroll);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +94,7 @@ const Messenger = () => {
   };
 
   const fetchData = () => {
-    // getMessages();
+    getMessages();
   };
 
   return (
@@ -118,26 +131,28 @@ const Messenger = () => {
             <Loader active inline />
           </div>
         ) : (
-          <div className={styles.messagesContainer} ref={textContainerRef}>
-            <InfiniteScroll
-              dataLength={messages.size} //This is important field to render the next data
-              next={fetchData}
-              hasMore={true}
-              loader={
-                <div className={styles.loader}>
-                  <Loader active inline />
-                </div>
-              }
-              // inverse
-              scrollableTarget="scrollableDiv"
-            >
-              {Array.from(messages.values()).map((message, index, array) => {
+          <InfiniteScroll
+            dataLength={messages.size}
+            next={fetchData}
+            hasMore={messages.size < messagesCount}
+            style={{ display: "flex", flexDirection: "column-reverse" }}
+            loader={
+              <div className={styles.loader}>
+                <Loader active inline />
+              </div>
+            }
+            inverse
+            scrollableTarget="scrollableDiv"
+          >
+            <div className={styles.messagesContainer} ref={textContainerRef}>
+              <div ref={messagesEndRef}></div>
+              {getMesangesByDate.map((message, index, array) => {
                 const authorMessage =
-                  array[index - 1]?.author.id == message.author.id;
+                  array[index + 1]?.author.id == message.author.id;
                 const lastRecipientMessage =
                   message.author.id == converser?.id &&
-                  (array[index + 1]?.author.id == user.id ||
-                    array[index + 1]?.author.id == undefined);
+                  (array[index - 1]?.author.id == user.id ||
+                    array[index - 1]?.author.id == undefined);
                 return (
                   <div
                     className={cx(styles.message, {
@@ -169,15 +184,14 @@ const Messenger = () => {
                   </div>
                 );
               })}
-            </InfiniteScroll>
-            <div ref={messagesEndRef}></div>
-          </div>
+            </div>
+          </InfiniteScroll>
         )}
       </div>
 
       <Divider className={styles.divider} />
       <div className={styles.toolbar}>
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <form className={styles.form} onSubmit={handleSubmit} ref={myFormRef}>
           <div className={styles.newMessage}>
             <span
               contentEditable
@@ -186,6 +200,7 @@ const Messenger = () => {
               placeholder="Type a message"
               suppressContentEditableWarning={true}
               ref={textRef}
+              onKeyPress={handleKeyPress}
             ></span>
           </div>
           <div className={styles.sendMessage}>

@@ -24,6 +24,13 @@ export default class MessageStore {
   converser: User | null = null;
   messages = new Map<string, Message>();
   isLoading = false;
+  messagesCount = 0;
+
+  get getMesangesByDate() {
+    return Array.from(this.messages.values()).sort((a, b) => {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }
 
   closeMessenger = () => {
     this.conversationId = undefined;
@@ -36,13 +43,15 @@ export default class MessageStore {
     user: User,
     conversationId: string | undefined,
     friendshipId: string,
-    isMessage: boolean
+    isMessage: boolean,
+    messagesCount: number
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
-    if (this.conversationId != conversationId) {
+    if (this.conversationId != conversationId || conversationId == null) {
       this.conversationId = conversationId;
       this.friendshipId = friendshipId;
       this.converser = user;
+      this.messagesCount = messagesCount;
 
       this.messages = new Map<string, Message>();
 
@@ -107,7 +116,6 @@ export default class MessageStore {
       );
       this.setMessage(messages);
       runInAction(() => {
-        console.log(this.messages.size);
         this.isLoading = false;
       });
     } catch (error) {
@@ -142,6 +150,7 @@ export default class MessageStore {
         body: messageContext,
         author: user,
       };
+      this.messagesCount += 1;
 
       this.messages.set(message.id, message);
     } catch (error) {}

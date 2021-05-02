@@ -246,6 +246,7 @@ namespace Persistence.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     CreatorId = table.Column<string>(type: "TEXT", nullable: true),
                     RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
                     LastMessageId = table.Column<Guid>(type: "TEXT", nullable: false),
                     MessageTo = table.Column<string>(type: "TEXT", nullable: true),
                     FriendId = table.Column<Guid>(type: "TEXT", nullable: true)

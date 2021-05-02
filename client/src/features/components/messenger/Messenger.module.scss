@@ -70,9 +70,10 @@
   }
 
   .content {
-    position: relative;
+    display: flex;
+    flex-direction: column-reverse;
     flex-grow: 1;
-    overflow-y: scroll;
+    overflow-x: hidden;
   }
 
   .loader {
@@ -84,6 +85,8 @@
   }
 
   .messagesContainer {
+    display: flex;
+    flex-direction: column-reverse;
     padding: 0.5em 0.75em 0.5em 0;
   }
 

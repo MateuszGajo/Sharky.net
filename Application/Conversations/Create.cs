@@ -75,11 +75,13 @@ namespace Application.Conversations
                     Recipient = recipient,
                     LastMessageId = messageId,
                     MessageTo = recipient.Id,
-                    FriendId = friendship.Id
+                    FriendId = friendship.Id,
+                    MessagesCount = 1
                 };
+
                 conversation.Messages.Add(message);
                 _context.Conversations.Add(conversation);
-                friendship.conversation = conversation;
+                friendship.Conversation = conversation;
 
 
                 bool result = await _context.SaveChangesAsync() > 0;

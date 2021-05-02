@@ -17,7 +17,6 @@ namespace Application.Conversations
 
     public class AddMessage
     {
-
         public class Response
         {
             public DateTime CreatedAt { get; set; }
@@ -73,6 +72,7 @@ namespace Application.Conversations
 
                 string messageTo = conversation.Recipient.Id == user.Id ? conversation.Creator.Id : conversation.Recipient.Id;
                 conversation.MessageTo = messageTo;
+                conversation.MessagesCount += 1;
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 Response response = new Response

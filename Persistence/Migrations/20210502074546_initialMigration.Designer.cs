@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210501072051_initialMigration")]
+    [Migration("20210502074546_initialMigration")]
     partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,6 +152,9 @@ namespace Persistence.Migrations
 
                     b.Property<string>("MessageTo")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("MessagesCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("RecipientId")
                         .HasColumnType("TEXT");

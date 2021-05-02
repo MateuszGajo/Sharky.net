@@ -50,6 +50,7 @@ export default class FriendStore {
             body: message,
             author: user,
           };
+          this.root.messageStore.messagesCount += 1;
           this.root.messageStore.messages.set(newMessage.id, newMessage);
         } else {
           const friend = this.friends.get(friendId);

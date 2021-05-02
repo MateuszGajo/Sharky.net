@@ -5,6 +5,7 @@ export interface Conversation {
   creator: User;
   recipient: User;
   messageTo: string | null;
+  messagesCount: number;
 }
 
 export interface Message {

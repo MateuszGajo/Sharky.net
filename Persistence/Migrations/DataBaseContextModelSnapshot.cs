@@ -151,6 +151,9 @@ namespace Persistence.Migrations
                     b.Property<string>("MessageTo")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MessagesCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("RecipientId")
                         .HasColumnType("TEXT");
 

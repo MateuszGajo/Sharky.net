@@ -34,20 +34,43 @@ namespace Persistence
                 var harry = await context.Users.FindAsync("32257ce4-7c32-48a9-ab16-9e4be1633cdb");
                 var charlie = await context.Users.FindAsync("a997f083-7dab-45de-b45d-224520a2a29f");
 
+                Conversation conversationBobTom = new Conversation
+                {
+                    Creator = bob,
+                    Recipient = tom,
+                };
+
                 Friend friendshipBobTom = new Friend
                 {
                     RequestedBy = bob,
                     RequestedTo = tom,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
+                    FriendRequestFlag = FriendRequestFlag.Approved,
+                    Conversation = conversationBobTom
                 };
+
+                Conversation conversationJohnBob = new Conversation
+                {
+                    Creator = john,
+                    Recipient = bob,
+                };
+
+
 
                 Friend friendshipBobJohn = new Friend
                 {
                     RequestedBy = john,
                     RequestedTo = bob,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
+                    FriendRequestFlag = FriendRequestFlag.Approved,
+                    Conversation = conversationJohnBob
+
+                };
+
+                Conversation conversationHarryJohn = new Conversation
+                {
+                    Creator = harry,
+                    Recipient = john,
                 };
 
                 Friend friendshipJohnHarry = new Friend
@@ -55,7 +78,14 @@ namespace Persistence
                     RequestedBy = harry,
                     RequestedTo = john,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
+                    FriendRequestFlag = FriendRequestFlag.Approved,
+                    Conversation = conversationHarryJohn
+                };
+
+                Conversation conversationTomHarry = new Conversation
+                {
+                    Creator = harry,
+                    Recipient = john,
                 };
 
 
@@ -64,8 +94,16 @@ namespace Persistence
                     RequestedBy = tom,
                     RequestedTo = harry,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
+                    FriendRequestFlag = FriendRequestFlag.Approved,
+                    Conversation = conversationTomHarry
                 };
+
+                Conversation conversationTomJohn = new Conversation
+                {
+                    Creator = harry,
+                    Recipient = john,
+                };
+
 
                 Friend friendshipTomJohn = new Friend
                 {
@@ -73,6 +111,14 @@ namespace Persistence
                     RequestedTo = john,
                     RequestTime = DateTime.Now,
                     FriendRequestFlag = FriendRequestFlag.Approved
+                    ,
+                    Conversation = conversationTomJohn
+                };
+
+                Conversation conversationTomCharlie = new Conversation
+                {
+                    Creator = harry,
+                    Recipient = john,
                 };
 
 
@@ -81,7 +127,8 @@ namespace Persistence
                     RequestedBy = tom,
                     RequestedTo = charlie,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
+                    FriendRequestFlag = FriendRequestFlag.Approved,
+                    Conversation = conversationTomCharlie
                 };
 
 

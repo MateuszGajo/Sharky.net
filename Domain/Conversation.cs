@@ -9,6 +9,7 @@ namespace Domain
         public User Creator { get; set; }
         public User Recipient { get; set; }
         public ICollection<Message> Messages { get; set; } = new List<Message>();
+        public int MessagesCount { get; set; } = 0;
         public Guid LastMessageId { get; set; }
 #nullable enable
         public string? MessageTo { get; set; }

@@ -39,7 +39,8 @@ const Sidebar = () => {
               item.friend,
               item.conversation?.id,
               item.id,
-              item.conversation?.messageTo === user.id
+              item.conversation?.messageTo === user.id,
+              item.conversation?.messagesCount!
             )
           }
         >

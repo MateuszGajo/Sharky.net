@@ -31,7 +31,6 @@ namespace API.Controllers
 
         public async Task<ActionResult<List<MessageDto>>> MessagesList(Guid id, int start)
         {
-            System.Console.WriteLine(start);
             return await _mediator.Send(new ListMessages.Query { ConversationId = id, Start = start });
         }
 

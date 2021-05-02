@@ -11,7 +11,7 @@ namespace Domain
 
         public FriendRequestFlag FriendRequestFlag { get; set; }
 #nullable enable
-        public Conversation? conversation { get; set; }
+        public Conversation? Conversation { get; set; }
         public Guid? MessageToUser { get; set; }
     }
 
