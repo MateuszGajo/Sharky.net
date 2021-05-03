@@ -1,7 +1,9 @@
+import { observer } from "mobx-react-lite";
 import React, { ReactNode } from "react";
-import { Icon } from "semantic-ui-react";
+import Messenger from "~components/messenger/Messenger";
 import Navbar from "~components/nav/Navbar";
 import Sidebar from "~components/sidebar/Sidebar";
+import { useMessagesStore } from "~root/src/app/providers/RootStoreProvider";
 import styles from "./HomeLayout.module.scss";
 
 interface Props {
@@ -10,12 +12,16 @@ interface Props {
 }
 
 const HomeLayout: React.FC<Props> = ({ children, sidebar = false }) => {
+  const { isMessengerOpen } = useMessagesStore();
   return (
     <div className={styles.container}>
       <div className={styles.navbar}>
         <Navbar />
       </div>
-      <div className={styles.content}>{children}</div>
+      <div className={styles.content}>
+        {isMessengerOpen && <Messenger />}
+        {children}
+      </div>
       {sidebar && (
         <div className={styles.sidebar}>
           <Sidebar />
@@ -25,4 +31,4 @@ const HomeLayout: React.FC<Props> = ({ children, sidebar = false }) => {
   );
 };
 
-export default HomeLayout;
+export default observer(HomeLayout);

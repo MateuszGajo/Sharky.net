@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Application.Activities;
 using Application.Comments;
+using Application.Conversations;
 using Application.Replies;
+using Application.Users;
 using Domain;
 
 namespace Application.Core
@@ -15,8 +17,11 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
-            // CreateMap<AppActivity, AppActivity>()
-            // .ForMember(d => d.Activity, o => o.MapFrom(s => !hiddenElements.Contains(s.Activity.Id)));
+            CreateMap<Friend, FriendDto>()
+                .ForMember(d => d.Friend, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
+
+            CreateMap<Conversation, ConversationDto>();
+            CreateMap<Message, MessageDto>();
 
             CreateMap<AppActivity, ActivityDto>()
             .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.Activity.Id))

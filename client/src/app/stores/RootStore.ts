@@ -2,8 +2,10 @@ import CommonStore from "./commonStore";
 import ActivityStore from "./activityStore";
 import AuthenticationStore from "./authenticationStore";
 import UserStore from "./userStore";
-import CommentStore from "./CommentStore";
-import ReplyStore from "./ReplyStore";
+import CommentStore from "./commentStore";
+import ReplyStore from "./replyStore";
+import MessageStore from "./messageStore";
+import FriendStore from "./friendStore";
 
 export type RootStoreHydration = {
   user?: {
@@ -20,6 +22,8 @@ export class RootStore {
   replyStore: ReplyStore;
   authenticationStore: AuthenticationStore;
   userStore: UserStore;
+  messageStore: MessageStore;
+  friendStore: FriendStore;
 
   constructor() {
     this.commonStore = new CommonStore(this);
@@ -28,6 +32,8 @@ export class RootStore {
     this.replyStore = new ReplyStore(this);
     this.authenticationStore = new AuthenticationStore(this);
     this.userStore = new UserStore(this);
+    this.messageStore = new MessageStore(this);
+    this.friendStore = new FriendStore(this);
   }
 
   hydrate(data: RootStoreHydration) {

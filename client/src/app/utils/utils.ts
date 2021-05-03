@@ -280,12 +280,10 @@ export const likeClick = ({
   isLiked,
   id,
 }: handleLikeClickI) => {
-  console.log(id);
   if (!isSubmitting) {
     setStatusOfSubmitting(true);
     giveLike(isLiked, id).then(() => {
       if (isLiked) {
-        console.log("Halo");
         setNumberOfLikes((prev) => prev - 1);
         setStatusOfLike(false);
         setStatusOfSubmitting(false);

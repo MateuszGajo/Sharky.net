@@ -48,7 +48,6 @@ namespace Application.Users
                 if (user == null)
                     throw new RestException(HttpStatusCode.NotFound, new { User = "User doesn't exist" });
 
-                System.Console.WriteLine(request.Reasons);
                 string[] userReasons = request.Reasons;
                 List<Reason> reasons = new List<Reason>();
                 bool isReason = false;

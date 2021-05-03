@@ -13,6 +13,7 @@ import { observer } from "mobx-react-lite";
 import styles from "./signin.module.scss";
 import { isNotLoggedIn } from "~utils/utils";
 import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
+import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
 
 const Signin = (props: any) => {
   const router = useRouter();

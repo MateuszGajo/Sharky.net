@@ -11,6 +11,8 @@ import {
   SignupFormValues,
 } from "~root/src/app/models/authentication";
 import axios, { AxiosResponse } from "axios";
+import { Friend } from "../models/user";
+import { Message } from "../models/conversation";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -123,4 +125,39 @@ const User = {
     requests.post(`/user/${id}/report`, { reasons }),
 };
 
-export default { Account, Activities, Comments, Replies, User };
+const Friends = {
+  get: () => requests.get<Friend[]>("/user/friends"),
+};
+
+const Conversation = {
+  create: (friendshipId: string, userId: string, message: string) =>
+    requests.post<{ id: string; conversationId: string; createdAt: Date }>(
+      "/conversation/create",
+      {
+        friendshipId,
+        recipientId: userId,
+        message,
+      }
+    ),
+  getMessages: (conversationId: string, start: number) =>
+    requests.get<Message[]>(
+      `/conversation/${conversationId}/messages?start=${start}`
+    ),
+  addMessage: (conversationId: string, message: string) =>
+    requests.put<{ id: string; createdAt: Date; friendId: string }>(
+      `conversation/${conversationId}/message/add`,
+      { message }
+    ),
+  readMessages: (conversationId: String) =>
+    requests.put<void>(`/conversation/${conversationId}/messages/read`, {}),
+};
+
+export default {
+  Account,
+  Activities,
+  Comments,
+  Replies,
+  User,
+  Friends,
+  Conversation,
+};

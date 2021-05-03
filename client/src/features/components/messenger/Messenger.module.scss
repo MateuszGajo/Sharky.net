@@ -1,0 +1,265 @@
+:global(#app) {
+  .container {
+    position: absolute;
+    bottom: 0;
+    right: 1em;
+    display: flex;
+    flex-direction: column;
+    height: 1400px;
+    width: 800px;
+    box-shadow: 0 0 2px 0.5px $primaryGrey;
+    border-radius: 0.5em 0.5em 0 0;
+    background-color: white;
+    font-size: 0.85rem;
+    z-index: 20;
+  }
+
+  .header {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75em 0.7em;
+    border-radius: 0.5em 0.5em 0 0;
+    box-shadow: 0 4px 2px -2px grey;
+  }
+
+  .user {
+    display: flex;
+  }
+
+  .photoContainer {
+    width: 2.5em;
+    height: 2.5em;
+  }
+
+  .photo {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.2em;
+  }
+
+  .userInfo {
+    margin-left: 0.5em;
+    display: flex;
+    align-items: center;
+  }
+
+  .icons {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    font-size: 1.3rem;
+  }
+
+  .icon {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    cursor: pointer;
+  }
+
+  .icon i {
+    width: auto;
+    height: auto;
+  }
+
+  .closeIcon {
+    color: $primaryRed;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column-reverse;
+    flex-grow: 1;
+    overflow-x: hidden;
+  }
+
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5em 0;
+    overflow: hidden;
+  }
+
+  .messagesContainer {
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 0.5em 0.75em 0.5em 0;
+  }
+
+  @-moz-document url-prefix() {
+    .content {
+      scrollbar-width: thin;
+      scrollbar-color: white white;
+    }
+
+    .content {
+      scrollbar-color: $primaryColor white;
+    }
+  }
+
+  .content::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 0.5em;
+  }
+
+  .content::-webkit-scrollbar-thumb {
+    background-color: $primaryColor;
+    border-radius: 20px;
+  }
+
+  .content::-webkit-scrollbar-track {
+    background-color: white;
+  }
+
+  .message {
+    display: flex;
+  }
+
+  .bigMargin:not(:first-child) {
+    margin-top: 0.8em;
+  }
+
+  .littleMargin {
+    margin-top: 0.2em;
+  }
+
+  .messageUser {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    align-self: flex-end;
+    margin-left: 0.3em;
+  }
+
+  .messageUserPhoto {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.2em;
+  }
+
+  .messageTextContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .messageText {
+    margin-left: 0.5em;
+    max-width: 60%;
+    width: max-content;
+    border-radius: 1em;
+    padding: 0.4em 0.6em;
+    font-size: 0.5em;
+    background-color: $secondaryGrey;
+    color: $primaryBlack;
+    word-break: break-all;
+  }
+
+  .authorMessage {
+    align-self: flex-end;
+    background-color: $primaryColor;
+    color: white;
+  }
+
+  .divider {
+    margin-top: 0;
+  }
+
+  .toolbar {
+    padding: 0 0.5em 0.5em;
+  }
+
+  .form {
+    display: flex;
+  }
+
+  .newMessage {
+    width: 90%;
+    font-size: 0.6em;
+  }
+
+  .textField {
+    display: block;
+    resize: none;
+    width: 100%;
+    cursor: text;
+    line-height: normal;
+    border-radius: 0.6em;
+    padding: 0.7em;
+    border: 1px solid $primaryGrey;
+  }
+
+  .sendMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0.5em;
+  }
+
+  .sendIcon {
+    border: none;
+    padding: 0;
+    color: $primaryColor;
+    cursor: pointer;
+    background-color: transparent;
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .sendIcon i {
+    width: auto;
+    height: auto;
+  }
+
+  @media (max-width: 3839px) {
+    .container {
+      height: 1000px;
+      width: 600px;
+    }
+  }
+
+  @media (max-width: 2559px) {
+    .container {
+      height: 600px;
+      width: 400px;
+    }
+    .messageText {
+      font-size: 0.8rem;
+    }
+
+    .newMessage {
+      font-size: 0.9em;
+    }
+  }
+
+  @media (max-width: 1919px) {
+    .container {
+      height: 450px;
+      width: 300px;
+    }
+    .messageText {
+      max-width: 65%;
+    }
+  }
+
+  @media (max-width: 1365px) {
+    .container {
+      height: 400px;
+      width: 250px;
+    }
+
+    .messageText {
+      font-size: 0.85rem;
+    }
+
+    .newMessage {
+      font-size: 0.95em;
+    }
+  }
+}

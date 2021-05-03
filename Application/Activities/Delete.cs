@@ -32,7 +32,6 @@ namespace Application.Activities
 
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                System.Console.WriteLine(request.Id);
                 // AppActivity appActivity = await _context.AppActivity.Include(x => x.Activity).FirstOrDefaultAsync(x => x.Activity.Id == request.Id);
                 // if (appActivity == null)
                 //     throw new RestException(HttpStatusCode.NotFound, new { Error = "Activity doesn't exist" });

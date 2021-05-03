@@ -46,6 +46,16 @@ export const useUserStore = () => {
   return userStore;
 };
 
+export const useMessagesStore = () => {
+  const { messageStore } = useRootStore();
+  return messageStore;
+};
+
+export const useFriendStore = () => {
+  const { friendStore } = useRootStore();
+  return friendStore;
+};
+
 export function RootStoreProvider({
   children,
   hydrationData,

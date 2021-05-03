@@ -76,8 +76,6 @@ export default class AcitivtyStore {
     try {
       await agent.Activities.hide(activityId);
       runInAction(() => {
-        console.log(appActivityId);
-        console.log(activityId);
         this.activities.delete(appActivityId);
       });
     } catch (error) {}
