@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import { userInfo } from "node:os";
 import React, { useEffect } from "react";
 import { Container, Feed, Icon } from "semantic-ui-react";
 import {
@@ -13,12 +12,8 @@ const Sidebar = () => {
   const { openMessenger } = useMessagesStore();
   const { user } = useCommonStore();
 
-  const {
-    getFriends,
-    friends,
-    createHubConnection,
-    stopHubConnection,
-  } = useFriendStore();
+  const { getFriends, friends } = useFriendStore();
+  const { createHubConnection, stopHubConnection } = useCommonStore();
 
   useEffect(() => {
     getFriends();

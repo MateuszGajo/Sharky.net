@@ -11,6 +11,10 @@ using Persistence;
 using Application.Errors;
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Collections.Generic;
+using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Application.Activities
 {
@@ -35,8 +39,10 @@ namespace Application.Activities
             private readonly IPhotoAccessor _photoAccessor;
             private readonly DataBaseContext _context;
             private readonly IUserAccessor _userAccessor;
-            public Handler(DataBaseContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+            public Handler(DataBaseContext context, IPhotoAccessor photoAccessor, IUserAccessor userAccessor, IMapper mapper)
             {
+                _mapper = mapper;
                 _userAccessor = userAccessor;
                 _context = context;
                 _photoAccessor = photoAccessor;
@@ -65,9 +71,11 @@ namespace Application.Activities
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 DateTime date = DateTime.Now;
+                Guid activityId = Guid.NewGuid();
 
                 var activity = new Domain.Activity
                 {
+                    Id = activityId,
                     User = user,
                     Content = request.Content,
                     Photo = request.File != null ? photo : null,
@@ -80,7 +88,15 @@ namespace Application.Activities
                     CreatedAt = date
                 };
 
+                Notification notification = new Notification
+                {
+                    User = user,
+                    Type = "post",
+                    RefId = activityId
+                };
+
                 _context.AppActivity.Add(appActivity);
+                _context.Notifications.Add(notification);
 
                 var success = await _context.SaveChangesAsync() > 0;
                 var response = new Response
@@ -88,7 +104,7 @@ namespace Application.Activities
                     ActivityId = activity.Id,
                     Id = appActivity.Id,
                     CreatedAt = date,
-                    Photo = photo
+                    Photo = photo,
                 };
                 if (success) return response;
 

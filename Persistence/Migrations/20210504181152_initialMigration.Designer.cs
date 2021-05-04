@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210502074546_initialMigration")]
+    [Migration("20210504181152_initialMigration")]
     partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -322,6 +322,28 @@ namespace Persistence.Migrations
                     b.ToTable("Messages");
                 });
 
+            modelBuilder.Entity("Domain.Notification", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RefId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Domain.Photo", b =>
                 {
                     b.Property<string>("Id")
@@ -431,6 +453,9 @@ namespace Persistence.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("FriendRequestCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
@@ -443,11 +468,17 @@ namespace Persistence.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("MessagesCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("NormalizedEmail")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("NormalizedUserName")
                         .HasColumnType("TEXT");
+
+                    b.Property<int>("NotificationsCount")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("TEXT");
@@ -546,7 +577,7 @@ namespace Persistence.Migrations
                         .HasForeignKey("CreatorId");
 
                     b.HasOne("Domain.Friend", null)
-                        .WithOne("conversation")
+                        .WithOne("Conversation")
                         .HasForeignKey("Domain.Conversation", "FriendId");
 
                     b.HasOne("Domain.User", "Recipient")
@@ -667,6 +698,15 @@ namespace Persistence.Migrations
                     b.Navigation("Conversation");
                 });
 
+            modelBuilder.Entity("Domain.Notification", b =>
+                {
+                    b.HasOne("Domain.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Domain.Reason", b =>
                 {
                     b.HasOne("Domain.Report", null)
@@ -728,7 +768,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Friend", b =>
                 {
-                    b.Navigation("conversation");
+                    b.Navigation("Conversation");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>

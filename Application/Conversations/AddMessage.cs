@@ -22,12 +22,13 @@ namespace Application.Conversations
             public DateTime CreatedAt { get; set; }
             public Guid Id { get; set; }
             public UserDto User { get; set; }
-            public Guid? FriendId { get; set; }
+            public string FriendId { get; set; }
         }
         public class Command : IRequest<Response>
         {
             public Guid ConversationId { get; set; }
             public string Message { get; set; }
+            public Guid FriendshipId { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, Response>
@@ -80,7 +81,7 @@ namespace Application.Conversations
                     Id = message.Id,
                     CreatedAt = createdAt,
                     User = _mapper.Map<UserDto>(user),
-                    FriendId = conversation.FriendId
+                    FriendId = messageTo
                 };
 
                 if (result) return response;

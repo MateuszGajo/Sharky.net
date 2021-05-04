@@ -137,6 +137,7 @@ namespace API
             app.UseCors("myPolicy");
             app.UseAuthentication();
 
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

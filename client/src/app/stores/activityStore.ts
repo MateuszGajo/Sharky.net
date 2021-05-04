@@ -2,13 +2,11 @@ import {
   ActivityFormValues,
   CreateActResp,
   ActivityMap,
-  Reply,
   CommentMap,
-  Activity,
 } from "./../models/activity";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "~api/agent";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class AcitivtyStore {
   root: RootStore;
@@ -19,7 +17,6 @@ export default class AcitivtyStore {
 
   activities = new Map<string, ActivityMap>();
   activity: ActivityMap | undefined = undefined;
-
   isSubmitting = false;
 
   get activitiesByDate() {
@@ -35,6 +32,8 @@ export default class AcitivtyStore {
     try {
       const resp = await agent.Activities.create(activity);
       this.setActivity(activity, resp);
+
+      this.root.commonStore.hubConnection?.invoke("ActivityAdded", resp.id);
       runInAction(() => {
         this.isSubmitting = false;
       });

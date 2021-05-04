@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.SignalR;
 using Application.Activities;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace API.Controllers
 {
@@ -13,9 +15,12 @@ namespace API.Controllers
     public class ActivityController
     {
         private readonly IMediator _mediator;
-        public ActivityController(IMediator mediator)
+        private readonly IHubContext<ConversationHub> _hubContext;
+
+        public ActivityController(IMediator mediator, IHubContext<ConversationHub> hubContext)
         {
             _mediator = mediator;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -43,10 +48,13 @@ namespace API.Controllers
             return await _mediator.Send(new Unshare.Command { Id = id });
         }
 
+
+
         [HttpPost("create")]
         public async Task<ActionResult<Create.Response>> Create([FromForm] Create.Command command)
         {
             return await _mediator.Send(command);
+
         }
 
         [HttpPut("{id}/like")]

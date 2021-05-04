@@ -82,6 +82,7 @@ const Messenger = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(conversationId);
     if (conversationId) {
       addMessage(text).then(() => {
         if (textRef.current) textRef.current.innerHTML = "";
