@@ -1,11 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Icon } from "semantic-ui-react";
+import { Icon, SemanticICONS } from "semantic-ui-react";
 import cx from "classnames";
 import styles from "./Navbar.module.scss";
 import { navItems } from "~utils/utils";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import agent from "~root/src/app/api/agent";
+import { useCommonStore } from "~root/src/app/providers/RootStoreProvider";
+import { NavbarItem } from "~root/src/app/models/common";
+import { observer } from "mobx-react-lite";
 
 interface redirectProps {
   name: string;
@@ -13,11 +16,25 @@ interface redirectProps {
 }
 
 const Navbar = () => {
+  const router = useRouter();
   const { t } = useTranslation("components");
-  const [activeItem, setActiveItem] = useState<string>("home");
+  const [activeItem, setActiveItem] = useState<string>(
+    router.pathname.substring(1)
+  );
   const [isActive, setStatusOfActive] = useState(false);
 
-  const router = useRouter();
+  const {
+    getNotification,
+    notificationCount,
+    messagesCount,
+    friendRequestCount,
+  } = useCommonStore();
+
+  const notifyCounts = {
+    notifications: notificationCount,
+    messages: messagesCount,
+    friends: friendRequestCount,
+  };
 
   const handleItemClick = ({ name, linkTo }: redirectProps) => {
     if (name == "logout") {
@@ -46,6 +63,7 @@ const Navbar = () => {
 
   useEffect(() => {
     navbar.current?.addEventListener("wheel", showScroll);
+    getNotification();
 
     return () => {
       navbar.current?.removeEventListener("whell", showScroll);
@@ -77,26 +95,44 @@ const Navbar = () => {
         ref={navbar}
       >
         <div className={styles.navbarContainer}>
-          {navItems.map((item: any) => (
-            <div
-              className={cx(styles.item, {
-                [styles.itemActive]: activeItem == item.name,
-              })}
-              key={item.id}
-              onClick={() =>
-                handleItemClick({ name: item.name, linkTo: item.linkTo })
-              }
-            >
-              <Icon name={item.icon} className={styles.icon} />
-              <span className={styles.itemText}>
-                {t(`components:navbar.${item.name}`)}
-              </span>
-            </div>
-          ))}
+          {navItems.map((item: NavbarItem) => {
+            const notifyCount =
+              notifyCounts[item.name as keyof typeof notifyCounts];
+            return (
+              <div
+                className={cx(styles.item, {
+                  [styles.itemActive]: activeItem == item.name,
+                })}
+                key={item.id}
+                onClick={() =>
+                  handleItemClick({
+                    name: item.name,
+                    linkTo: item.linkTo || "",
+                  })
+                }
+              >
+                <div className={styles.iconContainer}>
+                  {notifyCount > 0 && (
+                    <div className={styles.notify}>
+                      <span className={styles.notifyNumber}>{notifyCount}</span>
+                    </div>
+                  )}
+
+                  <Icon
+                    name={item.icon as SemanticICONS}
+                    className={styles.icon}
+                  />
+                </div>
+                <span className={styles.itemText}>
+                  {t(`components:navbar.${item.name}`)}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
   );
 };
 
-export default Navbar;
+export default observer(Navbar);

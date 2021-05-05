@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from "react";
 import { Container, Feed, Icon } from "semantic-ui-react";
+import { useRouter } from "next/router";
 import {
   useCommonStore,
   useFriendStore,
@@ -11,13 +12,14 @@ import styles from "./Sidebar.module.scss";
 const Sidebar = () => {
   const { openMessenger } = useMessagesStore();
   const { user } = useCommonStore();
+  const router = useRouter();
 
   const { getFriends, friends } = useFriendStore();
   const { createHubConnection, stopHubConnection } = useCommonStore();
 
   useEffect(() => {
     getFriends();
-    createHubConnection();
+    createHubConnection(router.pathname);
     return () => {
       stopHubConnection();
     };

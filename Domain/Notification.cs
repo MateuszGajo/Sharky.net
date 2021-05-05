@@ -7,6 +7,7 @@ namespace Domain
         public Guid Id { get; set; }
         public User User { get; set; }
         public string Type { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Guid RefId { get; set; }
     }
 }

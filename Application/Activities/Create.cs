@@ -26,6 +26,7 @@ namespace Application.Activities
             public Photo Photo { get; set; }
             public Guid Id { get; set; }
             public Guid ActivityId { get; set; }
+            public Guid NotifyId { get; set; }
         }
         public class Command : IRequest<Response>
         {
@@ -88,10 +89,11 @@ namespace Application.Activities
                     CreatedAt = date
                 };
 
-                Notification notification = new Notification
+                Domain.Notification notification = new Domain.Notification
                 {
                     User = user,
                     Type = "post",
+                    CreatedAt = DateTime.Now,
                     RefId = activityId
                 };
 
@@ -105,6 +107,7 @@ namespace Application.Activities
                     Id = appActivity.Id,
                     CreatedAt = date,
                     Photo = photo,
+                    NotifyId = notification.Id
                 };
                 if (success) return response;
 

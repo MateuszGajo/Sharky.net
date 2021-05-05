@@ -33,7 +33,11 @@ export default class AcitivtyStore {
       const resp = await agent.Activities.create(activity);
       this.setActivity(activity, resp);
 
-      this.root.commonStore.hubConnection?.invoke("ActivityAdded", resp.id);
+      this.root.commonStore.hubConnection?.invoke(
+        "ActivityAdded",
+        resp.id,
+        resp.notifyId
+      );
       runInAction(() => {
         this.isSubmitting = false;
       });

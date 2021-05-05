@@ -49,7 +49,7 @@ namespace API.SignalR
             return resp;
         }
 
-        public async Task<ActionResult<Unit>> ActivityAdded(Guid activityId)
+        public async Task<ActionResult<Unit>> ActivityAdded(Guid activityId, Guid notifyId)
         {
             string userId = _userAccessor.GetCurrentId();
             UserDto user = await _context.Users.Where(x => x.Id == userId).ProjectTo<UserDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
@@ -67,18 +67,14 @@ namespace API.SignalR
 
             foreach (var friend in friends)
             {
-                // var not = _context.AppNotifications.FirstOrDefault(x => x.UserId == friend.User.Id);
-                // not.NotificationsCount += 1;
                 friend.User.NotificationsCount += 1;
-                System.Console.WriteLine(friend.User.NotificationsCount);
                 foreach (var connectionId in _connections.GetConnections(friend.User.Id))
                 {
                     await Clients
                     .Client(connectionId)
-                    .SendAsync("activityAdded", activityId, user);
+                    .SendAsync("activityAdded", notifyId, activityId, user, DateTime.Now);
                 }
             }
-
             await _context.SaveChangesAsync();
             return Unit.Value;
         }

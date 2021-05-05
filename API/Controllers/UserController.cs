@@ -59,11 +59,24 @@ namespace API.Controllers
             return await _mediator.Send(new Friends.Query { Id = null });
         }
 
+        [HttpGet("notification")]
+        public async Task<ActionResult<GetNotification.Response>> Notification()
+        {
+            return await _mediator.Send(new GetNotification.Query { });
+        }
+
         [HttpGet("{id}/friends")]
         public async Task<ActionResult<List<FriendDto>>> friends(string id)
         {
             return await _mediator.Send(new Friends.Query { Id = id });
         }
+
+        [HttpPut("notification/read")]
+        public async Task<ActionResult<Unit>> ReadNotification()
+        {
+            return await _mediator.Send(new ReadNotification.Command { });
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> Details(string id)
         {

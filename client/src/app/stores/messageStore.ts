@@ -132,7 +132,6 @@ export default class MessageStore {
 
   addMessage = async (messageContext: string) => {
     try {
-      console.log("wysyłamy");
       const {
         value: { id, createdAt, user },
       } = await this.root.commonStore.hubConnection?.invoke("AddMessage", {
@@ -150,9 +149,7 @@ export default class MessageStore {
       this.messagesCount += 1;
 
       this.messages.set(message.id, message);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   messageListener = () => {

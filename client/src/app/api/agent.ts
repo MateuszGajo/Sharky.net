@@ -13,6 +13,10 @@ import {
 import axios, { AxiosResponse } from "axios";
 import { Friend } from "../models/user";
 import { Message } from "../models/conversation";
+import {
+  Notification as NotificationI,
+  NotificationCount,
+} from "~root/src/app/models/notification";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -123,6 +127,8 @@ const User = {
   block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
   report: (id: string, reasons: string[]) =>
     requests.post(`/user/${id}/report`, { reasons }),
+  getNotification: () => requests.get<NotificationCount>("/user/notification"),
+  readNotification: () => requests.put<void>("/user/notification/read", {}),
 };
 
 const Friends = {
@@ -152,6 +158,10 @@ const Conversation = {
     requests.put<void>(`/conversation/${conversationId}/messages/read`, {}),
 };
 
+const Notification = {
+  get: () => requests.get<NotificationI[]>("/notification"),
+};
+
 export default {
   Account,
   Activities,
@@ -160,4 +170,5 @@ export default {
   User,
   Friends,
   Conversation,
+  Notification,
 };
