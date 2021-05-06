@@ -53,7 +53,11 @@ export default class MessageStore {
       if (isMessage == true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
+
+          this.root.commonStore.messagesCount -= 1;
+
           const friend = this.root.friendStore.friends.get(friendshipId);
+
           if (friend) {
             const newFriendObject = {
               ...friend,
@@ -189,6 +193,9 @@ export default class MessageStore {
       this.root.messageStore.messages.set(newMessage.id, newMessage);
     } else {
       const friend = this.root.friendStore.friends.get(friendId);
+
+      this.root.commonStore.messagesCount += 1;
+
       if (friend) {
         const newFriendObject: Friend = {
           ...friend,

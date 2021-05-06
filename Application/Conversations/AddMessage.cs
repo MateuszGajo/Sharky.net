@@ -71,9 +71,10 @@ namespace Application.Conversations
 
                 conversation.Messages.Add(message);
 
-                string messageTo = conversation.Recipient.Id == user.Id ? conversation.Creator.Id : conversation.Recipient.Id;
-                conversation.MessageTo = messageTo;
+                User messageTo = conversation.Recipient.Id == user.Id ? conversation.Creator : conversation.Recipient;
+                conversation.MessageTo = messageTo.Id;
                 conversation.MessagesCount += 1;
+                messageTo.MessagesCount += 1;
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 Response response = new Response
@@ -81,7 +82,7 @@ namespace Application.Conversations
                     Id = message.Id,
                     CreatedAt = createdAt,
                     User = _mapper.Map<UserDto>(user),
-                    FriendId = messageTo
+                    FriendId = messageTo.Id
                 };
 
                 if (result) return response;

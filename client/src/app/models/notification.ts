@@ -10,6 +10,7 @@ export interface Notification {
   id: string;
   user: User;
   type: string;
+  action: string;
   createdAt: Date;
   refId: string;
 }

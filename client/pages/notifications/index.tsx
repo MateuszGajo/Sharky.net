@@ -33,7 +33,7 @@ const Notifications = () => {
         {Array.from(notifications.values()).map((item) => (
           <Feed
             className={styles.item}
-            onClick={() => router.push(`/post/${item.refId}`)}
+            onClick={() => router.push(`/${item.type}/${item.refId}`)}
           >
             <Feed.Event>
               <Feed.Label
@@ -48,7 +48,7 @@ const Notifications = () => {
                   </Feed.User>{" "}
                   <Feed.Date>{formatDate(item.createdAt)}</Feed.Date>
                 </Feed.Summary>
-                <Feed.Extra text>{t(item.type)}</Feed.Extra>
+                <Feed.Extra text>{t(`${item.type}.${item.action}`)}</Feed.Extra>
               </Feed.Content>
             </Feed.Event>
           </Feed>

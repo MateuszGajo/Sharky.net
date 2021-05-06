@@ -15,12 +15,10 @@ namespace API.Controllers
     public class ActivityController
     {
         private readonly IMediator _mediator;
-        private readonly IHubContext<ConversationHub> _hubContext;
 
-        public ActivityController(IMediator mediator, IHubContext<ConversationHub> hubContext)
+        public ActivityController(IMediator mediator)
         {
             _mediator = mediator;
-            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -55,12 +53,6 @@ namespace API.Controllers
         {
             return await _mediator.Send(command);
 
-        }
-
-        [HttpPut("{id}/like")]
-        public async Task<ActionResult<Unit>> Like(Guid id)
-        {
-            return await _mediator.Send(new Application.Activities.Like.Command { Id = id });
         }
 
         [HttpDelete("{id}/unlike")]

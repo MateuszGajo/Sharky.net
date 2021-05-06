@@ -1,3 +1,9 @@
 {
-  "post": "Dodał nowy post"
+  "post": {
+    "added": "Dodał nowy post",
+    "liked": "Polubił twój post"
+  },
+  "comment": {
+    "added": "Skomentował twój post"
+  }
 }

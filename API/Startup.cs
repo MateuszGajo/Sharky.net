@@ -143,7 +143,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ConversationHub>("/conversationHub");
+                endpoints.MapHub<CommonHub>("/commonHub");
             });
         }
     }

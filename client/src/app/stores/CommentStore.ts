@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { CommentMap, Reply } from "../models/activity";
+import { CommentMap, Reply, User } from "../models/activity";
 import { RootStore } from "./RootStore";
 
 export default class CommentStore {
@@ -43,14 +43,20 @@ export default class CommentStore {
     content: string
   ) => {
     try {
-      const response = await agent.Comments.create(activityId, content);
+      const {
+        value: { id, createdAt },
+      } = await this.root.commonStore.hubConnection?.invoke(
+        "CreateComment",
+        activityId,
+        content
+      );
       const activity = this.root.activityStore.activities.get(appActivityId);
       if (activity) {
         const user = this.root.commonStore.user;
         const comment = {
           content,
-          id: response.id,
-          createdAt: response.createdAt,
+          id: id,
+          createdAt: createdAt,
           author: user,
           likes: 0,
           replies: new Map<string, Reply>(),
@@ -62,7 +68,33 @@ export default class CommentStore {
           this.setComment(appActivityId, comment);
         });
       }
-    } catch (eror) {}
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  createCommentListener = (path: string) => {
+    this.root.commonStore.hubConnection?.on(
+      "commentAdded",
+      (notifyId: string, activityId: string, user: User, createdAt: Date) => {
+        if (path == "/notifications") {
+          const newNotification = {
+            id: notifyId,
+            user: user,
+            type: "comment",
+            action: "added",
+            createdAt: createdAt,
+            refId: activityId,
+          };
+          this.root.notificationStore.notifications.set(
+            newNotification.id,
+            newNotification
+          );
+        } else {
+          this.root.commonStore.notificationCount += 1;
+        }
+      }
+    );
   };
 
   setComment = async (activityId: string, comment: CommentMap) => {

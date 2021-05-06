@@ -18,7 +18,7 @@ using Persistence;
 namespace API.SignalR
 {
     [Authorize(AuthenticationSchemes = "Bearer")]
-    public class ConversationHub : Hub
+    public class CommonHub : Hub
     {
         private string id;
         private readonly IMediator _mediator;
@@ -29,7 +29,7 @@ namespace API.SignalR
         private readonly DataBaseContext _context;
         private readonly IMapper _mapper;
 
-        public ConversationHub(IMediator mediator, IUserAccessor userAccessor, DataBaseContext context, IMapper mapper)
+        public CommonHub(IMediator mediator, IUserAccessor userAccessor, DataBaseContext context, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;
@@ -47,6 +47,45 @@ namespace API.SignalR
                 .SendAsync("reciveMessage", resp.Id, command.Message, command.ConversationId, resp.CreatedAt, resp.User, command.FriendshipId);
             }
             return resp;
+        }
+
+        public async Task<ActionResult<Unit>> LikeActivity(Guid id)
+        {
+            var response = await _mediator.Send(new Application.Activities.Like.Command { Id = id });
+            if (response.AuthorId != response.User.Id && response.IsNotification)
+            {
+                foreach (var connectionId in _connections.GetConnections(response.AuthorId))
+                {
+                    await Clients
+                       .Client(connectionId)
+                       .SendAsync("activityLiked", response.NotifyId, response.ActivityId, response.User, DateTime.Now);
+                }
+            }
+            return Unit.Value;
+        }
+
+        public class CreateCommentResponse
+        {
+            public Guid Id { get; set; }
+            public DateTime CreatedAt { get; set; }
+        }
+        public async Task<ActionResult<CreateCommentResponse>> CreateComment(Guid activityId, string content)
+        {
+            var response = await _mediator.Send(new Application.Comments.Create.Command { ActivityId = activityId, Content = content });
+            if (response.AuthorId != response.User.Id)
+            {
+                foreach (var connectionId in _connections.GetConnections(response.AuthorId))
+                {
+                    await Clients
+                       .Client(connectionId)
+                       .SendAsync("commentAdded", response.NotifyId, activityId, response.User, DateTime.Now);
+                }
+            }
+            return new CreateCommentResponse
+            {
+                Id = response.Id,
+                CreatedAt = response.CreatedAt
+            };
         }
 
         public async Task<ActionResult<Unit>> ActivityAdded(Guid activityId, Guid notifyId)

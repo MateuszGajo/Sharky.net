@@ -31,6 +31,8 @@ namespace Application.Conversations
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
+                User user = await _context.Users.FindAsync(userId);
+                if (user == null) throw new RestException(HttpStatusCode.Unauthorized, new { user = "user doesn't exist" });
 
                 Conversation conversation = await _context.Conversations.Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x => x.Id == request.ConversationId);
                 if (conversation.Creator.Id != userId && conversation.Recipient.Id != userId)
@@ -40,6 +42,7 @@ namespace Application.Conversations
                     throw new RestException(HttpStatusCode.Forbidden, new { conversation = "You don't have unread messages" });
 
                 conversation.MessageTo = null;
+                user.MessagesCount -= 1;
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;

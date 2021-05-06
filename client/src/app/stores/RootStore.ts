@@ -2,7 +2,7 @@ import CommonStore from "./commonStore";
 import ActivityStore from "./activityStore";
 import AuthenticationStore from "./authenticationStore";
 import UserStore from "./userStore";
-import CommentStore from "./commonStore";
+import CommentStore from "./CommentStore";
 import ReplyStore from "./ReplyStore";
 import MessageStore from "./messageStore";
 import FriendStore from "./friendStore";

@@ -34,7 +34,7 @@ namespace Application.Notification
                 ).ToListAsync();
 
                 var notification = await _context.Notifications
-                        .Where(x => friends.Contains(x.User.Id))
+                        .Where(x => (x.RecipientId == userId || x.RecipientId == null) && friends.Contains(x.User.Id))
                         .Include(x => x.User)
                         .ToListAsync();
 

@@ -51,7 +51,7 @@ export default class CommonStore {
 
   createHubConnection = (path: string) => {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/conversationHub")
+      .withUrl("http://localhost:5000/commonHub")
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
@@ -61,27 +61,8 @@ export default class CommonStore {
       .catch((err) => console.log("Error establishing the connection: ", err));
 
     this.root.messageStore.messageListener();
-
-    this.hubConnection.on(
-      "activityAdded",
-      (notifyId: string, activityId: string, user: User, createdAt: Date) => {
-        if (path == "/notifications") {
-          const newNotification = {
-            id: notifyId,
-            user: user,
-            type: "post",
-            createdAt: createdAt,
-            refId: activityId,
-          };
-          this.root.notificationStore.notifications.set(
-            newNotification.id,
-            newNotification
-          );
-        } else {
-          this.root.commonStore.notificationCount += 1;
-        }
-      }
-    );
+    this.root.activityStore.likeListener(path);
+    this.root.activityStore.activityListener(path);
   };
 
   stopHubConnection = () => {

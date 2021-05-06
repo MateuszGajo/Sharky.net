@@ -93,6 +93,7 @@ namespace Application.Activities
                 {
                     User = user,
                     Type = "post",
+                    Action = "added",
                     CreatedAt = DateTime.Now,
                     RefId = activityId
                 };
