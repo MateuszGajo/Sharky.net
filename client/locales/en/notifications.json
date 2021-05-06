@@ -1,0 +1,9 @@
+{
+  "post": {
+    "added": "Add new post",
+    "liked": "Liked your post"
+  },
+  "comment": {
+    "added": "Replied to your post"
+  }
+}

@@ -137,12 +137,13 @@ namespace API
             app.UseCors("myPolicy");
             app.UseAuthentication();
 
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ConversationHub>("/conversationHub");
+                endpoints.MapHub<CommonHub>("/commonHub");
             });
         }
     }

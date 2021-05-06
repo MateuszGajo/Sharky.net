@@ -1,6 +1,6 @@
 import { enableStaticRendering } from "mobx-react-lite";
 import React, { createContext, ReactNode, useContext } from "react";
-import { RootStore, RootStoreHydration } from "../stores/rootStore";
+import { RootStore, RootStoreHydration } from "../stores/RootStore";
 
 enableStaticRendering(typeof window === "undefined");
 
@@ -54,6 +54,11 @@ export const useMessagesStore = () => {
 export const useFriendStore = () => {
   const { friendStore } = useRootStore();
   return friendStore;
+};
+
+export const useNotificationStore = () => {
+  const { notificationStore } = useRootStore();
+  return notificationStore;
 };
 
 export function RootStoreProvider({

@@ -2,13 +2,12 @@ import {
   ActivityFormValues,
   CreateActResp,
   ActivityMap,
-  Reply,
   CommentMap,
-  Activity,
+  User,
 } from "./../models/activity";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "~api/agent";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class AcitivtyStore {
   root: RootStore;
@@ -19,7 +18,6 @@ export default class AcitivtyStore {
 
   activities = new Map<string, ActivityMap>();
   activity: ActivityMap | undefined = undefined;
-
   isSubmitting = false;
 
   get activitiesByDate() {
@@ -35,6 +33,12 @@ export default class AcitivtyStore {
     try {
       const resp = await agent.Activities.create(activity);
       this.setActivity(activity, resp);
+
+      this.root.commonStore.hubConnection?.invoke(
+        "ActivityAdded",
+        resp.id,
+        resp.notifyId
+      );
       runInAction(() => {
         this.isSubmitting = false;
       });
@@ -43,6 +47,30 @@ export default class AcitivtyStore {
         this.isSubmitting = false;
       });
     }
+  };
+
+  activityListener = (path: string) => {
+    this.root.commonStore.hubConnection?.on(
+      "activityAdded",
+      (notifyId: string, activityId: string, user: User, createdAt: Date) => {
+        if (path == "/notifications") {
+          const newNotification = {
+            id: notifyId,
+            user: user,
+            type: "post",
+            action: "added",
+            createdAt: createdAt,
+            refId: activityId,
+          };
+          this.root.notificationStore.notifications.set(
+            newNotification.id,
+            newNotification
+          );
+        } else {
+          this.root.commonStore.notificationCount += 1;
+        }
+      }
+    );
   };
 
   editActivity = async (
@@ -131,9 +159,35 @@ export default class AcitivtyStore {
 
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {
     try {
-      if (!isLiked) await agent.Activities.like(activityId);
-      else await agent.Activities.unlike(activityId);
+      if (!isLiked) {
+        this.root.commonStore.hubConnection?.invoke("LikeActivity", activityId);
+        await agent.Activities.like(activityId);
+      } else await agent.Activities.unlike(activityId);
     } catch (error) {}
+  };
+
+  likeListener = (path: string) => {
+    this.root.commonStore.hubConnection?.on(
+      "activityLiked",
+      (notifyId: string, activityId: string, user: User, createdAt: Date) => {
+        if (path == "/notifications") {
+          const newNotification = {
+            id: notifyId,
+            user: user,
+            type: "post",
+            action: "liked",
+            createdAt: createdAt,
+            refId: activityId,
+          };
+          this.root.notificationStore.notifications.set(
+            newNotification.id,
+            newNotification
+          );
+        } else {
+          this.root.commonStore.notificationCount += 1;
+        }
+      }
+    );
   };
 
   shareActivity = async (activityId: string, appActivityId: string) => {

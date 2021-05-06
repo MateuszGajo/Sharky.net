@@ -168,18 +168,58 @@ const polishMonthNames = [
 ];
 
 export const formatDate = (date: Date) => {
-  let d = new Date(date),
-    monthNumber = d.getMonth() + 1,
-    day = "" + d.getDate(),
-    year = d.getFullYear();
+  const time = new Date(date).getTime();
+  const currentTime = new Date().getTime();
+  const timeDifference = currentTime - time;
 
-  const monthNames =
-    cookies.get("NEXT_LOCALE") == "pl" ? polishMonthNames : englishMonthNames;
+  const language = cookies.get("NEXT_LOCALE");
+  if (timeDifference < 86400000) {
+    if (timeDifference < 60000) {
+      const secondsAgo = Math.floor(timeDifference / 1000);
+      const enText = timeDifference < 2000 ? " second ago" : " seconds ago";
+      const plText =
+        timeDifference < 2000
+          ? " sekunda temu"
+          : timeDifference < 5000
+          ? " sekundy temu"
+          : " sekund temu";
+      const text = language == "pl" ? plText : enText;
+      return secondsAgo + text;
+    } else if (timeDifference < 3600000) {
+      const minutesAgo = Math.floor(timeDifference / 60000);
+      const enText = timeDifference < 120000 ? " minut ago" : " minutes ago";
+      const plText =
+        timeDifference < 120000
+          ? " minuta temu"
+          : timeDifference < 300000
+          ? " minuty temu"
+          : " minut temu";
+      const text = language == "pl" ? plText : enText;
+      return minutesAgo + text;
+    }
+    const hoursAgo = Math.floor(timeDifference / 3600000);
+    const enText = timeDifference < 7200000 ? " hour ago" : " hours ago";
+    const plText =
+      timeDifference < 7200000
+        ? " godzin temu"
+        : timeDifference < 18000000
+        ? " godziny"
+        : " godzin temu";
+    const text = language == "pl" ? plText : enText;
+    return hoursAgo + text;
+  } else {
+    let d = new Date(date),
+      monthNumber = d.getMonth() + 1,
+      day = "" + d.getDate(),
+      year = d.getFullYear();
 
-  const month = monthNames[monthNumber - 1];
-  if (day.length < 2) day = "0" + day;
+    const monthNames = language == "pl" ? polishMonthNames : englishMonthNames;
 
-  return [day, month, year].join(" ");
+    const month = monthNames[monthNumber - 1];
+    if (day.length < 2) day = "0" + day;
+
+    return [day, month, year].join(" ");
+  }
 };
 
 export const verifyJWT = (token: string) => {

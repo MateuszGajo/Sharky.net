@@ -55,7 +55,7 @@
   .item {
     display: flex;
     width: fit-content;
-    padding: 0.15em 0.3em;
+    padding: 0.2em 0.3em;
     border-radius: 1em;
     font-size: 1.5rem;
     cursor: pointer;
@@ -79,6 +79,29 @@
 
   .itemActive > * {
     color: $primaryColor;
+  }
+
+  .iconContainer {
+    position: relative;
+  }
+
+  .notify {
+    position: absolute;
+    top: -0.2em;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 0.7em;
+    height: 0.7em;
+    border-radius: 50%;
+    box-shadow: 0 0 2px 1px $primaryBlack;
+    background-color: $primaryColor;
+  }
+
+  .notifyNumber {
+    font-size: 0.9rem;
+    color: white;
   }
 
   .itemText {

@@ -1,14 +1,9 @@
-import {
-  HubConnection,
-  HubConnectionBuilder,
-  LogLevel,
-} from "@microsoft/signalr";
-import axios from "axios";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/activity";
 import { Message } from "../models/conversation";
-import { RootStore } from "./rootStore";
+import { Friend } from "../models/user";
+import { RootStore } from "./RootStore";
 
 export default class MessageStore {
   root: RootStore;
@@ -58,7 +53,11 @@ export default class MessageStore {
       if (isMessage == true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
+
+          this.root.commonStore.messagesCount -= 1;
+
           const friend = this.root.friendStore.friends.get(friendshipId);
+
           if (friend) {
             const newFriendObject = {
               ...friend,
@@ -139,9 +138,10 @@ export default class MessageStore {
     try {
       const {
         value: { id, createdAt, user },
-      } = await this.root.friendStore.hubConnection?.invoke("AddMessage", {
+      } = await this.root.commonStore.hubConnection?.invoke("AddMessage", {
         message: messageContext,
         conversationId: this.conversationId,
+        friendshipId: this.friendshipId,
       });
 
       const message = {
@@ -154,5 +154,58 @@ export default class MessageStore {
 
       this.messages.set(message.id, message);
     } catch (error) {}
+  };
+
+  messageListener = () => {
+    this.root.commonStore.hubConnection?.on(
+      "reciveMessage",
+      (
+        id: string,
+        message: string,
+        conversationId: string,
+        createdAt: Date,
+        user: User,
+        friendId: string
+      ) =>
+        this.newMessage(id, message, conversationId, createdAt, user, friendId)
+    );
+  };
+
+  newMessage = (
+    id: string,
+    message: string,
+    conversationId: string,
+    createdAt: Date,
+    user: User,
+    friendId: string
+  ) => {
+    if (
+      this.root.messageStore.isMessengerOpen &&
+      this.root.messageStore.conversationId == conversationId
+    ) {
+      const newMessage = {
+        id,
+        createdAt,
+        body: message,
+        author: user,
+      };
+      this.root.messageStore.messagesCount += 1;
+      this.root.messageStore.messages.set(newMessage.id, newMessage);
+    } else {
+      const friend = this.root.friendStore.friends.get(friendId);
+
+      this.root.commonStore.messagesCount += 1;
+
+      if (friend) {
+        const newFriendObject: Friend = {
+          ...friend,
+          conversation: {
+            ...friend.conversation!,
+            messageTo: this.root.commonStore.user.id,
+          },
+        };
+        this.root.friendStore.friends.set(newFriendObject.id, newFriendObject);
+      }
+    }
   };
 }

@@ -72,6 +72,7 @@ export interface CreateActResp {
     url: string;
   };
   createdAt: Date;
+  notifyId: string;
 }
 
 export interface CreateCommResp {
