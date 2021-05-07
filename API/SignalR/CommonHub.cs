@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Application.Activities;
 using Application.Conversations;
 using Application.Interface;
-using Application.Users;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
@@ -117,8 +116,6 @@ namespace API.SignalR
             await _context.SaveChangesAsync();
             return Unit.Value;
         }
-
-
         public override async Task OnConnectedAsync()
         {
             string userId = _userAccessor.GetCurrentId();

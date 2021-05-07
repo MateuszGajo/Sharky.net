@@ -34,12 +34,7 @@ const RepliesWrapper: React.FC<RepliesWrapperI> = ({
 
   if (display || item.isHidden === false) {
     return (
-      <ActivityReply
-        key={item.id}
-        item={item}
-        activityId={activityId}
-        commentId={item.id}
-      />
+      <ActivityReply item={item} activityId={activityId} commentId={item.id} />
     );
   } else if (prevEl?.isHidden != item.isHidden) {
     return (
@@ -82,6 +77,7 @@ const RepliesLoader: React.FC<RepliesLoaderI> = observer(
         <>
           {replies.map((reply, index) => (
             <RepliesWrapper
+              key={reply.id}
               index={index}
               item={reply}
               activityId={activityId}

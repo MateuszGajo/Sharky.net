@@ -1,7 +1,7 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Friend } from "../models/user";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class FriendStore {
   root: RootStore;
@@ -15,8 +15,10 @@ export default class FriendStore {
   getFriends = async () => {
     try {
       const friends = await agent.Friends.get();
-      friends.forEach((friend) => {
-        this.friends.set(friend.id, friend);
+      runInAction(() => {
+        friends.forEach((friend) => {
+          this.friends.set(friend.id, friend);
+        });
       });
     } catch (error) {}
   };

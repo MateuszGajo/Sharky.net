@@ -3,7 +3,7 @@ import ActivityStore from "./activityStore";
 import AuthenticationStore from "./authenticationStore";
 import UserStore from "./userStore";
 import CommentStore from "./CommentStore";
-import ReplyStore from "./ReplyStore";
+import ReplyStore from "./replyStore";
 import MessageStore from "./messageStore";
 import FriendStore from "./friendStore";
 import NotificationStore from "./notificationStore";

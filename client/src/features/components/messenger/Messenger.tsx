@@ -1,4 +1,4 @@
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Divider, Icon, Loader } from "semantic-ui-react";
 import styles from "./Messenger.module.scss";
 import cx from "classnames";
@@ -8,29 +8,150 @@ import {
 } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Message } from "~root/src/app/models/conversation";
+
+interface ItemI {
+  message: Message;
+  authorMessage: boolean;
+  lastRecipientMessage: boolean;
+}
+
+const Item: React.FC<ItemI> = ({
+  message,
+  authorMessage,
+  lastRecipientMessage,
+}) => {
+  const { converser } = useMessagesStore();
+  return (
+    <div
+      className={cx(styles.message, {
+        [styles.littleMargin]: authorMessage,
+        [styles.bigMargin]: !authorMessage,
+      })}
+    >
+      <div className={styles.messageUser}>
+        {lastRecipientMessage && (
+          <img
+            src={process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
+            alt=""
+            className={styles.messageUserPhoto}
+          />
+        )}
+      </div>
+      <div className={cx(styles.messageTextContainer)}>
+        <div
+          className={cx(styles.messageText, {
+            [styles.authorMessage]: message.author.id != converser?.id,
+          })}
+        >
+          {message.body}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface ContentI {
+  contentContainerRef: React.RefObject<HTMLDivElement>;
+}
+
+const Content: React.FC<ContentI> = ({ contentContainerRef }) => {
+  const {
+    converser,
+    messages,
+    isLoading,
+    messagesCount,
+    getMesangesByDate,
+    getMessages,
+  } = useMessagesStore();
+  const { user } = useCommonStore();
+
+  const [isScrolling, setScrollingStatus] = useState(false);
+
+  const textContainerRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const fetchData = () => {
+    getMessages();
+  };
+
+  useEffect(() => {
+    if (!isScrolling)
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.size]);
+
+  let timeOut: ReturnType<typeof setTimeout>;
+
+  const handleScroll = (e: any) => {
+    if (e.deltaY < 0) {
+      clearTimeout(timeOut);
+      setScrollingStatus(true);
+      timeOut = setTimeout(() => {
+        setScrollingStatus(false);
+      }, 10000);
+    }
+  };
+
+  useEffect(() => {
+    contentContainerRef.current?.addEventListener("mousewheel", handleScroll);
+  }, []);
+
+  if (isLoading)
+    return (
+      <div className={styles.loader}>
+        <Loader active inline />
+      </div>
+    );
+  return (
+    <InfiniteScroll
+      dataLength={messages.size}
+      next={fetchData}
+      hasMore={messages.size < messagesCount}
+      style={{ display: "flex", flexDirection: "column-reverse" }}
+      loader={
+        <div className={styles.loader}>
+          <Loader active inline />
+        </div>
+      }
+      inverse
+      scrollableTarget="messenger__scrollableDiv"
+    >
+      <div className={styles.messagesContainer} ref={textContainerRef}>
+        <div ref={messagesEndRef}></div>
+        {getMesangesByDate.map((message, index, array) => {
+          const authorMessage =
+            array[index + 1]?.author.id == message.author.id;
+          const lastRecipientMessage =
+            message.author.id == converser?.id &&
+            (array[index - 1]?.author.id == user.id ||
+              array[index - 1]?.author.id == undefined);
+          return (
+            <Item
+              key={message.id}
+              message={message}
+              authorMessage={authorMessage}
+              lastRecipientMessage={lastRecipientMessage}
+            />
+          );
+        })}
+      </div>
+    </InfiniteScroll>
+  );
+};
 
 const Messenger = () => {
   const {
     closeMessenger,
     converser,
     conversationId,
-    messages,
     newConversation,
-    getMessages,
     getInitialMessages,
     addMessage,
-    isLoading,
-    messagesCount,
-    getMesangesByDate,
   } = useMessagesStore();
-  const { user } = useCommonStore();
 
   const [text, setText] = useState("");
-  const [isScrolling, setScrollingStatus] = useState(false);
-
   const textRef = useRef<HTMLElement>(null);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const textContainerRef = useRef<HTMLDivElement>(null);
+
   const contentContainerRef = useRef<HTMLDivElement>(null);
   const myFormRef = useRef<HTMLFormElement>(null);
 
@@ -59,27 +180,6 @@ const Messenger = () => {
     };
   }, [conversationId]);
 
-  useEffect(() => {
-    if (!isScrolling)
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.size]);
-
-  let timeOut: ReturnType<typeof setTimeout>;
-
-  const handleScroll = (e: any) => {
-    if (e.deltaY < 0) {
-      clearTimeout(timeOut);
-      setScrollingStatus(true);
-      timeOut = setTimeout(() => {
-        setScrollingStatus(false);
-      }, 10000);
-    }
-  };
-
-  useEffect(() => {
-    contentContainerRef.current?.addEventListener("mousewheel", handleScroll);
-  }, []);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (conversationId) {
@@ -91,10 +191,6 @@ const Messenger = () => {
         if (textRef.current) textRef.current.innerHTML = "";
       });
     }
-  };
-
-  const fetchData = () => {
-    getMessages();
   };
 
   return (
@@ -124,69 +220,9 @@ const Messenger = () => {
       <div
         className={styles.content}
         ref={contentContainerRef}
-        id="scrollableDiv"
+        id="messenger__scrollableDiv"
       >
-        {isLoading ? (
-          <div className={styles.loader}>
-            <Loader active inline />
-          </div>
-        ) : (
-          <InfiniteScroll
-            dataLength={messages.size}
-            next={fetchData}
-            hasMore={messages.size < messagesCount}
-            style={{ display: "flex", flexDirection: "column-reverse" }}
-            loader={
-              <div className={styles.loader}>
-                <Loader active inline />
-              </div>
-            }
-            inverse
-            scrollableTarget="scrollableDiv"
-          >
-            <div className={styles.messagesContainer} ref={textContainerRef}>
-              <div ref={messagesEndRef}></div>
-              {getMesangesByDate.map((message, index, array) => {
-                const authorMessage =
-                  array[index + 1]?.author.id == message.author.id;
-                const lastRecipientMessage =
-                  message.author.id == converser?.id &&
-                  (array[index - 1]?.author.id == user.id ||
-                    array[index - 1]?.author.id == undefined);
-                return (
-                  <div
-                    className={cx(styles.message, {
-                      [styles.littleMargin]: authorMessage,
-                      [styles.bigMargin]: !authorMessage,
-                    })}
-                    key={message.id}
-                  >
-                    <div className={styles.messageUser}>
-                      {lastRecipientMessage && (
-                        <img
-                          src={process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
-                          alt=""
-                          className={styles.messageUserPhoto}
-                        />
-                      )}
-                    </div>
-
-                    <div className={cx(styles.messageTextContainer)}>
-                      <div
-                        className={cx(styles.messageText, {
-                          [styles.authorMessage]:
-                            message.author.id != converser?.id,
-                        })}
-                      >
-                        {message.body}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </InfiniteScroll>
-        )}
+        <Content contentContainerRef={contentContainerRef} />
       </div>
 
       <Divider className={styles.divider} />

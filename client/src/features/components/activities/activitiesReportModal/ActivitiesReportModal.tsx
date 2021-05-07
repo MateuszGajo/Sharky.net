@@ -83,6 +83,7 @@ const ActivitiesReportModal: React.FC<Props> = ({
             <div className={styles.rows}>
               {firstRowlist.map((item) => (
                 <div
+                  key={item.name}
                   className={cx(styles.item, {
                     [styles.itemActive]: reportList[item.name],
                   })}
@@ -97,6 +98,7 @@ const ActivitiesReportModal: React.FC<Props> = ({
             <div className={cx(styles.listContainerSecondRow, styles.rows)}>
               {secondRowList.map((item) => (
                 <div
+                  key={item.name}
                   className={cx(styles.item, {
                     [styles.itemActive]: reportList[item.name],
                   })}

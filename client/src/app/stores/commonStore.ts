@@ -3,10 +3,10 @@ import {
   HubConnectionBuilder,
   LogLevel,
 } from "@microsoft/signalr";
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/authentication";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class CommonStore {
   root: RootStore;
@@ -36,16 +36,20 @@ export default class CommonStore {
         messagesCount,
         friendRequestCount,
       } = await agent.User.getNotification();
-      this.notificationCount = notificationCount;
-      this.messagesCount = messagesCount;
-      this.friendRequestCount = friendRequestCount;
+      runInAction(() => {
+        this.notificationCount = notificationCount;
+        this.messagesCount = messagesCount;
+        this.friendRequestCount = friendRequestCount;
+      });
     } catch (error) {}
   };
 
   readNotification = async () => {
     try {
       await agent.User.readNotification();
-      this.notificationCount = 0;
+      runInAction(() => {
+        this.notificationCount = 0;
+      });
     } catch (error) {}
   };
 

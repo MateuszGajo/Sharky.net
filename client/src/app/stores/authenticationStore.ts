@@ -3,7 +3,7 @@ import { makeAutoObservable } from "mobx";
 import { SignupFormValues as SignupValues } from "~root/src/app/models/authentication";
 import { SigninFormValues as SigninValues } from "~root/src/app/models/authentication";
 import router from "next/router";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class AuthenticationStore {
   root: RootStore;

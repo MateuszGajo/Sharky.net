@@ -7,7 +7,7 @@ import {
 } from "./../models/activity";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "~api/agent";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class AcitivtyStore {
   root: RootStore;
@@ -32,14 +32,14 @@ export default class AcitivtyStore {
     this.isSubmitting = true;
     try {
       const resp = await agent.Activities.create(activity);
-      this.setActivity(activity, resp);
-
-      this.root.commonStore.hubConnection?.invoke(
-        "ActivityAdded",
-        resp.id,
-        resp.notifyId
-      );
       runInAction(() => {
+        this.setActivity(activity, resp);
+
+        this.root.commonStore.hubConnection?.invoke(
+          "ActivityAdded",
+          resp.id,
+          resp.notifyId
+        );
         this.isSubmitting = false;
       });
     } catch (error) {
@@ -81,22 +81,26 @@ export default class AcitivtyStore {
     this.isSubmitting = true;
     try {
       const resp = await agent.Activities.edit(editedActivity, activityId);
-      const activity = this.activities.get(appActivityId);
-      if (activity) {
-        const newActivity = {
-          ...activity,
-          photo: resp.photo ? resp.photo : activity?.photo,
-          content: editedActivity.content,
-        };
-        this.activities.set(appActivityId, newActivity);
-      }
+      runInAction(() => {
+        const activity = this.activities.get(appActivityId);
+        if (activity) {
+          const newActivity = {
+            ...activity,
+            photo: resp.photo ? resp.photo : activity?.photo,
+            content: editedActivity.content,
+          };
+          this.activities.set(appActivityId, newActivity);
+        }
+      });
     } catch (error) {}
   };
 
   deleteActivity = async (activityId: string, appActivityId: string) => {
     try {
       await agent.Activities.delete(activityId);
-      this.activities.delete(appActivityId);
+      runInAction(() => {
+        this.activities.delete(appActivityId);
+      });
     } catch (error) {}
   };
 
@@ -130,7 +134,8 @@ export default class AcitivtyStore {
 
   getActivities = async () => {
     try {
-      await agent.Activities.list().then((data) => {
+      const data = await agent.Activities.list();
+      runInAction(() => {
         data.forEach((activity) => {
           const newActivity = {
             ...activity,
@@ -146,22 +151,25 @@ export default class AcitivtyStore {
 
   getActivity = async (appActivityId: string) => {
     const activity = this.activities.get(appActivityId);
-    if (activity) this.activity = activity;
-    else {
-      const getActivity = await agent.Activities.get(appActivityId);
-      const newActivity = {
-        ...getActivity,
-        comments: new Map<string, CommentMap>(),
-      };
-      this.activity = newActivity;
-    }
+    runInAction(async () => {
+      if (activity) this.activity = activity;
+      else {
+        const getActivity = await agent.Activities.get(appActivityId);
+        runInAction(() => {
+          const newActivity = {
+            ...getActivity,
+            comments: new Map<string, CommentMap>(),
+          };
+          this.activity = newActivity;
+        });
+      }
+    });
   };
 
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {
     try {
       if (!isLiked) {
         this.root.commonStore.hubConnection?.invoke("LikeActivity", activityId);
-        await agent.Activities.like(activityId);
       } else await agent.Activities.unlike(activityId);
     } catch (error) {}
   };

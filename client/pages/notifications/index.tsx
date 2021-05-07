@@ -32,6 +32,7 @@ const Notifications = () => {
       <div>
         {Array.from(notifications.values()).map((item) => (
           <Feed
+            key={item.id}
             className={styles.item}
             onClick={() => router.push(`/${item.type}/${item.refId}`)}
           >

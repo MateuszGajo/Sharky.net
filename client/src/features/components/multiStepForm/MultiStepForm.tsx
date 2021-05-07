@@ -11,7 +11,7 @@ import { registerValidationSchema as validationSchema } from "~utils/utils";
 import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 
 const SaveValues: React.FC<{ saveValues: boolean }> = ({ saveValues }) => {
-  const { values, errors } = useFormikContext<FormValue>();
+  const { values } = useFormikContext<FormValue>();
   const { password, confirmPassword, ...formValues } = values;
   useEffect(() => {
     window.onbeforeunload = () => {

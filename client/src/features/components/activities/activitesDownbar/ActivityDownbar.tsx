@@ -30,9 +30,7 @@ const CommentWrapper: React.FC<CommentWrapperI> = ({
   }
 
   if (display || item.isHidden === false) {
-    return (
-      <ActivityComment key={item.id} item={item} activityId={appActivityId} />
-    );
+    return <ActivityComment item={item} activityId={appActivityId} />;
   } else if (prevEl?.isHidden != item.isHidden) {
     return (
       <div className={styles.hiddenComments}>
@@ -72,6 +70,7 @@ const CommentsComponent: React.FC<CommentsComponentI> = observer(
           <Comment.Group className={styles.comments}>
             {comments.map((item, index) => (
               <CommentWrapper
+                key={item.id}
                 item={item}
                 index={index}
                 appActivityId={appActivityId}

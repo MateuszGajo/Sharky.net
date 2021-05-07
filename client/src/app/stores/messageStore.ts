@@ -3,7 +3,7 @@ import agent from "../api/agent";
 import { User } from "../models/activity";
 import { Message } from "../models/conversation";
 import { Friend } from "../models/user";
-import { RootStore } from "./RootStore";
+import { RootStore } from "./rootStore";
 
 export default class MessageStore {
   root: RootStore;
@@ -53,24 +53,25 @@ export default class MessageStore {
       if (isMessage == true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
+          runInAction(() => {
+            this.root.commonStore.messagesCount -= 1;
 
-          this.root.commonStore.messagesCount -= 1;
+            const friend = this.root.friendStore.friends.get(friendshipId);
 
-          const friend = this.root.friendStore.friends.get(friendshipId);
-
-          if (friend) {
-            const newFriendObject = {
-              ...friend,
-              conversation: {
-                ...friend.conversation!,
-                messageTo: null,
-              },
-            };
-            this.root.friendStore.friends.set(
-              newFriendObject.id,
-              newFriendObject
-            );
-          }
+            if (friend) {
+              const newFriendObject = {
+                ...friend,
+                conversation: {
+                  ...friend.conversation!,
+                  messageTo: null,
+                },
+              };
+              this.root.friendStore.friends.set(
+                newFriendObject.id,
+                newFriendObject
+              );
+            }
+          });
         } catch (error) {}
       }
     }
@@ -90,7 +91,9 @@ export default class MessageStore {
         body: message,
         author: this.root.commonStore.user,
       };
-      this.messages.set(newMessage.id, newMessage);
+      runInAction(() => {
+        this.messages.set(newMessage.id, newMessage);
+      });
     } catch (error) {
       const { conversationId } = error.response.data.errors;
       if (conversationId) {
@@ -113,8 +116,8 @@ export default class MessageStore {
         this.conversationId!,
         this.messages.size
       );
-      this.setMessage(messages);
       runInAction(() => {
+        this.setMessage(messages);
         this.isLoading = false;
       });
     } catch (error) {
@@ -130,7 +133,9 @@ export default class MessageStore {
         this.conversationId!,
         this.messages.size
       );
-      this.setMessage(messages);
+      runInAction(() => {
+        this.setMessage(messages);
+      });
     } catch (error) {}
   };
 
@@ -150,9 +155,10 @@ export default class MessageStore {
         body: messageContext,
         author: user,
       };
-      this.messagesCount += 1;
-
-      this.messages.set(message.id, message);
+      runInAction(() => {
+        this.messagesCount += 1;
+        this.messages.set(message.id, message);
+      });
     } catch (error) {}
   };
 

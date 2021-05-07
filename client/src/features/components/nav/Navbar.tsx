@@ -10,17 +10,61 @@ import { useCommonStore } from "~root/src/app/providers/RootStoreProvider";
 import { NavbarItem } from "~root/src/app/models/common";
 import { observer } from "mobx-react-lite";
 
+interface Item {
+  item: NavbarItem;
+  notifyCount: number;
+}
+
+const Item: React.FC<Item> = ({ item, notifyCount }) => {
+  const router = useRouter();
+  const { t } = useTranslation("components");
+  const [activeItem, setActiveItem] = useState<string>(
+    router.pathname.substring(1)
+  );
+
+  const handleItemClick = ({ name, linkTo }: redirectProps) => {
+    if (name == "logout") {
+      agent.Account.logout().then(() => router.push("/signin"));
+    } else {
+      setActiveItem(name);
+      router.push(linkTo);
+    }
+  };
+
+  return (
+    <div
+      className={cx(styles.item, {
+        [styles.itemActive]: activeItem == item.name,
+      })}
+      onClick={() =>
+        handleItemClick({
+          name: item.name,
+          linkTo: item.linkTo || "",
+        })
+      }
+    >
+      <div className={styles.iconContainer}>
+        {notifyCount > 0 && (
+          <div className={styles.notify}>
+            <span className={styles.notifyNumber}>{notifyCount}</span>
+          </div>
+        )}
+
+        <Icon name={item.icon as SemanticICONS} className={styles.icon} />
+      </div>
+      <span className={styles.itemText}>
+        {t(`components:navbar.${item.name}`)}
+      </span>
+    </div>
+  );
+};
+
 interface redirectProps {
   name: string;
   linkTo: string;
 }
 
 const Navbar = () => {
-  const router = useRouter();
-  const { t } = useTranslation("components");
-  const [activeItem, setActiveItem] = useState<string>(
-    router.pathname.substring(1)
-  );
   const [isActive, setStatusOfActive] = useState(false);
 
   const {
@@ -34,15 +78,6 @@ const Navbar = () => {
     notifications: notificationCount,
     messages: messagesCount,
     friends: friendRequestCount,
-  };
-
-  const handleItemClick = ({ name, linkTo }: redirectProps) => {
-    if (name == "logout") {
-      agent.Account.logout().then(() => router.push("/signin"));
-    } else {
-      setActiveItem(name);
-      router.push(linkTo);
-    }
   };
 
   const navbar = useRef<HTMLDivElement | null>(null);
@@ -98,36 +133,7 @@ const Navbar = () => {
           {navItems.map((item: NavbarItem) => {
             const notifyCount =
               notifyCounts[item.name as keyof typeof notifyCounts];
-            return (
-              <div
-                className={cx(styles.item, {
-                  [styles.itemActive]: activeItem == item.name,
-                })}
-                key={item.id}
-                onClick={() =>
-                  handleItemClick({
-                    name: item.name,
-                    linkTo: item.linkTo || "",
-                  })
-                }
-              >
-                <div className={styles.iconContainer}>
-                  {notifyCount > 0 && (
-                    <div className={styles.notify}>
-                      <span className={styles.notifyNumber}>{notifyCount}</span>
-                    </div>
-                  )}
-
-                  <Icon
-                    name={item.icon as SemanticICONS}
-                    className={styles.icon}
-                  />
-                </div>
-                <span className={styles.itemText}>
-                  {t(`components:navbar.${item.name}`)}
-                </span>
-              </div>
-            );
+            return <Item key={item.id} item={item} notifyCount={notifyCount} />;
           })}
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import { RootStore } from "./rootStore";
 import agent from "~api/agent";
 
@@ -16,9 +16,11 @@ export default class UserStore {
         this.root.activityStore.activities.values()
       ).filter((item) => item.user.id == id);
 
-      for (let i = 0; i < activities.length; i++) {
-        this.root.activityStore.activities.delete(activities[i].id);
-      }
+      runInAction(() => {
+        for (let i = 0; i < activities.length; i++) {
+          this.root.activityStore.activities.delete(activities[i].id);
+        }
+      });
     } catch (error) {}
   };
 }
