@@ -100,7 +100,7 @@ namespace Persistence
 
                 Conversation conversationTomJohn = new Conversation
                 {
-                    Creator = harry,
+                    Creator = tom,
                     Recipient = john,
                 };
 

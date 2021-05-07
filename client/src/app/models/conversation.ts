@@ -8,6 +8,15 @@ export interface Conversation {
   messagesCount: number;
 }
 
+export interface ConversationItem {
+  id: string;
+  user: User;
+  lastMessage: Message;
+  messageTo: string;
+  FriendId: string | null;
+  MessagesCount: number;
+}
+
 export interface Message {
   id: string;
   createdAt: Date;

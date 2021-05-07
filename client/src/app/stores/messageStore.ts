@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/activity";
-import { Message } from "../models/conversation";
+import { ConversationItem, Message } from "../models/conversation";
 import { Friend } from "../models/user";
 import { RootStore } from "./rootStore";
 
@@ -18,12 +18,24 @@ export default class MessageStore {
   friendshipId: string | undefined = undefined;
   converser: User | null = null;
   messages = new Map<string, Message>();
+  conversations = new Map<string, ConversationItem>();
+  isMoreConversation = true;
+  isWindowMessenger = false;
   isLoading = false;
   messagesCount = 0;
 
   get getMesangesByDate() {
     return Array.from(this.messages.values()).sort((a, b) => {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
+  }
+
+  get getConversationsByDate() {
+    return Array.from(this.conversations.values()).sort((a, b) => {
+      return (
+        new Date(b.lastMessage.createdAt).getTime() -
+        new Date(a.lastMessage.createdAt).getTime()
+      );
     });
   }
 
@@ -39,7 +51,8 @@ export default class MessageStore {
     conversationId: string | undefined,
     friendshipId: string,
     isMessage: boolean,
-    messagesCount: number
+    messagesCount: number,
+    isWindowMessenger: boolean = false
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
     if (this.conversationId != conversationId || conversationId == null) {
@@ -47,7 +60,7 @@ export default class MessageStore {
       this.friendshipId = friendshipId;
       this.converser = user;
       this.messagesCount = messagesCount;
-
+      this.isWindowMessenger = isWindowMessenger;
       this.messages = new Map<string, Message>();
 
       if (isMessage == true) {
@@ -75,6 +88,22 @@ export default class MessageStore {
         } catch (error) {}
       }
     }
+  };
+
+  getConversation = async () => {
+    try {
+      const conversations = await agent.Conversation.get(
+        this.conversations.size
+      );
+      if (conversations.length < 10) {
+        this.isMoreConversation = false;
+      }
+      runInAction(() => {
+        conversations.forEach((conversation) => {
+          this.conversations.set(conversation.id, conversation);
+        });
+      });
+    } catch (error) {}
   };
 
   newConversation = async (message: string) => {
@@ -159,7 +188,9 @@ export default class MessageStore {
         this.messagesCount += 1;
         this.messages.set(message.id, message);
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   messageListener = () => {
@@ -199,18 +230,22 @@ export default class MessageStore {
       this.root.messageStore.messages.set(newMessage.id, newMessage);
     } else {
       const friend = this.root.friendStore.friends.get(friendId);
+      if (friend?.conversation?.messageTo != this.root.commonStore.user.id) {
+        this.root.commonStore.messagesCount += 1;
 
-      this.root.commonStore.messagesCount += 1;
-
-      if (friend) {
-        const newFriendObject: Friend = {
-          ...friend,
-          conversation: {
-            ...friend.conversation!,
-            messageTo: this.root.commonStore.user.id,
-          },
-        };
-        this.root.friendStore.friends.set(newFriendObject.id, newFriendObject);
+        if (friend) {
+          const newFriendObject: Friend = {
+            ...friend,
+            conversation: {
+              ...friend.conversation!,
+              messageTo: this.root.commonStore.user.id,
+            },
+          };
+          this.root.friendStore.friends.set(
+            newFriendObject.id,
+            newFriendObject
+          );
+        }
       }
     }
   };

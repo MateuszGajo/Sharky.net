@@ -20,6 +20,12 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ConversationDto>>> List(int from)
+        {
+            return await _mediator.Send(new List.Query { From = from });
+        }
+
         [HttpPost("create")]
 
         public async Task<ActionResult<Create.Response>> Create(Create.Command command)

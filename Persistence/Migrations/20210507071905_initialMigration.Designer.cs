@@ -9,7 +9,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210506062816_initialMigration")]
+    [Migration("20210507071905_initialMigration")]
     partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -147,7 +147,7 @@ namespace Persistence.Migrations
                     b.Property<Guid?>("FriendId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("LastMessageId")
+                    b.Property<Guid?>("LastMessageId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("MessageTo")
@@ -165,6 +165,8 @@ namespace Persistence.Migrations
 
                     b.HasIndex("FriendId")
                         .IsUnique();
+
+                    b.HasIndex("LastMessageId");
 
                     b.HasIndex("RecipientId");
 
@@ -589,11 +591,17 @@ namespace Persistence.Migrations
                         .WithOne("Conversation")
                         .HasForeignKey("Domain.Conversation", "FriendId");
 
+                    b.HasOne("Domain.Message", "LastMessage")
+                        .WithMany()
+                        .HasForeignKey("LastMessageId");
+
                     b.HasOne("Domain.User", "Recipient")
                         .WithMany()
                         .HasForeignKey("RecipientId");
 
                     b.Navigation("Creator");
+
+                    b.Navigation("LastMessage");
 
                     b.Navigation("Recipient");
                 });

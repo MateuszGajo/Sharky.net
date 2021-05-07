@@ -12,7 +12,7 @@ namespace Application.Users
 
         public FriendRequestFlag FriendRequestFlag { get; set; }
 
-        public ConversationDto Conversation { get; set; }
+        public FriendConversationDto Conversation { get; set; }
 
     }
 }

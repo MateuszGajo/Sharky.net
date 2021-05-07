@@ -12,14 +12,14 @@ interface Props {
 }
 
 const HomeLayout: React.FC<Props> = ({ children, sidebar = false }) => {
-  const { isMessengerOpen } = useMessagesStore();
+  const { isMessengerOpen, isWindowMessenger } = useMessagesStore();
   return (
     <div className={styles.container}>
       <div className={styles.navbar}>
         <Navbar />
       </div>
       <div className={styles.content}>
-        {isMessengerOpen && <Messenger />}
+        {isMessengerOpen && isWindowMessenger && <Messenger isWindow />}
         {children}
       </div>
       {sidebar && (
