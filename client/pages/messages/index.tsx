@@ -1,7 +1,8 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useRef, useState } from "react";
-import { Divider, Feed, Loader } from "semantic-ui-react";
+import { Feed, Loader } from "semantic-ui-react";
 import cx from "classnames";
+import { useMediaQuery } from "react-responsive";
 import Loading from "~common/Loading/Loading";
 import Messenger from "~components/messenger/Messenger";
 import HomeLayout from "~layout/homeLayout/HomeLayout";
@@ -20,12 +21,18 @@ const Messages = () => {
     openMessenger,
     conversations,
     isMoreConversation,
+    isMessengerOpen,
   } = useMessagesStore();
   const { user } = useCommonStore();
 
+  const isTabletOrMobileDevice = useMediaQuery({
+    query: "(max-device-width: 1023px)",
+  });
+
   const [isLoading, setLoading] = useState(true);
-  const conversationListRef = useRef<HTMLDivElement | null>(null);
   const [isNavbarScrolling, setStatusOfNavbarScrolling] = useState(false);
+
+  const conversationListRef = useRef<HTMLDivElement | null>(null);
 
   let timeout: number;
 
@@ -42,7 +49,7 @@ const Messages = () => {
 
   useEffect(() => {
     getConversation().then(() => {
-      if (conversations.size > 0) {
+      if (conversations.size > 0 && !isTabletOrMobileDevice) {
         const conversation = conversations.entries().next().value[1];
         openMessenger(
           conversation.user,
@@ -68,7 +75,6 @@ const Messages = () => {
   const fetchData = () => {
     getConversation();
   };
-
   return (
     <HomeLayout>
       {isLoading ? (
@@ -133,7 +139,11 @@ const Messages = () => {
               </Feed>
             </InfiniteScroll>
           </div>
-          <div className={styles.messenger}>
+          <div
+            className={cx(styles.messenger, {
+              [styles.messengerOpen]: isMessengerOpen,
+            })}
+          >
             <Messenger />
           </div>
         </div>

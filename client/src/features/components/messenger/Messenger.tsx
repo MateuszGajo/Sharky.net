@@ -184,6 +184,12 @@ const Messenger: React.FC<Props> = ({ isWindow = false }) => {
     };
   }, [conversationId]);
 
+  useEffect(() => {
+    return () => {
+      closeMessenger();
+    };
+  }, []);
+
   const controlSelectHandler = (e: any) => {
     e.preventDefault();
   };
@@ -209,6 +215,12 @@ const Messenger: React.FC<Props> = ({ isWindow = false }) => {
       })}
     >
       <div className={styles.header}>
+        <div
+          className={styles.backIconContainer}
+          onClick={() => closeMessenger()}
+        >
+          <Icon name="arrow left" className={styles.backIcon} />
+        </div>
         <div className={styles.user}>
           <div className={styles.photoContainer}>
             <img

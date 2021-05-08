@@ -25,7 +25,7 @@
     }
 
     .container {
-      margin-top: 80px;
+      margin-top: 70px;
       display: flex;
       flex-direction: column;
     }
@@ -35,7 +35,7 @@
       z-index: 20;
     }
     .content {
-      margin-top: 20px;
+      min-height: calc(100vh - 70px);
     }
 
     .sidebar {

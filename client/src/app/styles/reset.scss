@@ -32,8 +32,8 @@ select:focus {
   font-style: italic;
 }
 
-// [contenteditable="true"]:empty:before {
-//   content: attr(placeholder);
-//   pointer-events: none;
-//   display: block; /* For Firefox */
-// }
+@media (max-width: 1023px) {
+  body {
+    height: calc(100vh - 70px);
+  }
+}
