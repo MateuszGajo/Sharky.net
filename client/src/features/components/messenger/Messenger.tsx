@@ -55,7 +55,7 @@ interface ContentI {
   contentContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-const Content: React.FC<ContentI> = ({ contentContainerRef }) => {
+const Content: React.FC<ContentI> = observer(({ contentContainerRef }) => {
   const {
     converser,
     messages,
@@ -137,9 +137,13 @@ const Content: React.FC<ContentI> = ({ contentContainerRef }) => {
       </div>
     </InfiniteScroll>
   );
-};
+});
 
-const Messenger = () => {
+interface Props {
+  isWindow?: boolean;
+}
+
+const Messenger: React.FC<Props> = ({ isWindow = false }) => {
   const {
     closeMessenger,
     converser,
@@ -180,8 +184,19 @@ const Messenger = () => {
     };
   }, [conversationId]);
 
+  useEffect(() => {
+    return () => {
+      closeMessenger();
+    };
+  }, []);
+
+  const controlSelectHandler = (e: any) => {
+    e.preventDefault();
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    textRef.current?.addEventListener("mscontrolselect", controlSelectHandler);
     if (conversationId) {
       addMessage(text).then(() => {
         if (textRef.current) textRef.current.innerHTML = "";
@@ -194,8 +209,18 @@ const Messenger = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div
+      className={cx(styles.container, {
+        [styles.windowContainer]: isWindow,
+      })}
+    >
       <div className={styles.header}>
+        <div
+          className={styles.backIconContainer}
+          onClick={() => closeMessenger()}
+        >
+          <Icon name="arrow left" className={styles.backIcon} />
+        </div>
         <div className={styles.user}>
           <div className={styles.photoContainer}>
             <img
@@ -213,7 +238,12 @@ const Messenger = () => {
         </div>
         <div className={styles.icons}>
           <div className={styles.icon} onClick={() => closeMessenger()}>
-            <Icon name="close" className={styles.closeIcon} />
+            <Icon
+              name="close"
+              className={cx(styles.closeIcon, {
+                [styles.closeIconVisble]: isWindow,
+              })}
+            />
           </div>
         </div>
       </div>

@@ -37,7 +37,8 @@ const Sidebar = () => {
               item.conversation?.id,
               item.id,
               item.conversation?.messageTo === user.id,
-              item.conversation?.messagesCount!
+              item.conversation?.messagesCount!,
+              true
             )
           }
         >

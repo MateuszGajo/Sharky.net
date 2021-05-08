@@ -12,7 +12,7 @@ import {
 } from "~root/src/app/models/authentication";
 import axios, { AxiosResponse } from "axios";
 import { Friend } from "../models/user";
-import { Message } from "../models/conversation";
+import { ConversationItem, Message } from "../models/conversation";
 import {
   Notification as NotificationI,
   NotificationCount,
@@ -136,6 +136,8 @@ const Friends = {
 };
 
 const Conversation = {
+  get: (from: number) =>
+    requests.get<ConversationItem[]>(`/conversation?from=${from}`),
   create: (friendshipId: string, userId: string, message: string) =>
     requests.post<{ id: string; conversationId: string; createdAt: Date }>(
       "/conversation/create",

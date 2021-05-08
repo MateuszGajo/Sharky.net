@@ -39,6 +39,7 @@ namespace API.SignalR
         {
             var resp = await _mediator.Send(command);
 
+
             foreach (var connectionId in _connections.GetConnections(resp.FriendId))
             {
                 await Clients

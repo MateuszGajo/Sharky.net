@@ -1,45 +1,53 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interface;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Conversations
 {
     public class List
     {
-        public class Query : IRequest<Conversation>
+        public class Query : IRequest<List<ConversationDto>>
         {
-            public string RecipientId { get; set; }
+            public int From { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, Conversation>
+        public class Handler : IRequestHandler<Query, List<ConversationDto>>
         {
             private readonly DataBaseContext _context;
             private readonly IUserAccessor _userAccessor;
-            public Handler(DataBaseContext context, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+            public Handler(DataBaseContext context, IUserAccessor userAccessor, IMapper mapper)
             {
+                _mapper = mapper;
                 _userAccessor = userAccessor;
                 _context = context;
             }
 
-            public async Task<Conversation> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<ConversationDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
                 User user = await _context.Users.FindAsync(userId);
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                User recipient = await _context.Users.FindAsync(request.RecipientId);
-                if (recipient == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { User = "User doesn't exist" });
+                List<ConversationDto> conversation = await _context
+                .Conversations
+                .Where(x => (x.Creator.Id == userId || x.Recipient.Id == userId) && x.LastMessage != null)
+                .Skip(request.From)
+                .Take(10)
+                .ProjectTo<ConversationDto>(_mapper.ConfigurationProvider, new { userId = userId })
+                .ToListAsync();
 
-                Conversation conversation = _context.Conversations.Where(x =>
-                (x.Creator.Id == userId && x.Recipient.Id == request.RecipientId) || (x.Creator.Id == request.RecipientId && x.Recipient.Id == userId)).FirstOrDefault();
                 return conversation;
 
             }

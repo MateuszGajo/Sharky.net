@@ -4,7 +4,7 @@ using Domain;
 
 namespace Application.Users
 {
-    public class ConversationDto
+    public class FriendConversationDto
     {
         public Guid Id { get; set; }
         public UserDto Creator { get; set; }

@@ -70,11 +70,16 @@ namespace Application.Conversations
                 };
 
                 conversation.Messages.Add(message);
+                conversation.LastMessage = message;
 
                 User messageTo = conversation.Recipient.Id == user.Id ? conversation.Creator : conversation.Recipient;
-                conversation.MessageTo = messageTo.Id;
+                if (conversation.MessageTo != messageTo.Id)
+                {
+                    conversation.MessageTo = messageTo.Id;
+                    messageTo.MessagesCount += 1;
+                }
                 conversation.MessagesCount += 1;
-                messageTo.MessagesCount += 1;
+
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 Response response = new Response

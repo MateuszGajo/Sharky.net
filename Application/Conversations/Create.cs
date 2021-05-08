@@ -73,7 +73,7 @@ namespace Application.Conversations
                     Id = Guid.NewGuid(),
                     Creator = user,
                     Recipient = recipient,
-                    LastMessageId = messageId,
+                    // LastMessageId = messageId,
                     MessageTo = recipient.Id,
                     FriendId = friendship.Id,
                     MessagesCount = 1

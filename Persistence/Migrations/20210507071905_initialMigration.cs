@@ -266,41 +266,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Conversations",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatorId = table.Column<string>(type: "TEXT", nullable: true),
-                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
-                    MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastMessageId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    MessageTo = table.Column<string>(type: "TEXT", nullable: true),
-                    FriendId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Conversations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Conversations_Friends_FriendId",
-                        column: x => x.FriendId,
-                        principalTable: "Friends",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Conversations_Users_CreatorId",
-                        column: x => x.CreatorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Conversations_Users_RecipientId",
-                        column: x => x.RecipientId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Reason",
                 columns: table => new
                 {
@@ -373,33 +338,6 @@ namespace Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Body = table.Column<string>(type: "TEXT", nullable: true),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
-                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Messages_Conversations_ConversationId",
-                        column: x => x.ConversationId,
-                        principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Messages_Users_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "HiddenReplies",
                 columns: table => new
                 {
@@ -463,6 +401,68 @@ namespace Persistence.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Messages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Body = table.Column<string>(type: "TEXT", nullable: true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Messages_Users_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Conversations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<string>(type: "TEXT", nullable: true),
+                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastMessageId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MessageTo = table.Column<string>(type: "TEXT", nullable: true),
+                    FriendId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Conversations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Friends_FriendId",
+                        column: x => x.FriendId,
+                        principalTable: "Friends",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Messages_LastMessageId",
+                        column: x => x.LastMessageId,
+                        principalTable: "Messages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Users_CreatorId",
+                        column: x => x.CreatorId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Conversations_Users_RecipientId",
+                        column: x => x.RecipientId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Activities_PhotoId",
                 table: "Activities",
@@ -513,6 +513,11 @@ namespace Persistence.Migrations
                 table: "Conversations",
                 column: "FriendId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Conversations_LastMessageId",
+                table: "Conversations",
+                column: "LastMessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Conversations_RecipientId",
@@ -618,10 +623,46 @@ namespace Persistence.Migrations
                 name: "IX_Reports_UserId",
                 table: "Reports",
                 column: "UserId");
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_Messages_Conversations_ConversationId",
+                table: "Messages",
+                column: "ConversationId",
+                principalTable: "Conversations",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Conversations_Users_CreatorId",
+                table: "Conversations");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Conversations_Users_RecipientId",
+                table: "Conversations");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Friends_Users_RequestedById",
+                table: "Friends");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Friends_Users_RequestedToId",
+                table: "Friends");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Messages_Users_AuthorId",
+                table: "Messages");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Conversations_Friends_FriendId",
+                table: "Conversations");
+
+            migrationBuilder.DropForeignKey(
+                name: "FK_Conversations_Messages_LastMessageId",
+                table: "Conversations");
+
             migrationBuilder.DropTable(
                 name: "AppActivity");
 
@@ -641,9 +682,6 @@ namespace Persistence.Migrations
                 name: "Likes");
 
             migrationBuilder.DropTable(
-                name: "Messages");
-
-            migrationBuilder.DropTable(
                 name: "Notifications");
 
             migrationBuilder.DropTable(
@@ -653,16 +691,10 @@ namespace Persistence.Migrations
                 name: "Replies");
 
             migrationBuilder.DropTable(
-                name: "Conversations");
-
-            migrationBuilder.DropTable(
                 name: "Reports");
 
             migrationBuilder.DropTable(
                 name: "Comments");
-
-            migrationBuilder.DropTable(
-                name: "Friends");
 
             migrationBuilder.DropTable(
                 name: "Activities");
@@ -672,6 +704,15 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Friends");
+
+            migrationBuilder.DropTable(
+                name: "Messages");
+
+            migrationBuilder.DropTable(
+                name: "Conversations");
         }
     }
 }
