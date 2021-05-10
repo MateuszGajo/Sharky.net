@@ -4,8 +4,8 @@ using System.Linq;
 using Application.Activities;
 using Application.Comments;
 using Application.Conversations;
+using Application.Friends;
 using Application.Replies;
-using Application.Users;
 using Domain;
 
 namespace Application.Core

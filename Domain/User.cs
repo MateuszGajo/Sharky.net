@@ -11,6 +11,7 @@ namespace Domain
         public string GoogleId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public bool IsActive { get; set; } = false;
 
         public int MessagesCount { get; set; } = 0;
         public int FriendRequestCount { get; set; } = 0;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -6,19 +7,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
 using Application.Interface;
+using Application.Users;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Persistence;
 
-namespace Application.Users
+namespace Application.Friends
 {
-    public class Friends
+    public class List
     {
         public class Query : IRequest<List<FriendDto>>
         {
             public string Id { get; set; }
+            public bool OnlineFriends { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, List<FriendDto>>
@@ -40,7 +43,20 @@ namespace Application.Users
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                var friends = _context.Friends.Where(x => x.RequestedBy.Id == userId || x.RequestedTo.Id == userId);
+                IQueryable<Friend> friends = null;
+
+                if (request.OnlineFriends)
+                {
+                    friends = _context
+                    .Friends
+                    .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.IsActive == true || x.RequestedTo.Id == userId && x.RequestedBy.IsActive == true) && x.FriendRequestFlag == FriendRequestFlag.Approved);
+                }
+                else
+                {
+                    friends = _context
+                .Friends
+                .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved);
+                }
 
                 return friends.ProjectTo<FriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();
             }

@@ -468,6 +468,9 @@ namespace Persistence.Migrations
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 

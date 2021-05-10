@@ -120,8 +120,28 @@ namespace API.SignalR
         public override async Task OnConnectedAsync()
         {
             string userId = _userAccessor.GetCurrentId();
+            var user = await _context.Users.FindAsync(userId);
+
+            user.IsActive = true;
+            await _context.SaveChangesAsync();
+
             _connections.Add(userId, Context.ConnectionId);
             await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception ex)
+        {
+            string userId = _userAccessor.GetCurrentId();
+            var user = await _context.Users.FindAsync(userId);
+
+            _connections.Remove(userId, Context.ConnectionId);
+            var connections = _connections.GetConnections(userId);
+            if (connections.Count() == 0)
+            {
+                user.IsActive = false;
+                await _context.SaveChangesAsync();
+            }
+            await base.OnDisconnectedAsync(ex);
         }
     }
 }

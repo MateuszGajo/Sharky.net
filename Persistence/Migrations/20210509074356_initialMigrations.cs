@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class initialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,6 +29,7 @@ namespace Persistence.Migrations
                     GoogleId = table.Column<string>(type: "TEXT", nullable: true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
                     FriendRequestCount = table.Column<int>(type: "INTEGER", nullable: false),
                     NotificationsCount = table.Column<int>(type: "INTEGER", nullable: false),

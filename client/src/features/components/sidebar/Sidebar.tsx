@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
-import React, { useEffect } from "react";
-import { Container, Feed, Icon } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { Container, Feed, Icon, Loader, Segment } from "semantic-ui-react";
 import { useRouter } from "next/router";
 import {
   useCommonStore,
@@ -14,11 +14,13 @@ const Sidebar = () => {
   const { user } = useCommonStore();
   const router = useRouter();
 
-  const { getFriends, friends } = useFriendStore();
+  const { getFriends, onlineFriends } = useFriendStore();
   const { createHubConnection, stopHubConnection } = useCommonStore();
 
+  const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
-    getFriends();
+    getFriends().then(() => setLoading(false));
     createHubConnection(router.pathname);
     return () => {
       stopHubConnection();
@@ -27,7 +29,7 @@ const Sidebar = () => {
 
   return (
     <Container className={styles.container}>
-      {Array.from(friends.values()).map((item) => (
+      {Array.from(onlineFriends.values()).map((item) => (
         <Feed
           key={item.id}
           className={styles.element}
@@ -65,6 +67,11 @@ const Sidebar = () => {
           </Feed.Event>
         </Feed>
       ))}
+      {isLoading ? (
+        <Segment basic loading className={styles.loader} />
+      ) : (
+        onlineFriends.size == 0 && <p>There are no active friends</p>
+      )}
     </Container>
   );
 };

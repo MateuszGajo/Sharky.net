@@ -10,14 +10,14 @@ export default class FriendStore {
     makeAutoObservable(this);
   }
 
-  friends = new Map<string, Friend>();
+  onlineFriends = new Map<string, Friend>();
 
   getFriends = async () => {
     try {
-      const friends = await agent.Friends.get();
+      const friends = await agent.Friends.get({ online: true });
       runInAction(() => {
         friends.forEach((friend) => {
-          this.friends.set(friend.id, friend);
+          this.onlineFriends.set(friend.id, friend);
         });
       });
     } catch (error) {}

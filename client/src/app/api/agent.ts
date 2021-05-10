@@ -131,8 +131,16 @@ const User = {
   readNotification: () => requests.put<void>("/user/notification/read", {}),
 };
 
+interface getFriendI {
+  id?: string;
+  online?: boolean;
+}
+
 const Friends = {
-  get: () => requests.get<Friend[]>("/user/friends"),
+  get: ({ id, online }: getFriendI) =>
+    requests.get<Friend[]>(
+      `/friends${id ? `?userId=${id}` : ""}${online ? "?online=true" : ""}`
+    ),
 };
 
 const Conversation = {
