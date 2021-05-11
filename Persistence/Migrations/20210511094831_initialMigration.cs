@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class initialMigrations : Migration
+    public partial class initialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,6 +29,7 @@ namespace Persistence.Migrations
                     GoogleId = table.Column<string>(type: "TEXT", nullable: true),
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    FullName = table.Column<string>(type: "TEXT", nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
                     FriendRequestCount = table.Column<int>(type: "INTEGER", nullable: false),
@@ -431,9 +432,9 @@ namespace Persistence.Migrations
                     CreatorId = table.Column<string>(type: "TEXT", nullable: true),
                     RecipientId = table.Column<string>(type: "TEXT", nullable: true),
                     MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    FriendId = table.Column<Guid>(type: "TEXT", nullable: true),
                     LastMessageId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    MessageTo = table.Column<string>(type: "TEXT", nullable: true),
-                    FriendId = table.Column<Guid>(type: "TEXT", nullable: true)
+                    MessageTo = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -443,7 +444,7 @@ namespace Persistence.Migrations
                         column: x => x.FriendId,
                         principalTable: "Friends",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Conversations_Messages_LastMessageId",
                         column: x => x.LastMessageId,

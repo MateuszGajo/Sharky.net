@@ -30,6 +30,12 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            modelBuilder.Entity<Conversation>()
+            .HasOne(x => x.Friend)
+            .WithOne(x => x.Conversation)
+            .HasForeignKey<Conversation>(x => x.FriendId)
+            .OnDelete(DeleteBehavior.Cascade);
+
             modelBuilder.Entity<Message>()
                 .HasOne(c => c.Conversation)
                 .WithMany(m => m.Messages)

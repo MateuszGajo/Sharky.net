@@ -14,13 +14,13 @@ const Sidebar = () => {
   const { user } = useCommonStore();
   const router = useRouter();
 
-  const { getFriends, onlineFriends } = useFriendStore();
+  const { getOnlineFriends, onlineFriends } = useFriendStore();
   const { createHubConnection, stopHubConnection } = useCommonStore();
 
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    getFriends().then(() => setLoading(false));
+    getOnlineFriends().then(() => setLoading(false));
     createHubConnection(router.pathname);
     return () => {
       stopHubConnection();

@@ -1,37 +1,55 @@
-.container {
-  display: inline-flex;
-  justify-content: space-between;
-  width: 300px;
-  border: 1px solid $secondaryGrey;
-  padding: 0.5em 1em;
-  margin-top: 1em;
-}
+:global(#app) {
+  .container {
+    display: flex;
+    justify-content: center;
+    flex: 50%;
+  }
+  .cardContainer {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 20rem;
+    border: 1px solid $secondaryGrey;
+    padding: 0.4rem 0.8rem;
+    margin-top: 1rem;
+  }
 
-.user {
-  display: flex;
-}
+  .user {
+    display: flex;
+  }
 
-.photoContainer {
-  width: 4em;
-  height: 4em;
-}
+  .photoContainer {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
 
-.photo {
-  display: block;
-  width: 100%;
-  object-fit: cover;
-  border-radius: 0.3em;
-}
+  .photo {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.2rem;
+  }
 
-.username {
-  display: flex;
-  align-items: center;
-  margin-left: 1em;
-}
+  .username {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    font-size: 1rem;
+  }
 
-.dropdown {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.2rem;
+  .dropdownContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+  }
+
+  .dropdown i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .optionItem {
+    display: flex;
+  }
 }

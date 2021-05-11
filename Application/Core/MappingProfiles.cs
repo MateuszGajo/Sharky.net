@@ -17,11 +17,14 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
-            CreateMap<Friend, FriendDto>()
+            CreateMap<Friend, OnlineFriendDto>()
                 .ForMember(d => d.Friend, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
+            CreateMap<Friend, FriendDto>()
+            .ForMember(d => d.User, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
 
             CreateMap<Conversation, ConversationDto>()
             .ForMember(d => d.User, o => o.MapFrom(s => s.Creator.Id != userId ? s.Creator : s.Recipient));
+
             CreateMap<Conversation, FriendConversationDto>();
             CreateMap<Message, MessageDto>();
 

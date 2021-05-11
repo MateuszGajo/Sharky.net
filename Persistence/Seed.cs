@@ -13,11 +13,11 @@ namespace Persistence
             if (!context.Users.Any())
             {
                 var users = new List<User>{
-                    new User {Id = "adebacba-4986-44c4-b4eb-0c66afda9d7b",Email="example@example.com",FirstName="Bob",LastName="Smith", UserName="bobsmith1"},
-                    new User {Id ="80f1dab6-7aa0-4693-98c3-232e6aec16bb",Email="example1@example1.com",FirstName="Tom",LastName="Musk", UserName="tommusk1"},
-                    new User {Id ="06228c34-9c71-4c68-9493-ab13e0a30bd4",Email="example2@example2.com",FirstName="John",LastName="John", UserName="johnjohn1"},
-                    new User {Id ="32257ce4-7c32-48a9-ab16-9e4be1633cdb",Email="example3@example3.com",FirstName="Harry",LastName="Brown", UserName="harrybrown1"},
-                    new User {Id ="a997f083-7dab-45de-b45d-224520a2a29f",Email="example3@example3.com",FirstName="Charlie",LastName="William", UserName="charliewilliam1"},
+                    new User {Id = "adebacba-4986-44c4-b4eb-0c66afda9d7b",Email="example@example.com",FirstName="Bob",LastName="Smith", UserName="bobsmith1", FullName="bobsmith"},
+                    new User {Id ="80f1dab6-7aa0-4693-98c3-232e6aec16bb",Email="example1@example1.com",FirstName="Tom",LastName="Musk", UserName="tommusk1", FullName="tommusk"},
+                    new User {Id ="06228c34-9c71-4c68-9493-ab13e0a30bd4",Email="example2@example2.com",FirstName="John",LastName="John", UserName="johnjohn1", FullName="johnjohn"},
+                    new User {Id ="32257ce4-7c32-48a9-ab16-9e4be1633cdb",Email="example3@example3.com",FirstName="Harry",LastName="Brown", UserName="harrybrown1",FullName="harrybrown"},
+                    new User {Id ="a997f083-7dab-45de-b45d-224520a2a29f",Email="example3@example3.com",FirstName="Charlie",LastName="William", UserName="charliewilliam1",FullName="charliewilliam"},
                 };
 
                 foreach (var user in users)
@@ -28,11 +28,35 @@ namespace Persistence
 
             if (!context.Friends.Any())
             {
+
+                List<Friend> friends = new List<Friend>();
                 var bob = await context.Users.FindAsync("adebacba-4986-44c4-b4eb-0c66afda9d7b");
                 var tom = await context.Users.FindAsync("80f1dab6-7aa0-4693-98c3-232e6aec16bb");
                 var john = await context.Users.FindAsync("06228c34-9c71-4c68-9493-ab13e0a30bd4");
                 var harry = await context.Users.FindAsync("32257ce4-7c32-48a9-ab16-9e4be1633cdb");
                 var charlie = await context.Users.FindAsync("a997f083-7dab-45de-b45d-224520a2a29f");
+
+                for (int i = 0; i < 100; i++)
+                {
+                    User newUser = new User { Email = $"test{i}@test{i}.com", FirstName = $"test{i}", LastName = $"test{i}", UserName = $"test{i}test{i}${i}", FullName = $"test{i}test{i}" };
+                    Conversation testConversation = new Conversation
+                    {
+                        Creator = bob,
+                        Recipient = newUser
+                    };
+
+                    Friend testFriendship = new Friend
+                    {
+                        RequestedBy = bob,
+                        RequestedTo = newUser,
+                        RequestTime = DateTime.Now,
+                        FriendRequestFlag = FriendRequestFlag.Approved,
+                        Conversation = testConversation
+                    };
+
+                    friends.Add(testFriendship);
+
+                }
 
                 Conversation conversationBobTom = new Conversation
                 {
@@ -48,6 +72,8 @@ namespace Persistence
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationBobTom
                 };
+
+                friends.Add(friendshipBobTom);
 
                 Conversation conversationJohnBob = new Conversation
                 {
@@ -66,6 +92,7 @@ namespace Persistence
                     Conversation = conversationJohnBob
 
                 };
+                friends.Add(friendshipBobJohn);
 
                 Conversation conversationHarryJohn = new Conversation
                 {
@@ -81,12 +108,15 @@ namespace Persistence
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationHarryJohn
                 };
+                friends.Add(friendshipJohnHarry);
 
                 Conversation conversationTomHarry = new Conversation
                 {
                     Creator = harry,
                     Recipient = john,
                 };
+
+
 
 
                 Friend friendshipTomHarry = new Friend
@@ -97,6 +127,7 @@ namespace Persistence
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationTomHarry
                 };
+                friends.Add(friendshipTomHarry);
 
                 Conversation conversationTomJohn = new Conversation
                 {
@@ -115,6 +146,8 @@ namespace Persistence
                     Conversation = conversationTomJohn
                 };
 
+                friends.Add(friendshipTomJohn);
+
                 Conversation conversationTomCharlie = new Conversation
                 {
                     Creator = harry,
@@ -130,18 +163,12 @@ namespace Persistence
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationTomCharlie
                 };
+                friends.Add(friendshipTomCharlie);
 
 
-                List<Friend> friendss = new List<Friend>(){
-                        friendshipBobJohn,
-                        friendshipBobTom,
-                        friendshipJohnHarry,
-                        friendshipTomCharlie,
-                        friendshipTomHarry,
-                        friendshipTomJohn
-                };
 
-                context.AddRange(friendss);
+
+                context.AddRange(friends);
                 await context.SaveChangesAsync();
             }
 

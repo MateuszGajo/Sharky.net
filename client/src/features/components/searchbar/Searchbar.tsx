@@ -48,6 +48,8 @@ const Searchbar: React.FC<Props> = ({
         <div className={styles.field}>
           <input
             className={styles.input}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
             placeholder="find a friend"
             onKeyDown={handleKeyDown}
           />

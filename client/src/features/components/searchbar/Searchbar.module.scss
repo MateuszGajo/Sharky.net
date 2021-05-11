@@ -1,6 +1,6 @@
 :global(#app) {
   .container {
-    margin: 10px;
+    margin: 0.5rem 0.8rem;
     display: flex;
     width: inherit;
   }
@@ -18,12 +18,12 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    right: 20px;
+    right: 0.8rem;
     padding: 0;
     background-color: transparent;
     margin: 0;
     color: $primaryGrey;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     cursor: pointer;
   }
 
@@ -32,16 +32,16 @@
     top: 50%;
     left: 50%;
     transform: translateY(-50%) translateX(-50%);
-    width: calc(100% + 80px);
+    width: calc(100% + 2rem);
     z-index: 4;
   }
 
   .input {
-    border-radius: 40px;
-    height: 80px;
+    border-radius: 2rem;
+    height: 3rem;
     width: 100%;
-    border: 1px solid black;
+    border: 0.08rem solid black;
     padding: 0 20px;
-    font-size: 1.5rem;
+    font-size: 1rem;
   }
 }

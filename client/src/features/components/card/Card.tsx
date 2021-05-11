@@ -5,32 +5,41 @@ import styles from "./Card.module.scss";
 interface Props {
   photo?: string;
   name: string;
-  onDeleteClick: () => void;
+  onDeleteClick: (id: string) => void;
+  referenceId: string;
 }
 
-const Card: React.FC<Props> = ({ photo, name, onDeleteClick }) => {
+const Card: React.FC<Props> = ({ photo, name, onDeleteClick, referenceId }) => {
   return (
     <div className={styles.container}>
-      <div className={styles.user}>
-        <div className={styles.photoContainer}>
-          <img
-            src={photo || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
-            alt=""
-            className={styles.photo}
-          />
-        </div>
-        <div className={styles.username}>{name}</div>
-      </div>
-      <div className={styles.dropdown}>
-        <Dropdown icon="ellipsis horizontal" direction="left" trigger={<></>}>
-          <Dropdown.Menu>
-            <Dropdown.Item
-              icon="remove user"
-              text="Unfriend"
-              onClick={() => onDeleteClick()}
+      <div className={styles.cardContainer}>
+        <div className={styles.user}>
+          <div className={styles.photoContainer}>
+            <img
+              src={photo || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
+              alt=""
+              className={styles.photo}
             />
-          </Dropdown.Menu>
-        </Dropdown>
+          </div>
+          <div className={styles.username}>{name}</div>
+        </div>
+        <div className={styles.dropdownContainer}>
+          <Dropdown
+            icon="ellipsis horizontal"
+            direction="left"
+            trigger={<></>}
+            className={styles.dropdown}
+          >
+            <Dropdown.Menu>
+              <Dropdown.Item
+                className={styles.optionItem}
+                icon="remove user"
+                text="Unfriend"
+                onClick={() => onDeleteClick(referenceId)}
+              />
+            </Dropdown.Menu>
+          </Dropdown>
+        </div>
       </div>
     </div>
   );

@@ -61,7 +61,9 @@ namespace Application.Users
                 {
                     throw new RestException(HttpStatusCode.Conflict, new { email = "Email is already in use" });
                 }
-                var userName = $"{request.FirstName + request.LastName}".Replace(" ", string.Empty);
+                string fullName = (request.FirstName + request.LastName);
+                string fullNameLowerCase = fullName.ToLower();
+                var userName = fullNameLowerCase.Replace(" ", string.Empty);
                 int userCount = await _context.Users.CountAsync(x => x.UserName.StartsWith(userName)) + 1;
 
                 var user = new User
@@ -69,7 +71,8 @@ namespace Application.Users
                     Email = request.Email,
                     FirstName = request.FirstName,
                     LastName = request.LastName,
-                    UserName = userName + userCount
+                    UserName = userName + userCount,
+                    FullName = fullName
                 };
 
                 var result = await _userManager.CreateAsync(user, request.Password);

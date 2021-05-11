@@ -11,7 +11,7 @@ import {
   SignupFormValues,
 } from "~root/src/app/models/authentication";
 import axios, { AxiosResponse } from "axios";
-import { Friend } from "../models/user";
+import { Friend, GetFriends, OnlineFriend } from "../models/user";
 import { ConversationItem, Message } from "../models/conversation";
 import {
   Notification as NotificationI,
@@ -131,16 +131,19 @@ const User = {
   readNotification: () => requests.put<void>("/user/notification/read", {}),
 };
 
-interface getFriendI {
-  id?: string;
-  online?: boolean;
+interface GetFriendsExtend extends GetFriends {
+  from: number;
 }
 
 const Friends = {
-  get: ({ id, online }: getFriendI) =>
+  get: ({ id, filterText, from }: GetFriendsExtend) =>
     requests.get<Friend[]>(
-      `/friends${id ? `?userId=${id}` : ""}${online ? "?online=true" : ""}`
+      `/friends?from=${from}${filterText ? `?filter=${filterText}` : ""}
+      ${id ? `?userId=${id}` : ""}`
     ),
+  getOnline: () => requests.get<OnlineFriend[]>("/friends/online"),
+  unfriend: (friendshipId: string) =>
+    requests.delete<void>(`/friends/${friendshipId}`),
 };
 
 const Conversation = {

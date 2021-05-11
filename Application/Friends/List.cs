@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -21,7 +22,9 @@ namespace Application.Friends
         public class Query : IRequest<List<FriendDto>>
         {
             public string Id { get; set; }
-            public bool OnlineFriends { get; set; }
+            public int From { get; set; }
+#nullable enable
+            public string? FilterText { get; set; }
         }
 
         public class Handler : IRequestHandler<Query, List<FriendDto>>
@@ -44,18 +47,25 @@ namespace Application.Friends
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
                 IQueryable<Friend> friends = null;
-
-                if (request.OnlineFriends)
+                if (request.FilterText != null)
                 {
                     friends = _context
-                    .Friends
-                    .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.IsActive == true || x.RequestedTo.Id == userId && x.RequestedBy.IsActive == true) && x.FriendRequestFlag == FriendRequestFlag.Approved);
+                            .Friends
+                            .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.FullName.Contains(request.FilterText) ||
+                            x.RequestedTo.Id == userId && x.RequestedBy.FullName.Contains(request.FilterText)) &&
+                            x.FriendRequestFlag == FriendRequestFlag.Approved)
+                            .OrderBy(x => x.RequestTime)
+                            .Skip(request.From)
+                            .Take(30);
                 }
                 else
                 {
                     friends = _context
-                .Friends
-                .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved);
+                        .Friends
+                        .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved)
+                        .OrderBy(x => x.RequestTime)
+                        .Skip(request.From)
+                        .Take(30);
                 }
 
                 return friends.ProjectTo<FriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();

@@ -9,8 +9,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataBaseContext))]
-    [Migration("20210509074356_initialMigrations")]
-    partial class initialMigrations
+    [Migration("20210511094831_initialMigration")]
+    partial class initialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -467,6 +467,9 @@ namespace Persistence.Migrations
                     b.Property<int>("FriendRequestCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("FullName")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("GoogleId")
                         .HasColumnType("TEXT");
 
@@ -590,9 +593,10 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
-                    b.HasOne("Domain.Friend", null)
+                    b.HasOne("Domain.Friend", "Friend")
                         .WithOne("Conversation")
-                        .HasForeignKey("Domain.Conversation", "FriendId");
+                        .HasForeignKey("Domain.Conversation", "FriendId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Domain.Message", "LastMessage")
                         .WithMany()
@@ -603,6 +607,8 @@ namespace Persistence.Migrations
                         .HasForeignKey("RecipientId");
 
                     b.Navigation("Creator");
+
+                    b.Navigation("Friend");
 
                     b.Navigation("LastMessage");
 

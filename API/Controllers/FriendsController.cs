@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Friends;
@@ -16,10 +17,23 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<FriendDto>>> List(string userId, bool online)
+        [HttpGet("online")]
+        public async Task<ActionResult<List<OnlineFriendDto>>> OnlineList()
         {
-            return await _mediator.Send(new List.Query { Id = userId, OnlineFriends = online });
+            return await _mediator.Send(new ListOnline.Query());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<FriendDto>>> List(string userId, string filter, int from)
+        {
+            System.Console.WriteLine("filter");
+            System.Console.WriteLine(filter);
+            return await _mediator.Send(new List.Query { Id = userId, FilterText = filter, From = from });
+        }
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Unit>> Unfriend(Guid id)
+        {
+            return await _mediator.Send(new Unfriend.Command { FriendshipId = id });
         }
     }
 }
