@@ -26,8 +26,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<FriendDto>>> List(string userId, string filter, int from)
         {
-            System.Console.WriteLine("filter");
-            System.Console.WriteLine(filter);
             return await _mediator.Send(new List.Query { Id = userId, FilterText = filter, From = from });
         }
         [HttpDelete("{id}")]

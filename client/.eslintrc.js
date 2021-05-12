@@ -71,7 +71,7 @@ module.exports = {
     "react/jsx-curly-newline": "off",
     "no-param-reassign": ["error", { props: false }],
     indent: "off",
-    "no-use-before-define": "off",,
+    "no-use-before-define": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -93,8 +93,8 @@ module.exports = {
       "babel-module": {},
       node: {
         extensions: [".ts", ".tsx", ".native.js"],
-        paths: ["src"]
-      }
+        paths: ["src"],
+      },
     },
     node: {
       extensions: [".js", ".jsx", ".ts", ".tsx"],

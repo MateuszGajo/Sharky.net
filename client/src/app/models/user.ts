@@ -19,3 +19,7 @@ export interface GetFriends {
   id?: string;
   filterText?: string;
 }
+
+export interface UserList extends User {
+  isFriend: boolean;
+}

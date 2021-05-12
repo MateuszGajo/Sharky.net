@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Friend, GetFriends, OnlineFriend } from "../models/user";
+import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
 import { RootStore } from "./rootStore";
 
 export default class FriendStore {
@@ -12,7 +12,10 @@ export default class FriendStore {
 
   onlineFriends = new Map<string, OnlineFriend>();
   friends = new Map<string, Friend>();
-  isMore = true;
+  userList = new Map<string, UserList>();
+  isMoreFriends = true;
+  isMoreUsers = true;
+  lastFilter = "";
 
   getOnlineFriends = async () => {
     try {
@@ -26,12 +29,28 @@ export default class FriendStore {
   };
 
   getFriends = async ({ id, filterText }: GetFriends) => {
+    if (this.lastFilter !== filterText && filterText !== undefined) {
+      this.isMoreFriends = true;
+      this.lastFilter = filterText;
+      this.friends = new Map<string, Friend>();
+    }
+    this.fetchFriends(id, filterText);
+  };
+
+  fetchFriends = async (
+    id: string | undefined,
+    filterText: string | undefined
+  ) => {
     try {
-      const friends = await agent.Friends.get({ id, from: this.friends.size });
+      const friends = await agent.Friends.get({
+        id,
+        from: this.friends.size,
+        filterText: filterText,
+      });
 
       runInAction(() => {
         if (friends.length < 30) {
-          this.isMore = false;
+          this.isMoreFriends = false;
         }
         friends.forEach((friend) => {
           this.friends.set(friend.id, friend);
@@ -40,18 +59,27 @@ export default class FriendStore {
     } catch (error) {}
   };
 
-  filterFriends = async (text: string) => {
-    const filterText = text.trim().toLowerCase();
-    this.friends.forEach((value, key) => {
-      const { firstName, lastName } = value.user;
-      const username = firstName.toLowerCase() + lastName.toLowerCase();
-      if (!username.startsWith(filterText)) {
-        this.friends.delete(key);
-      }
-    });
-    if (this.friends.size < 20) {
-      console.log("pobieramy");
+  getUser = async (filterText: string) => {
+    if (this.lastFilter !== filterText && filterText !== undefined) {
+      this.isMoreFriends = true;
+      this.lastFilter = filterText;
+      this.userList = new Map<string, UserList>();
     }
+    this.fetchUser(filterText);
+  };
+
+  fetchUser = async (filterText: string | undefined) => {
+    try {
+      const users = await agent.User.get(this.userList.size, filterText);
+      runInAction(() => {
+        users.forEach((user) => {
+          if (users.length < 30) {
+            this.isMoreUsers = false;
+          }
+          this.userList.set(user.id, user);
+        });
+      });
+    } catch (error) {}
   };
 
   unfriend = async (friendshipId: string) => {

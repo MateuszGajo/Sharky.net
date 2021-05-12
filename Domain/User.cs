@@ -17,6 +17,9 @@ namespace Domain
         public int MessagesCount { get; set; } = 0;
         public int FriendRequestCount { get; set; } = 0;
         public int NotificationsCount { get; set; } = 0;
+
+        public ICollection<UserFriendship> Friends { get; set; } = new List<UserFriendship>();
+        public ICollection<UserFriendship> FriendsOf { get; set; } = new List<UserFriendship>();
         public ICollection<Activity> Activities { get; set; }
         public ICollection<HiddenActivity> HiddenActivities { get; set; } = new List<HiddenActivity>();
         public ICollection<HiddenComment> HiddenComments { get; set; } = new List<HiddenComment>();

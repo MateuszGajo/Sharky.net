@@ -142,9 +142,6 @@ namespace Persistence.Migrations
                     b.Property<string>("CreatorId")
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("FriendId")
-                        .HasColumnType("TEXT");
-
                     b.Property<Guid?>("LastMessageId")
                         .HasColumnType("TEXT");
 
@@ -161,44 +158,11 @@ namespace Persistence.Migrations
 
                     b.HasIndex("CreatorId");
 
-                    b.HasIndex("FriendId")
-                        .IsUnique();
-
                     b.HasIndex("LastMessageId");
 
                     b.HasIndex("RecipientId");
 
                     b.ToTable("Conversations");
-                });
-
-            modelBuilder.Entity("Domain.Friend", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("FriendRequestFlag")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<Guid?>("MessageToUser")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("RequestTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RequestedById")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("RequestedToId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RequestedById");
-
-                    b.HasIndex("RequestedToId");
-
-                    b.ToTable("Friends");
                 });
 
             modelBuilder.Entity("Domain.HiddenActivity", b =>
@@ -521,6 +485,39 @@ namespace Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Domain.UserFriendship", b =>
+                {
+                    b.Property<string>("RequestedById")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RequestedToId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("FriendRequestFlag")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("MessageToUser")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("RequestTime")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("RequestedById", "RequestedToId", "ConversationId");
+
+                    b.HasIndex("ConversationId")
+                        .IsUnique();
+
+                    b.HasIndex("RequestedToId");
+
+                    b.ToTable("UserFriendships");
+                });
+
             modelBuilder.Entity("Domain.Activity", b =>
                 {
                     b.HasOne("Domain.Photo", "Photo")
@@ -591,11 +588,6 @@ namespace Persistence.Migrations
                         .WithMany()
                         .HasForeignKey("CreatorId");
 
-                    b.HasOne("Domain.Friend", "Friend")
-                        .WithOne("Conversation")
-                        .HasForeignKey("Domain.Conversation", "FriendId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("Domain.Message", "LastMessage")
                         .WithMany()
                         .HasForeignKey("LastMessageId");
@@ -606,26 +598,9 @@ namespace Persistence.Migrations
 
                     b.Navigation("Creator");
 
-                    b.Navigation("Friend");
-
                     b.Navigation("LastMessage");
 
                     b.Navigation("Recipient");
-                });
-
-            modelBuilder.Entity("Domain.Friend", b =>
-                {
-                    b.HasOne("Domain.User", "RequestedBy")
-                        .WithMany()
-                        .HasForeignKey("RequestedById");
-
-                    b.HasOne("Domain.User", "RequestedTo")
-                        .WithMany()
-                        .HasForeignKey("RequestedToId");
-
-                    b.Navigation("RequestedBy");
-
-                    b.Navigation("RequestedTo");
                 });
 
             modelBuilder.Entity("Domain.HiddenActivity", b =>
@@ -769,6 +744,33 @@ namespace Persistence.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.UserFriendship", b =>
+                {
+                    b.HasOne("Domain.Conversation", "Conversation")
+                        .WithOne("Friendship")
+                        .HasForeignKey("Domain.UserFriendship", "ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "RequestedBy")
+                        .WithMany("Friends")
+                        .HasForeignKey("RequestedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.User", "RequestedTo")
+                        .WithMany("FriendsOf")
+                        .HasForeignKey("RequestedToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("RequestedBy");
+
+                    b.Navigation("RequestedTo");
+                });
+
             modelBuilder.Entity("Domain.Activity", b =>
                 {
                     b.Navigation("AppActivities");
@@ -787,12 +789,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Conversation", b =>
                 {
-                    b.Navigation("Messages");
-                });
+                    b.Navigation("Friendship");
 
-            modelBuilder.Entity("Domain.Friend", b =>
-                {
-                    b.Navigation("Conversation");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Domain.Reply", b =>
@@ -810,6 +809,10 @@ namespace Persistence.Migrations
                     b.Navigation("Activities");
 
                     b.Navigation("BlockedUsers");
+
+                    b.Navigation("Friends");
+
+                    b.Navigation("FriendsOf");
 
                     b.Navigation("HiddenActivities");
 

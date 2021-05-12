@@ -30,16 +30,16 @@ namespace Application.Friends
             public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
-
-                Friend friendship = await _context
-                .Friends
+                //tutajx2
+                UserFriendship friendship = await _context
+                .UserFriendships
                 .Include(x => x.RequestedBy)
                 .Include(x => x.RequestedTo)
                 .FirstOrDefaultAsync(x => x.Id == request.FriendshipId);
 
                 if (friendship.RequestedBy.Id != userId && friendship.RequestedTo.Id != userId)
                     throw new RestException(HttpStatusCode.Forbidden, new { friendship = "You are not part of this relation" });
-                _context.Friends.Remove(friendship);
+                _context.UserFriendships.Remove(friendship);
 
                 bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;

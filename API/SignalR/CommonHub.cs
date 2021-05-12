@@ -95,7 +95,7 @@ namespace API.SignalR
             if (user == null) return Unit.Value;
 
             List<FriendDto> friends = await _context
-            .Friends
+            .UserFriendships
             .Where(x => x.RequestedBy.Id == userId || x.RequestedTo.Id == userId)
             .Select(x => new FriendDto
             {

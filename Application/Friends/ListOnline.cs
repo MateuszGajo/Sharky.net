@@ -33,7 +33,6 @@ namespace Application.Friends
                 _userAccessor = userAccessor;
                 _context = context;
             }
-
             public async Task<List<OnlineFriendDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
@@ -41,7 +40,7 @@ namespace Application.Friends
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                IQueryable<Friend> friends = _context.Friends
+                IQueryable<UserFriendship> friends = _context.UserFriendships
                     .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.IsActive == true || x.RequestedTo.Id == userId && x.RequestedBy.IsActive == true) && x.FriendRequestFlag == FriendRequestFlag.Approved);
 
                 return friends.ProjectTo<OnlineFriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();

@@ -12,8 +12,7 @@ namespace Domain
         public int MessagesCount { get; set; } = 0;
 
 #nullable enable
-        public Guid? FriendId { get; set; }
-        public Friend? Friend { get; set; }
+        public UserFriendship? Friendship { get; set; }
         public Message? LastMessage { get; set; }
 
         public string? MessageTo { get; set; }

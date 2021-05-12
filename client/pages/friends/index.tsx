@@ -8,29 +8,45 @@ import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Friends = () => {
-  const { friends, getFriends, unfriend, filterFriends, isMore } =
-    useFriendStore();
+  const {
+    friends,
+    getFriends,
+    unfriend,
+    getUser,
+    isMoreFriends,
+    isMoreUsers,
+    userList,
+  } = useFriendStore();
   const [value, setValue] = useState("");
+  const [view, setView] = useState("friends");
 
-  const handleFriendClick = () => {};
-  const handleAddFriendClick = () => {};
+  const handleFriendClick = () => {
+    if (view !== "friends") {
+      setView("friends");
+      isMoreFriends && friends.size === 0 && fetchData("friends");
+    }
+  };
+  const handleAddFriendClick = () => {
+    if (view !== "addFriends") {
+      setView("addFriends");
+      isMoreUsers && userList.size === 0 && fetchData("addFriends");
+    }
+  };
 
-  // const handleDeleteClick = (id: string) => {
-  //   console.log(id);
-  // };
+  const handleInviteClick = () => {};
 
   useEffect(() => {
-    fetchData();
+    fetchData(view);
   }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (value) filterFriends(value);
-    else getFriends({});
+    fetchData(view);
   };
 
-  const fetchData = () => {
-    getFriends({ filterText: value });
+  const fetchData = (view: string) => {
+    if (view === "friends") getFriends({ filterText: value });
+    else getUser(value);
   };
 
   return (
@@ -47,21 +63,37 @@ const Friends = () => {
         />
 
         <InfiniteScroll
-          dataLength={friends.size} //This is important field to render the next data
-          next={fetchData}
-          hasMore={isMore}
+          dataLength={view === "friends" ? friends.size : userList.size}
+          next={() => fetchData(view)}
+          hasMore={view === "friends" ? isMoreFriends : isMoreUsers}
           loader={<h4>Loading...</h4>}
         >
           <div className={styles.cardContainer}>
-            {Array.from(friends.values()).map((friend) => {
-              return (
-                <Card
-                  name={friend.user.firstName + " " + friend.user.lastName}
-                  onDeleteClick={unfriend}
-                  referenceId={friend.id}
-                />
-              );
-            })}
+            {view === "friends" ? (
+              <>
+                {Array.from(friends.values()).map((friend) => {
+                  return (
+                    <Card
+                      name={friend.user.firstName + " " + friend.user.lastName}
+                      onDeleteClick={unfriend}
+                      referenceId={friend.id}
+                    />
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                {Array.from(userList.values()).map((user) => {
+                  return (
+                    <Card
+                      name={user.firstName + " " + user.lastName}
+                      onInviteClick={handleInviteClick}
+                      referenceId={user.id}
+                    />
+                  );
+                })}
+              </>
+            )}
           </div>
         </InfiniteScroll>
       </div>

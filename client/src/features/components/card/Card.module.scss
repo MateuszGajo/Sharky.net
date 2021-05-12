@@ -9,12 +9,13 @@
     justify-content: space-between;
     width: 20rem;
     border: 1px solid $secondaryGrey;
-    padding: 0.4rem 0.8rem;
+    padding: 0.4rem 0.4rem 0.4rem 0.8rem;
     margin-top: 1rem;
   }
 
   .user {
     display: flex;
+    width: 65%;
   }
 
   .photoContainer {
@@ -34,6 +35,16 @@
     align-items: center;
     margin-left: 1rem;
     font-size: 1rem;
+  }
+
+  .usernameText {
+    text-overflow: ellipsis;
+    display: -webkit-inline-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    line-height: normal;
   }
 
   .dropdownContainer {

@@ -6,6 +6,7 @@ using Application.Comments;
 using Application.Conversations;
 using Application.Friends;
 using Application.Replies;
+using Application.Users;
 using Domain;
 
 namespace Application.Core
@@ -17,13 +18,17 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
-            CreateMap<Friend, OnlineFriendDto>()
+            CreateMap<UserFriendship, OnlineFriendDto>()
                 .ForMember(d => d.Friend, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
-            CreateMap<Friend, FriendDto>()
+            CreateMap<UserFriendship, FriendDto>()
             .ForMember(d => d.User, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
 
             CreateMap<Conversation, ConversationDto>()
-            .ForMember(d => d.User, o => o.MapFrom(s => s.Creator.Id != userId ? s.Creator : s.Recipient));
+            .ForMember(d => d.User, o => o.MapFrom(s => s.Creator.Id != userId ? s.Creator : s.Recipient))
+            .ForMember(d => d.FriendshipId, o => o.MapFrom(s => s.Friendship.Id));
+
+            CreateMap<User, ListDto>()
+            .ForMember(d => d.isFriend, o => o.MapFrom(s => s.FriendsOf.Any(x => x.RequestedBy.Id == userId) || s.Friends.Any(x => x.RequestedTo.Id == userId)));
 
             CreateMap<Conversation, FriendConversationDto>();
             CreateMap<Message, MessageDto>();

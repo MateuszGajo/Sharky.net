@@ -22,7 +22,7 @@ namespace Persistence
         public DbSet<Like> Likes { get; set; }
         public DbSet<AppActivity> AppActivity { get; set; }
         public DbSet<Report> Reports { get; set; }
-        public DbSet<Friend> Friends { get; set; }
+        public DbSet<UserFriendship> UserFriendships { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<Notification> Notifications { get; set; }
@@ -30,11 +30,25 @@ namespace Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<Conversation>()
-            .HasOne(x => x.Friend)
-            .WithOne(x => x.Conversation)
-            .HasForeignKey<Conversation>(x => x.FriendId)
-            .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<UserFriendship>(b =>
+            {
+                b.HasKey(x => new { x.RequestedById, x.RequestedToId, x.ConversationId });
+
+                b.HasOne(x => x.RequestedBy)
+                .WithMany(x => x.Friends)
+                .HasForeignKey(x => x.RequestedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                b.HasOne(x => x.RequestedTo)
+                .WithMany(x => x.FriendsOf)
+                .HasForeignKey(x => x.RequestedToId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+                b.HasOne(x => x.Conversation)
+                .WithOne(x => x.Friendship)
+                .HasForeignKey<UserFriendship>(x => x.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
 
             modelBuilder.Entity<Message>()
                 .HasOne(c => c.Conversation)

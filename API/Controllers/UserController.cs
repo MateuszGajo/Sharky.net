@@ -47,6 +47,13 @@ namespace API.Controllers
             _httpClient = new HttpClient();
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ListDto>>> InviteList(int start, string filter)
+        {
+            System.Console.WriteLine(filter);
+            return await _mediator.Send(new List.Query { Start = start, FilterText = filter });
+        }
+
         [HttpPut("{id}/block")]
         public async Task<ActionResult<Unit>> Block(string id)
         {

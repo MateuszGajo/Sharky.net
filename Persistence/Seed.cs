@@ -26,10 +26,10 @@ namespace Persistence
                 }
             }
 
-            if (!context.Friends.Any())
+            if (!context.UserFriendships.Any())
             {
 
-                List<Friend> friends = new List<Friend>();
+                List<UserFriendship> friends = new List<UserFriendship>();
                 var bob = await context.Users.FindAsync("adebacba-4986-44c4-b4eb-0c66afda9d7b");
                 var tom = await context.Users.FindAsync("80f1dab6-7aa0-4693-98c3-232e6aec16bb");
                 var john = await context.Users.FindAsync("06228c34-9c71-4c68-9493-ab13e0a30bd4");
@@ -45,14 +45,17 @@ namespace Persistence
                         Recipient = newUser
                     };
 
-                    Friend testFriendship = new Friend
+                    UserFriendship testFriendship = new UserFriendship
                     {
+                        Id = Guid.NewGuid(),
                         RequestedBy = bob,
                         RequestedTo = newUser,
                         RequestTime = DateTime.Now,
                         FriendRequestFlag = FriendRequestFlag.Approved,
                         Conversation = testConversation
                     };
+                    newUser.FriendsOf.Add(testFriendship);
+                    bob.Friends.Add(testFriendship);
 
                     friends.Add(testFriendship);
 
@@ -64,8 +67,9 @@ namespace Persistence
                     Recipient = tom,
                 };
 
-                Friend friendshipBobTom = new Friend
+                UserFriendship friendshipBobTom = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = bob,
                     RequestedTo = tom,
                     RequestTime = DateTime.Now,
@@ -73,7 +77,10 @@ namespace Persistence
                     Conversation = conversationBobTom
                 };
 
+                bob.Friends.Add(friendshipBobTom);
+                tom.FriendsOf.Add(friendshipBobTom);
                 friends.Add(friendshipBobTom);
+
 
                 Conversation conversationJohnBob = new Conversation
                 {
@@ -81,10 +88,9 @@ namespace Persistence
                     Recipient = bob,
                 };
 
-
-
-                Friend friendshipBobJohn = new Friend
+                UserFriendship friendshipBobJohn = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = john,
                     RequestedTo = bob,
                     RequestTime = DateTime.Now,
@@ -92,6 +98,9 @@ namespace Persistence
                     Conversation = conversationJohnBob
 
                 };
+
+                john.Friends.Add(friendshipBobJohn);
+                bob.FriendsOf.Add(friendshipBobJohn);
                 friends.Add(friendshipBobJohn);
 
                 Conversation conversationHarryJohn = new Conversation
@@ -100,14 +109,17 @@ namespace Persistence
                     Recipient = john,
                 };
 
-                Friend friendshipJohnHarry = new Friend
+                UserFriendship friendshipJohnHarry = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = harry,
                     RequestedTo = john,
                     RequestTime = DateTime.Now,
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationHarryJohn
                 };
+                harry.Friends.Add(friendshipJohnHarry);
+                john.FriendsOf.Add(friendshipJohnHarry);
                 friends.Add(friendshipJohnHarry);
 
                 Conversation conversationTomHarry = new Conversation
@@ -116,17 +128,18 @@ namespace Persistence
                     Recipient = john,
                 };
 
-
-
-
-                Friend friendshipTomHarry = new Friend
+                UserFriendship friendshipTomHarry = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = tom,
                     RequestedTo = harry,
                     RequestTime = DateTime.Now,
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationTomHarry
                 };
+
+                tom.Friends.Add(friendshipTomHarry);
+                harry.FriendsOf.Add(friendshipTomHarry);
                 friends.Add(friendshipTomHarry);
 
                 Conversation conversationTomJohn = new Conversation
@@ -136,35 +149,38 @@ namespace Persistence
                 };
 
 
-                Friend friendshipTomJohn = new Friend
+                UserFriendship friendshipTomJohn = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = tom,
                     RequestedTo = john,
                     RequestTime = DateTime.Now,
-                    FriendRequestFlag = FriendRequestFlag.Approved
-                    ,
+                    FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationTomJohn
                 };
-
+                tom.Friends.Add(friendshipTomJohn);
+                john.FriendsOf.Add(friendshipTomJohn);
                 friends.Add(friendshipTomJohn);
 
                 Conversation conversationTomCharlie = new Conversation
                 {
-                    Creator = harry,
-                    Recipient = john,
+                    Creator = tom,
+                    Recipient = charlie,
                 };
 
 
-                Friend friendshipTomCharlie = new Friend
+                UserFriendship friendshipTomCharlie = new UserFriendship
                 {
+                    Id = Guid.NewGuid(),
                     RequestedBy = tom,
                     RequestedTo = charlie,
                     RequestTime = DateTime.Now,
                     FriendRequestFlag = FriendRequestFlag.Approved,
                     Conversation = conversationTomCharlie
                 };
+                tom.Friends.Add(friendshipTomCharlie);
+                charlie.FriendsOf.Add(friendshipTomCharlie);
                 friends.Add(friendshipTomCharlie);
-
 
 
 

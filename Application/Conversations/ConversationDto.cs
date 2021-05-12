@@ -9,7 +9,7 @@ namespace Application.Conversations
         public UserDto User { get; set; }
         public MessageDto LastMessage { get; set; }
         public string MessageTo { get; set; }
-        public Guid? FriendId { get; set; }
+        public Guid? FriendshipId { get; set; }
         public int MessagesCount { get; set; }
     }
 }

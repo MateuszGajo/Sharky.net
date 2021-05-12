@@ -38,7 +38,6 @@ namespace Application.Friends
                 _userAccessor = userAccessor;
                 _context = context;
             }
-
             public async Task<List<FriendDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 string userId = request.Id ?? _userAccessor.GetCurrentId();
@@ -46,11 +45,11 @@ namespace Application.Friends
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                IQueryable<Friend> friends = null;
+                IQueryable<UserFriendship> friends = null;
                 if (request.FilterText != null)
                 {
                     friends = _context
-                            .Friends
+                            .UserFriendships
                             .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.FullName.Contains(request.FilterText) ||
                             x.RequestedTo.Id == userId && x.RequestedBy.FullName.Contains(request.FilterText)) &&
                             x.FriendRequestFlag == FriendRequestFlag.Approved)
@@ -61,7 +60,7 @@ namespace Application.Friends
                 else
                 {
                     friends = _context
-                        .Friends
+                        .UserFriendships
                         .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved)
                         .OrderBy(x => x.RequestTime)
                         .Skip(request.From)
