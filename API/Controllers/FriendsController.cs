@@ -28,10 +28,17 @@ namespace API.Controllers
         {
             return await _mediator.Send(new List.Query { Id = userId, FilterText = filter, From = from });
         }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Unfriend(Guid id)
         {
             return await _mediator.Send(new Unfriend.Command { FriendshipId = id });
+        }
+
+        [HttpPost("{id}/add")]
+        public async Task<ActionResult<Unit>> Add(String id)
+        {
+            return await _mediator.Send(new Add.Command { UserId = id });
         }
     }
 }

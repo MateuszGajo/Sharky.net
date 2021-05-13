@@ -16,6 +16,7 @@ const Friends = () => {
     isMoreFriends,
     isMoreUsers,
     userList,
+    addFriend,
   } = useFriendStore();
   const [value, setValue] = useState("");
   const [view, setView] = useState("friends");
@@ -32,8 +33,6 @@ const Friends = () => {
       isMoreUsers && userList.size === 0 && fetchData("addFriends");
     }
   };
-
-  const handleInviteClick = () => {};
 
   useEffect(() => {
     fetchData(view);
@@ -87,7 +86,7 @@ const Friends = () => {
                   return (
                     <Card
                       name={user.firstName + " " + user.lastName}
-                      onInviteClick={handleInviteClick}
+                      onInviteClick={addFriend}
                       referenceId={user.id}
                     />
                   );

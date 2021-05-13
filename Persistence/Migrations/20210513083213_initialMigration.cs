@@ -119,7 +119,7 @@ namespace Persistence.Migrations
                     Action = table.Column<string>(type: "TEXT", nullable: true),
                     RecipientId = table.Column<string>(type: "TEXT", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    RefId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    RefId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -438,7 +438,7 @@ namespace Persistence.Migrations
                     RequestedToId = table.Column<string>(type: "TEXT", nullable: false),
                     ConversationId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RequestTime = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    RequestTime = table.Column<DateTime>(type: "TEXT", nullable: false),
                     FriendRequestFlag = table.Column<int>(type: "INTEGER", nullable: false),
                     MessageToUser = table.Column<Guid>(type: "TEXT", nullable: true)
                 },

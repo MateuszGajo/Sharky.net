@@ -17,7 +17,7 @@ namespace Persistence
                     new User {Id ="80f1dab6-7aa0-4693-98c3-232e6aec16bb",Email="example1@example1.com",FirstName="Tom",LastName="Musk", UserName="tommusk1", FullName="tommusk"},
                     new User {Id ="06228c34-9c71-4c68-9493-ab13e0a30bd4",Email="example2@example2.com",FirstName="John",LastName="John", UserName="johnjohn1", FullName="johnjohn"},
                     new User {Id ="32257ce4-7c32-48a9-ab16-9e4be1633cdb",Email="example3@example3.com",FirstName="Harry",LastName="Brown", UserName="harrybrown1",FullName="harrybrown"},
-                    new User {Id ="a997f083-7dab-45de-b45d-224520a2a29f",Email="example3@example3.com",FirstName="Charlie",LastName="William", UserName="charliewilliam1",FullName="charliewilliam"},
+                    new User {Id ="a997f083-7dab-45de-b45d-224520a2a29f",Email="example4@example4.com",FirstName="Charlie",LastName="William", UserName="charliewilliam1",FullName="charliewilliam"},
                 };
 
                 foreach (var user in users)

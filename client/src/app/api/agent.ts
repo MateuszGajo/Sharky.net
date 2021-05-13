@@ -148,6 +148,7 @@ const Friends = {
   getOnline: () => requests.get<OnlineFriend[]>("/friends/online"),
   unfriend: (friendshipId: string) =>
     requests.delete<void>(`/friends/${friendshipId}`),
+  add: (id: string) => requests.post<void>(`/friends/${id}/add`, {}),
 };
 
 const Conversation = {

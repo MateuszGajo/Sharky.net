@@ -83,6 +83,15 @@ module.exports = {
         mjs: "never",
       },
     ],
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { exceptAfterSingleLine: true },
+    ],
+    "arrow-body-style": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-non-null-assertion": true,
   },
 
   globals: {

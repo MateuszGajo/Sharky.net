@@ -1,0 +1,12 @@
+:global(#app) {
+  .item {
+    margin: 0;
+    padding: 0.2em 0;
+    border-bottom: 1px solid $primaryGrey;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    &:hover {
+      background-color: $secondaryGrey;
+    }
+  }
+}

@@ -55,7 +55,7 @@ export default class MessageStore {
     isWindowMessenger: boolean = false
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
-    if (this.conversationId != conversationId || conversationId == null) {
+    if (this.conversationId !== conversationId || conversationId == null) {
       this.conversationId = conversationId;
       this.friendshipId = friendshipId;
       this.converser = user;
@@ -63,7 +63,7 @@ export default class MessageStore {
       this.isWindowMessenger = isWindowMessenger;
       this.messages = new Map<string, Message>();
 
-      if (isMessage == true) {
+      if (isMessage === true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
           runInAction(() => {

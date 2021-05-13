@@ -9,12 +9,12 @@ namespace Domain
         public User RequestedBy { get; set; }
         public string RequestedToId { get; set; }
         public User RequestedTo { get; set; }
-        public DateTime? RequestTime { get; set; }
+        public DateTime RequestTime { get; set; }
 
         public FriendRequestFlag FriendRequestFlag { get; set; }
-#nullable enable
+
         public Guid ConversationId { get; set; }
-        public Conversation? Conversation { get; set; }
+        public Conversation Conversation { get; set; }
         public Guid? MessageToUser { get; set; }
     }
 

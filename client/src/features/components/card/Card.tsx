@@ -51,7 +51,11 @@ const Card: React.FC<Props> = ({
             </Dropdown>
           ) : (
             onInviteClick && (
-              <Button positive size="tiny">
+              <Button
+                positive
+                size="tiny"
+                onClick={() => onInviteClick(referenceId)}
+              >
                 invite
               </Button>
             )

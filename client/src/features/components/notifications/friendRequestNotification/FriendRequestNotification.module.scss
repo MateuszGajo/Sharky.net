@@ -1,0 +1,10 @@
+:global(#app) {
+  .container {
+    border-bottom: 1px solid $primaryGrey;
+  }
+
+  .card {
+    box-shadow: none;
+    background-color: transparent;
+  }
+}

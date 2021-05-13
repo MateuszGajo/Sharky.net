@@ -11,6 +11,6 @@ namespace Domain
 #nullable enable
         public string? RecipientId { get; set; }
         public DateTime CreatedAt { get; set; }
-        public Guid RefId { get; set; }
+        public Guid? RefId { get; set; }
     }
 }

@@ -68,6 +68,14 @@ export default class FriendStore {
     this.fetchUser(filterText);
   };
 
+  addFriend = async (userId: string) => {
+    console.log(userId);
+    try {
+      await agent.Friends.add(userId);
+      this.userList.delete(userId);
+    } catch (error) {}
+  };
+
   fetchUser = async (filterText: string | undefined) => {
     try {
       const users = await agent.User.get(this.userList.size, filterText);
