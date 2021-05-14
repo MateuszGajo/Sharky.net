@@ -7,16 +7,19 @@
   .navbar {
     display: block;
     width: calc(100vw / 16 * 3);
+    flex-shrink: 0;
   }
 
   .content {
     min-height: 100vh;
     position: relative;
     flex-grow: 1;
+    background-color: $primaryBackgroundColor;
   }
 
   .sidebar {
     width: calc(100vw / 16 * 2);
+    flex-shrink: 0;
   }
 
   @media (max-width: 1023px) {

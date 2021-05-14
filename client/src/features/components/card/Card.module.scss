@@ -1,0 +1,77 @@
+:global(#app) {
+  .container {
+    display: flex;
+    justify-content: center;
+    flex: 50%;
+  }
+
+  .cardContainer {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 20rem;
+    border: 1px solid $secondaryGrey;
+    padding: 0.4rem 0.4rem 0.4rem 0.8rem;
+    margin-top: 1rem;
+    background-color: #fff;
+  }
+
+  .user {
+    display: flex;
+    width: 65%;
+  }
+
+  .photoContainer {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .photo {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.2rem;
+  }
+
+  .username {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+    font-size: 1rem;
+  }
+
+  .usernameText {
+    text-overflow: ellipsis;
+    display: -webkit-inline-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    word-break: break-all;
+    overflow: hidden;
+    line-height: normal;
+  }
+
+  .dropdownContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+  }
+
+  .dropdown i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .optionItem {
+    display: flex;
+  }
+
+  @media (max-width: 1023px) {
+    .container {
+      flex: 100%;
+    }
+    .cardContainer {
+      width: 98%;
+    }
+  }
+}

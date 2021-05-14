@@ -2,9 +2,9 @@ using System;
 using Application.Activities;
 using Domain;
 
-namespace Application.Users
+namespace Application.Friends
 {
-    public class FriendDto
+    public class OnlineFriendDto
     {
         public Guid Id { get; set; }
         public UserDto Friend { get; set; }

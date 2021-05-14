@@ -13,7 +13,7 @@ export interface ConversationItem {
   user: User;
   lastMessage: Message;
   messageTo: string;
-  FriendId: string | null;
+  FriendshipId: string | null;
   MessagesCount: number;
 }
 

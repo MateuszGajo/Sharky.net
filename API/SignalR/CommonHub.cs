@@ -88,6 +88,16 @@ namespace API.SignalR
             };
         }
 
+        public async Task<ActionResult<Unit>> AddFriend(String id)
+        {
+            var response = await _mediator.Send(new Application.Friends.Add.Command { UserId = id });
+
+            foreach (var connectionId in _connections.GetConnections(id))
+            {
+                await Clients.Client(connectionId).SendAsync("friendRequestNotify", response.FriendshipId, response.RequestedAt, response.NotifyId, response.User);
+            }
+            return Unit.Value;
+        }
         public async Task<ActionResult<Unit>> ActivityAdded(Guid activityId, Guid notifyId)
         {
             string userId = _userAccessor.GetCurrentId();
@@ -95,7 +105,7 @@ namespace API.SignalR
             if (user == null) return Unit.Value;
 
             List<FriendDto> friends = await _context
-            .Friends
+            .UserFriendships
             .Where(x => x.RequestedBy.Id == userId || x.RequestedTo.Id == userId)
             .Select(x => new FriendDto
             {
@@ -120,8 +130,28 @@ namespace API.SignalR
         public override async Task OnConnectedAsync()
         {
             string userId = _userAccessor.GetCurrentId();
+            var user = await _context.Users.FindAsync(userId);
+
+            user.IsActive = true;
+            await _context.SaveChangesAsync();
+
             _connections.Add(userId, Context.ConnectionId);
             await base.OnConnectedAsync();
+        }
+
+        public override async Task OnDisconnectedAsync(Exception ex)
+        {
+            string userId = _userAccessor.GetCurrentId();
+            var user = await _context.Users.FindAsync(userId);
+
+            _connections.Remove(userId, Context.ConnectionId);
+            var connections = _connections.GetConnections(userId);
+            if (connections.Count() == 0)
+            {
+                user.IsActive = false;
+                await _context.SaveChangesAsync();
+            }
+            await base.OnDisconnectedAsync(ex);
         }
     }
 }

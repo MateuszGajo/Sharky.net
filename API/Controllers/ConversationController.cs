@@ -26,12 +26,12 @@ namespace API.Controllers
             return await _mediator.Send(new List.Query { From = from });
         }
 
-        [HttpPost("create")]
+        // [HttpPost("create")]
 
-        public async Task<ActionResult<Create.Response>> Create(Create.Command command)
-        {
-            return await _mediator.Send(command);
-        }
+        // public async Task<ActionResult<Create.Response>> Create(Create.Command command)
+        // {
+        //     return await _mediator.Send(command);
+        // }
 
         [HttpGet("{id}/messages")]
 

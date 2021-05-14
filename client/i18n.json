@@ -8,6 +8,7 @@
     "/signin": ["layout", "signin"],
     "/signup": ["signup", "layout", "common"],
     "/notifications": ["common", "components", "notifications"],
-    "/messages": ["common", "components"]
+    "/messages": ["common", "components"],
+    "/friends": ["common", "components"]
   }
 }

@@ -71,7 +71,7 @@ module.exports = {
     "react/jsx-curly-newline": "off",
     "no-param-reassign": ["error", { props: false }],
     indent: "off",
-    "no-use-before-define": "off",,
+    "no-use-before-define": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -83,6 +83,15 @@ module.exports = {
         mjs: "never",
       },
     ],
+    "lines-between-class-members": [
+      "error",
+      "always",
+      { exceptAfterSingleLine: true },
+    ],
+    "arrow-body-style": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "no-inferrable-types": [true, "ignore-params", "ignore-properties"],
+    "no-non-null-assertion": true,
   },
 
   globals: {
@@ -93,8 +102,8 @@ module.exports = {
       "babel-module": {},
       node: {
         extensions: [".ts", ".tsx", ".native.js"],
-        paths: ["src"]
-      }
+        paths: ["src"],
+      },
     },
     node: {
       extensions: [".js", ".jsx", ".ts", ".tsx"],

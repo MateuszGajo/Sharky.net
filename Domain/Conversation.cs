@@ -10,10 +10,12 @@ namespace Domain
         public User Recipient { get; set; }
         public ICollection<Message> Messages { get; set; } = new List<Message>();
         public int MessagesCount { get; set; } = 0;
+
 #nullable enable
+        public UserFriendship? Friendship { get; set; }
         public Message? LastMessage { get; set; }
 
         public string? MessageTo { get; set; }
-        public Guid? FriendId { get; set; }
+
     }
 }

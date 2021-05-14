@@ -47,16 +47,17 @@ namespace API.Controllers
             _httpClient = new HttpClient();
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ListDto>>> InviteList(int start, string filter)
+        {
+            System.Console.WriteLine(filter);
+            return await _mediator.Send(new List.Query { Start = start, FilterText = filter });
+        }
+
         [HttpPut("{id}/block")]
         public async Task<ActionResult<Unit>> Block(string id)
         {
             return await _mediator.Send(new Block.Command { UserId = id });
-        }
-
-        [HttpGet("friends")]
-        public async Task<ActionResult<List<FriendDto>>> friends()
-        {
-            return await _mediator.Send(new Friends.Query { Id = null });
         }
 
         [HttpGet("notification")]
@@ -64,13 +65,6 @@ namespace API.Controllers
         {
             return await _mediator.Send(new GetNotification.Query { });
         }
-
-        [HttpGet("{id}/friends")]
-        public async Task<ActionResult<List<FriendDto>>> friends(string id)
-        {
-            return await _mediator.Send(new Friends.Query { Id = id });
-        }
-
         [HttpPut("notification/read")]
         public async Task<ActionResult<Unit>> ReadNotification()
         {

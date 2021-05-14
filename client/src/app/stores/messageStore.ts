@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/activity";
 import { ConversationItem, Message } from "../models/conversation";
-import { Friend } from "../models/user";
+import { Friend, OnlineFriend } from "../models/user";
 import { RootStore } from "./rootStore";
 
 export default class MessageStore {
@@ -55,7 +55,7 @@ export default class MessageStore {
     isWindowMessenger: boolean = false
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
-    if (this.conversationId != conversationId || conversationId == null) {
+    if (this.conversationId !== conversationId || conversationId == null) {
       this.conversationId = conversationId;
       this.friendshipId = friendshipId;
       this.converser = user;
@@ -63,13 +63,14 @@ export default class MessageStore {
       this.isWindowMessenger = isWindowMessenger;
       this.messages = new Map<string, Message>();
 
-      if (isMessage == true) {
+      if (isMessage === true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
           runInAction(() => {
             this.root.commonStore.messagesCount -= 1;
 
-            const friend = this.root.friendStore.friends.get(friendshipId);
+            const friend =
+              this.root.friendStore.onlineFriends.get(friendshipId);
 
             if (friend) {
               const newFriendObject = {
@@ -79,7 +80,7 @@ export default class MessageStore {
                   messageTo: null,
                 },
               };
-              this.root.friendStore.friends.set(
+              this.root.friendStore.onlineFriends.set(
                 newFriendObject.id,
                 newFriendObject
               );
@@ -229,19 +230,19 @@ export default class MessageStore {
       this.root.messageStore.messagesCount += 1;
       this.root.messageStore.messages.set(newMessage.id, newMessage);
     } else {
-      const friend = this.root.friendStore.friends.get(friendId);
+      const friend = this.root.friendStore.onlineFriends.get(friendId);
       if (friend?.conversation?.messageTo != this.root.commonStore.user.id) {
         this.root.commonStore.messagesCount += 1;
 
         if (friend) {
-          const newFriendObject: Friend = {
+          const newFriendObject: OnlineFriend = {
             ...friend,
             conversation: {
               ...friend.conversation!,
               messageTo: this.root.commonStore.user.id,
             },
           };
-          this.root.friendStore.friends.set(
+          this.root.friendStore.onlineFriends.set(
             newFriendObject.id,
             newFriendObject
           );

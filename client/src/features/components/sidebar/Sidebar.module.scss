@@ -5,6 +5,7 @@
     height: 100vh;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     font-size: 0.8rem;
+    background-color: #fff;
   }
 
   .photo {
@@ -53,5 +54,9 @@
     word-break: break-all;
     overflow: hidden;
     line-height: normal;
+  }
+
+  .loader {
+    margin-top: 2em;
   }
 }

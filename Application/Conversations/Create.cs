@@ -21,14 +21,14 @@ namespace Application.Conversations
             public Guid ConversationId { get; set; }
             public DateTime CreatedAt { get; set; }
         }
-        public class Command : IRequest<Response>
+        public class Command : IRequest
         {
             public string Message { get; set; }
             public string RecipientId { get; set; }
             public Guid FriendshipId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Response>
+        public class Handler : IRequestHandler<Command>
         {
             private readonly IUserAccessor _userAccessor;
             private readonly DataBaseContext _context;
@@ -38,62 +38,63 @@ namespace Application.Conversations
                 _userAccessor = userAccessor;
             }
 
-            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                string userId = _userAccessor.GetCurrentId();
-                User user = await _context.Users.FindAsync(userId);
-                if (user == null)
-                    throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
+                return Unit.Value;
+                // string userId = _userAccessor.GetCurrentId();
+                // User user = await _context.Users.FindAsync(userId);
+                // if (user == null)
+                //     throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
 
-                User recipient = await _context.Users.FindAsync(request.RecipientId);
-                if (recipient == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Recipient = "Recipient doesn't exist" });
+                // User recipient = await _context.Users.FindAsync(request.RecipientId);
+                // if (recipient == null)
+                //     throw new RestException(HttpStatusCode.NotFound, new { Recipient = "Recipient doesn't exist" });
 
-                Friend friendship = await _context.Friends.FindAsync(request.FriendshipId);
-                if (friendship == null)
-                    throw new RestException(HttpStatusCode.NotFound, new { Friendship = "You aren't friends" });
+                // Friend friendship = await _context.Friends.FindAsync(request.FriendshipId);
+                // if (friendship == null)
+                //     throw new RestException(HttpStatusCode.NotFound, new { Friendship = "You aren't friends" });
 
-                Conversation conversation = await _context.Conversations.AsNoTracking().Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x =>
-                (x.Creator.Id == user.Id && x.Recipient.Id == recipient.Id) || (x.Creator.Id == recipient.Id && x.Recipient.Id == user.Id));
-                if (conversation != null)
-                    throw new RestException(HttpStatusCode.Forbidden, new { conversationId = conversation.Id, Conversation = "Conversation already exist" });
+                // Conversation conversation = await _context.Conversations.AsNoTracking().Include(x => x.Creator).Include(x => x.Recipient).FirstOrDefaultAsync(x =>
+                // (x.Creator.Id == user.Id && x.Recipient.Id == recipient.Id) || (x.Creator.Id == recipient.Id && x.Recipient.Id == user.Id));
+                // if (conversation != null)
+                //     throw new RestException(HttpStatusCode.Forbidden, new { conversationId = conversation.Id, Conversation = "Conversation already exist" });
 
-                DateTime createdAt = DateTime.Now;
-                Guid messageId = Guid.NewGuid();
-                Guid conversationId = Guid.NewGuid();
-                Message message = new Message
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = createdAt,
-                    Body = request.Message,
-                    Author = user,
-                };
-                conversation = new Conversation
-                {
-                    Id = Guid.NewGuid(),
-                    Creator = user,
-                    Recipient = recipient,
-                    // LastMessageId = messageId,
-                    MessageTo = recipient.Id,
-                    FriendId = friendship.Id,
-                    MessagesCount = 1
-                };
+                // DateTime createdAt = DateTime.Now;
+                // Guid messageId = Guid.NewGuid();
+                // Guid conversationId = Guid.NewGuid();
+                // Message message = new Message
+                // {
+                //     Id = Guid.NewGuid(),
+                //     CreatedAt = createdAt,
+                //     Body = request.Message,
+                //     Author = user,
+                // };
+                // conversation = new Conversation
+                // {
+                //     Id = Guid.NewGuid(),
+                //     Creator = user,
+                //     Recipient = recipient,
+                //     // LastMessageId = messageId,
+                //     MessageTo = recipient.Id,
+                //     FriendId = friendship.Id,
+                //     MessagesCount = 1
+                // };
 
-                conversation.Messages.Add(message);
-                _context.Conversations.Add(conversation);
-                friendship.Conversation = conversation;
+                // conversation.Messages.Add(message);
+                // _context.Conversations.Add(conversation);
+                // friendship.Conversation = conversation;
 
 
-                bool result = await _context.SaveChangesAsync() > 0;
-                Response response = new Response
-                {
-                    Id = message.Id,
-                    CreatedAt = createdAt,
-                    ConversationId = conversationId
-                };
-                if (result) return response;
+                // bool result = await _context.SaveChangesAsync() > 0;
+                // Response response = new Response
+                // {
+                //     Id = message.Id,
+                //     CreatedAt = createdAt,
+                //     ConversationId = conversationId
+                // };
+                // if (result) return response;
 
-                throw new RestException(HttpStatusCode.BadRequest, new { SaveChanges = "Problem creating conversation" });
+                // throw new RestException(HttpStatusCode.BadRequest, new { SaveChanges = "Problem creating conversation" });
 
             }
         }

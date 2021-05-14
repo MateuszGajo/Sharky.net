@@ -11,7 +11,7 @@ import {
   SignupFormValues,
 } from "~root/src/app/models/authentication";
 import axios, { AxiosResponse } from "axios";
-import { Friend } from "../models/user";
+import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
 import { ConversationItem, Message } from "../models/conversation";
 import {
   Notification as NotificationI,
@@ -128,11 +128,31 @@ const User = {
   report: (id: string, reasons: string[]) =>
     requests.post(`/user/${id}/report`, { reasons }),
   getNotification: () => requests.get<NotificationCount>("/user/notification"),
+  get: (start: number, filterText: string | undefined) =>
+    requests.get<UserList[]>(
+      `/user?start=${start}${filterText ? `&filter=${filterText}` : ""}`
+    ),
   readNotification: () => requests.put<void>("/user/notification/read", {}),
 };
 
+interface GetFriendsExtend extends GetFriends {
+  from: number;
+}
+
 const Friends = {
-  get: () => requests.get<Friend[]>("/user/friends"),
+  get: ({ id, filterText, from }: GetFriendsExtend) =>
+    requests.get<Friend[]>(
+      `/friends?from=${from}${filterText ? `&filter=${filterText}` : ""}
+      ${id ? `&userId=${id}` : ""}`
+    ),
+  getOnline: () => requests.get<OnlineFriend[]>("/friends/online"),
+  unfriend: (friendshipId: string) =>
+    requests.delete<void>(`/friends/${friendshipId}`),
+  add: (id: string) => requests.post<void>(`/friends/${id}/add`, {}),
+  acceptRequest: (friendshipId: string, notifyId: string) =>
+    requests.put(`friends/${friendshipId}/accept`, { notifyId }),
+  declineRequest: (friendshipId: string, notifyId: string) =>
+    requests.put(`friends/${friendshipId}/decline`, { notifyId }),
 };
 
 const Conversation = {

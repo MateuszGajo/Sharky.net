@@ -1,8 +1,7 @@
 using System;
 using Application.Activities;
-using Domain;
 
-namespace Application.Users
+namespace Application.Friends
 {
     public class FriendConversationDto
     {

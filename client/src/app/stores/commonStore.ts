@@ -31,11 +31,8 @@ export default class CommonStore {
 
   getNotification = async () => {
     try {
-      const {
-        notificationCount,
-        messagesCount,
-        friendRequestCount,
-      } = await agent.User.getNotification();
+      const { notificationCount, messagesCount, friendRequestCount } =
+        await agent.User.getNotification();
       runInAction(() => {
         this.notificationCount = notificationCount;
         this.messagesCount = messagesCount;
@@ -67,6 +64,7 @@ export default class CommonStore {
     this.root.messageStore.messageListener();
     this.root.activityStore.likeListener(path);
     this.root.activityStore.activityListener(path);
+    this.root.notificationStore.friendRequestNotifyListener(path);
   };
 
   stopHubConnection = () => {
