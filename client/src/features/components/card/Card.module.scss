@@ -4,6 +4,7 @@
     justify-content: center;
     flex: 50%;
   }
+
   .cardContainer {
     display: inline-flex;
     justify-content: space-between;
@@ -11,6 +12,7 @@
     border: 1px solid $secondaryGrey;
     padding: 0.4rem 0.4rem 0.4rem 0.8rem;
     margin-top: 1rem;
+    background-color: #fff;
   }
 
   .user {
@@ -62,5 +64,14 @@
 
   .optionItem {
     display: flex;
+  }
+
+  @media (max-width: 1023px) {
+    .container {
+      flex: 100%;
+    }
+    .cardContainer {
+      width: 98%;
+    }
   }
 }

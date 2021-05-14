@@ -149,6 +149,10 @@ const Friends = {
   unfriend: (friendshipId: string) =>
     requests.delete<void>(`/friends/${friendshipId}`),
   add: (id: string) => requests.post<void>(`/friends/${id}/add`, {}),
+  acceptRequest: (friendshipId: string, notifyId: string) =>
+    requests.put(`friends/${friendshipId}/accept`, { notifyId }),
+  declineRequest: (friendshipId: string, notifyId: string) =>
+    requests.put(`friends/${friendshipId}/decline`, { notifyId }),
 };
 
 const Conversation = {

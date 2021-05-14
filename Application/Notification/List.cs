@@ -29,7 +29,8 @@ namespace Application.Notification
             {
                 string userId = _userAccessor.GetCurrentId();
 
-                var friends = await _context.UserFriendships.Where(x => x.RequestedBy.Id == userId || x.RequestedTo.Id == userId).Select(x =>
+                var friends = await _context.UserFriendships.Where(x => (x.RequestedBy.Id == userId && x.FriendRequestFlag == FriendRequestFlag.Approved)
+                || (x.RequestedTo.Id == userId && x.FriendRequestFlag == FriendRequestFlag.Approved)).Select(x =>
                     x.RequestedBy.Id != userId ? x.RequestedBy.Id : x.RequestedTo.Id
                 ).ToListAsync();
 

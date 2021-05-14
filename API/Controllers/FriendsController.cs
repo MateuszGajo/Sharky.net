@@ -35,10 +35,22 @@ namespace API.Controllers
             return await _mediator.Send(new Unfriend.Command { FriendshipId = id });
         }
 
-        [HttpPost("{id}/add")]
-        public async Task<ActionResult<Unit>> Add(String id)
+        [HttpPut("{id}/accept")]
+        public async Task<ActionResult<Unit>> AcceptRequest(AcceptRequest.Command command, Guid id)
         {
-            return await _mediator.Send(new Add.Command { UserId = id });
+            command.FriendshipId = id;
+            return await _mediator.Send(command);
         }
+
+        [HttpPut("{id}/decline")]
+        public async Task<ActionResult<Unit>> DeclineRequest(DeclineRequest.Command command, Guid id)
+        {
+            command.FriendshipId = id;
+            return await _mediator.Send(command);
+        }
+
+
+
+
     }
 }

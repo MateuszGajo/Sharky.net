@@ -88,6 +88,16 @@ namespace API.SignalR
             };
         }
 
+        public async Task<ActionResult<Unit>> AddFriend(String id)
+        {
+            var response = await _mediator.Send(new Application.Friends.Add.Command { UserId = id });
+
+            foreach (var connectionId in _connections.GetConnections(id))
+            {
+                await Clients.Client(connectionId).SendAsync("friendRequestNotify", response.FriendshipId, response.RequestedAt, response.NotifyId, response.User);
+            }
+            return Unit.Value;
+        }
         public async Task<ActionResult<Unit>> ActivityAdded(Guid activityId, Guid notifyId)
         {
             string userId = _userAccessor.GetCurrentId();

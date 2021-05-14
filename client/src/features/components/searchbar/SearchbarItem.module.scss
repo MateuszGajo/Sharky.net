@@ -1,99 +1,113 @@
-.item {
-  position: relative;
-  display: flex;
-  width: 100%;
-  height: 3.5rem;
-  border: 0.08rem solid black;
-  border-right-width: 0px;
-  // overflow: hidden;
-  cursor: pointer;
-  transition: border-color 0.2s transform 0.4s;
-  &:hover {
-    border-color: $primaryBlackTint;
-    transform: scale(1.02);
+:global(#app) {
+  .item {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 3.5rem;
+    border: 0.08rem solid black;
+    border-right-width: 0px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s transform 0.4s;
+    &:hover {
+      border-color: $primaryBlackTint;
+      transform: scale(1.02);
+    }
+    &:hover .circle {
+      border-color: $primaryBlackTint;
+    }
+
+    &:hover .text {
+      color: $primaryBlackTint;
+    }
   }
-  &:hover .circle {
-    border-color: $primaryBlackTint;
+
+  .reverseItem {
+    flex-direction: row-reverse;
+    border-right-width: 0.08rem;
+    border-left-width: 0px;
   }
 
-  &:hover .text {
-    color: $primaryBlackTint;
-  }
-}
-
-.reverseItem {
-  flex-direction: row-reverse;
-  border-right-width: 0.08rem;
-  border-left-width: 0px;
-}
-
-.itemActive {
-  border-color: $primaryColor;
-
-  &:hover {
+  .itemActive {
     border-color: $primaryColor;
-    transform: scale(1);
-  }
-  &:hover .circle {
-    border-color: $primaryColor;
+
+    &:hover {
+      border-color: $primaryColor;
+      transform: scale(1);
+    }
+    &:hover .circle {
+      border-color: $primaryColor;
+    }
+
+    &:hover .text {
+      color: $primaryColor;
+    }
   }
 
-  &:hover .text {
+  .textContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 1.4rem);
+    height: 100%;
+  }
+
+  .textContainerReverse {
+    align-self: flex-end;
+  }
+
+  .text {
+    text-align: center;
+    font-size: 1.5rem;
+    transition: color 0.2s;
+  }
+
+  .textActive {
     color: $primaryColor;
   }
-}
 
-.textContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: calc(100% - 50px);
-  height: 100%;
-}
-
-.textContainerReverse {
-  align-self: flex-end;
-}
-
-.text {
-  text-align: center;
-  font-size: 1.5rem;
-  transition: color 0.2s;
-}
-
-.textActive {
-  color: $primaryColor;
-}
-
-.circle {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 3.4rem;
-  width: 1.75rem;
-  border-top-left-radius: 3.6rem;
-  border-bottom-left-radius: 3.6rem;
-  border: 0.08rem solid black;
-  border-right: 0;
-  z-index: 5;
-  cursor: auto;
-  transition: border-color 0.2s;
-}
-
-.circleActive {
-  border-color: $primaryColor;
-  &.reverseCircle {
-    border-right: 0.08rem solid $primaryColor;
+  .circle {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 3.4rem;
+    width: 1.75rem;
+    border-top-left-radius: 3.6rem;
+    border-bottom-left-radius: 3.6rem;
+    border: 0.08rem solid black;
+    border-right: 0;
+    background-color: $primaryBackgroundColor;
+    z-index: 5;
+    cursor: auto;
+    transition: border-color 0.2s;
   }
-}
 
-.reverseCircle {
-  right: auto;
-  left: 0;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-  border-top-right-radius: 3.6rem;
-  border-bottom-right-radius: 3.6rem;
-  border-right: 0.08rem solid $primaryBlack;
-  border-left: 0;
+  .circleActive {
+    border-color: $primaryColor;
+    &.reverseCircle {
+      border-right: 0.08rem solid $primaryColor;
+    }
+  }
+
+  .reverseCircle {
+    right: auto;
+    left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 3.6rem;
+    border-bottom-right-radius: 3.6rem;
+    border-right: 0.08rem solid $primaryBlack;
+    border-left: 0;
+  }
+  @media (max-width: 700px) and(orientation:landscape) {
+    .text {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (max-width: 700px) and(orientation:portrait) {
+    .text {
+      font-size: 1rem;
+    }
+  }
 }

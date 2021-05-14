@@ -2,8 +2,10 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.Activities;
 using Application.Errors;
 using Application.Interface;
+using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
@@ -12,22 +14,31 @@ namespace Application.Friends
 {
     public class Add
     {
-        public class Command : IRequest
+        public class Response
+        {
+            public UserDto User { get; set; }
+            public DateTime RequestedAt { get; set; }
+            public Guid FriendshipId { get; set; }
+            public Guid NotifyId { get; set; }
+        }
+        public class Command : IRequest<Response>
         {
             public string UserId { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Response>
         {
             private readonly IUserAccessor _userAccessor;
             private readonly DataBaseContext _context;
-            public Handler(DataBaseContext context, IUserAccessor userAccessor)
+            private readonly IMapper _mapper;
+            public Handler(DataBaseContext context, IUserAccessor userAccessor, IMapper mapper)
             {
+                _mapper = mapper;
                 _context = context;
                 _userAccessor = userAccessor;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
                 string userId = _userAccessor.GetCurrentId();
                 User requestedByUser = await _context.Users.FindAsync(userId);
@@ -37,6 +48,8 @@ namespace Application.Friends
                 User requestedToUser = await _context.Users.FindAsync(request.UserId);
                 if (requestedToUser == null)
                     throw new RestException(HttpStatusCode.NotFound, new { user = "User doesn't exist" });
+
+                DateTime date = DateTime.Now;
 
                 Conversation conversation = new Conversation
                 {
@@ -50,18 +63,20 @@ namespace Application.Friends
                     Id = Guid.NewGuid(),
                     RequestedBy = requestedByUser,
                     RequestedTo = requestedToUser,
-                    RequestTime = DateTime.Now,
+                    RequestTime = date,
                     FriendRequestFlag = FriendRequestFlag.None,
                     Conversation = conversation
                 };
 
                 Domain.Notification notification = new Domain.Notification
                 {
+                    Id = Guid.NewGuid(),
                     User = requestedByUser,
                     Type = "friend",
                     Action = "add",
-                    CreatedAt = DateTime.Now,
-                    RecipientId = requestedToUser.Id
+                    CreatedAt = date,
+                    RecipientId = requestedToUser.Id,
+                    RefId = friendship.Id,
                 };
 
                 requestedByUser.Friends.Add(friendship);
@@ -69,8 +84,16 @@ namespace Application.Friends
                 _context.UserFriendships.Add(friendship);
                 _context.Notifications.Add(notification);
 
+                Response response = new Response
+                {
+                    User = _mapper.Map<UserDto>(requestedByUser),
+                    RequestedAt = date,
+                    FriendshipId = friendship.Id,
+                    NotifyId = notification.Id
+                };
+
                 bool result = await _context.SaveChangesAsync() > 0;
-                if (result) return Unit.Value;
+                if (result) return response;
 
                 throw new Exception("problem adding friend");
             }

@@ -1,5 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
+import { User } from "../models/activity";
 import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
 import { RootStore } from "./rootStore";
 
@@ -71,7 +72,7 @@ export default class FriendStore {
   addFriend = async (userId: string) => {
     console.log(userId);
     try {
-      await agent.Friends.add(userId);
+      this.root.commonStore.hubConnection?.invoke("AddFriend", userId);
       this.userList.delete(userId);
     } catch (error) {}
   };
@@ -95,5 +96,17 @@ export default class FriendStore {
       await agent.Friends.unfriend(friendshipId);
       this.friends.delete(friendshipId);
     } catch (error) {}
+  };
+
+  acceptRequest = async (friendshipId: string, notifyId: string) => {
+    try {
+      await agent.Friends.acceptRequest(friendshipId, notifyId);
+    } catch {}
+  };
+
+  declineRequest = async (friendshipId: string, notifyId: string) => {
+    try {
+      await agent.Friends.declineRequest(friendshipId, notifyId);
+    } catch {}
   };
 }
