@@ -9,6 +9,7 @@
     "/signup": ["signup", "layout", "common"],
     "/notifications": ["common", "components", "notifications"],
     "/messages": ["common", "components"],
-    "/friends": ["common", "components"]
+    "/friends": ["common", "components"],
+    "/settings": ["common", "components"]
   }
 }

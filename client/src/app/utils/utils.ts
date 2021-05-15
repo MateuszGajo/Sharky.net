@@ -42,21 +42,25 @@ export const navItems = [
     id: 6,
     name: "groups",
     icon: "users",
+    linkTo: "/groups",
   },
   {
     id: 7,
     name: "fanpages",
     icon: "newspaper",
+    linkTo: "/fanpages",
   },
   {
     id: 8,
     name: "profile",
     icon: "user",
+    linkTo: "/profile",
   },
   {
     id: 9,
     name: "settings",
     icon: "cog",
+    linkTo: "/settings",
   },
   {
     id: 10,

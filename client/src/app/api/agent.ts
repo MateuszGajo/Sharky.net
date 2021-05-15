@@ -17,6 +17,7 @@ import {
   Notification as NotificationI,
   NotificationCount,
 } from "~root/src/app/models/notification";
+import { General, EditGeneral } from "../models/setting";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -180,8 +181,14 @@ const Conversation = {
     requests.put<void>(`/conversation/${conversationId}/messages/read`, {}),
 };
 
-const Notification = {
+const Notifications = {
   get: () => requests.get<NotificationI[]>("/notification"),
+};
+
+const Settings = {
+  getGeneral: () => requests.get<General>("/settings/general"),
+  editGeneral: ({ firstname = "", lastname = "" }: EditGeneral) =>
+    requests.put<void>("/settings/general/edit", { firstname, lastname }),
 };
 
 export default {
@@ -192,5 +199,6 @@ export default {
   User,
   Friends,
   Conversation,
-  Notification,
+  Notifications,
+  Settings,
 };

@@ -14,7 +14,7 @@ export default class NotificationStore {
 
   getNotification = async () => {
     try {
-      const notifications = await agent.Notification.get();
+      const notifications = await agent.Notifications.get();
       runInAction(() => {
         notifications.forEach((item) => {
           this.notifications.set(item.id, item);

@@ -1,0 +1,17 @@
+:global(#app) {
+  .loading {
+    flex-grow: 1;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-grow: 1;
+  }
+
+  .settingsWrapper {
+    width: 60%;
+  }
+}
