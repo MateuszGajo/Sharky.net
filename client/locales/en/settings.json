@@ -1,0 +1,18 @@
+{
+  "error": {
+    "retype": {
+      "password": "Retype password incorrect",
+      "email": "Retype email incorrect"
+    },
+    "validation": {
+      "email": "Email incorrect",
+      "eightCharacters": "password must be at least 6 characters",
+      "uppercaseLetter": "Password must cotains 1 uppercase letter",
+      "lowercaseLetter": "Password must have at least 1 lowercase character",
+      "oneDigit": "Password must contain a number",
+      "nonAlphanumeric": "Password must contain non alphanumeric"
+    },
+    "password": "Password incorrect",
+    "email": "Email incorrect"
+  }
+}

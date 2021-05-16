@@ -17,7 +17,7 @@ import {
   Notification as NotificationI,
   NotificationCount,
 } from "~root/src/app/models/notification";
-import { General, EditGeneral } from "../models/setting";
+import { General, EditGeneral, Security } from "../models/setting";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -189,6 +189,10 @@ const Settings = {
   getGeneral: () => requests.get<General>("/settings/general"),
   editGeneral: ({ firstname = "", lastname = "" }: EditGeneral) =>
     requests.put<void>("/settings/general/edit", { firstname, lastname }),
+  editEmail: (email: string, newEmail: string) =>
+    requests.put("/settings/email/edit", { email, newEmail }),
+  editPassword: (currentPassword: string, newPassword: string) =>
+    requests.put("/settings/password/edit", { currentPassword, newPassword }),
 };
 
 export default {

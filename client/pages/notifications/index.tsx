@@ -23,7 +23,6 @@ const Notifications = () => {
   return (
     <HomeLayout sidebar>
       <div>
-        {console.log(Array.from(notifications.values()))}
         {Array.from(notifications.values()).map((item) => (
           <>
             {item.type === "post" && <Activity item={item} />}

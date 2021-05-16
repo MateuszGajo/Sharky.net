@@ -36,11 +36,7 @@ namespace Application.Settings
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { user = "user doesn't exist" });
 
-                return await _context.Users
-                            .AsNoTracking()
-                            .Where(x => x.Id == userId)
-                            .ProjectTo<GeneralDto>(_mapper.ConfigurationProvider)
-                            .FirstOrDefaultAsync();
+                return _mapper.Map<GeneralDto>(user);
             }
         }
     }

@@ -339,3 +339,43 @@ export const likeClick = ({
     });
   }
 };
+
+const regexValidation = {
+  email: [
+    {
+      regex:
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      error: "email",
+    },
+  ],
+  password: [
+    {
+      regex: /^[A-Za-z\d@$!%*?&]{6,}$/,
+      error: "eightCharacters",
+    },
+    {
+      regex: /(?=.*[A-Z])/,
+      error: "uppercaseLetter",
+    },
+    {
+      regex: /(?=.*[a-z])/,
+      error: "lowercaseLetter",
+    },
+    {
+      regex: /(?=.*\d)/,
+      error: "oneDigit",
+    },
+    {
+      regex: /[^-a-zA-Z0-9]/,
+      error: "nonAlphanumeric",
+    },
+  ],
+};
+
+export const securitySettingsValidation = (type: string, value: string) => {
+  const rules = regexValidation[type as keyof typeof regexValidation];
+  for (let i = 0; i < rules.length; i++) {
+    if (!value.match(rules[i].regex)) return rules[i].error;
+  }
+  return "";
+};

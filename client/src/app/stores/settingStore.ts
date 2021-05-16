@@ -12,6 +12,7 @@ export default class SettingStore {
   isLoading = false;
   firstname = "";
   lastname = "";
+  edittingEl = "";
 
   getGeneral = async () => {
     this.isLoading = true;
@@ -26,6 +27,29 @@ export default class SettingStore {
       runInAction(() => {
         this.isLoading = false;
       });
+    }
+  };
+
+  setEditting = (el: string) => {
+    this.edittingEl = el;
+  };
+
+  editSecurity = async (
+    type: string,
+    currentValue: string,
+    newValue: string
+  ) => {
+    const apiCalls = {
+      email: (email: string, newEmail: string) =>
+        agent.Settings.editEmail(email, newEmail),
+      password: (password: string, newPassword: string) =>
+        agent.Settings.editPassword(password, newPassword),
+    };
+
+    try {
+      await apiCalls[type as keyof typeof apiCalls](currentValue, newValue);
+    } catch (error) {
+      console.log(error.response);
     }
   };
 

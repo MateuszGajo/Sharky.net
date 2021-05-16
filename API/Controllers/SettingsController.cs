@@ -3,11 +3,13 @@ using Application.Settings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
+
+
 namespace API.Controllers
 {
     [ApiController]
     [Route("/api/[controller]")]
-    public class SettingsController
+    public class SettingsController : ControllerBase
     {
         private readonly IMediator _mediator;
         public SettingsController(IMediator mediator)
@@ -19,6 +21,19 @@ namespace API.Controllers
         public async Task<ActionResult<GeneralDto>> GeneralList()
         {
             return await _mediator.Send(new GeneralList.Query());
+        }
+
+        [HttpPut("password/edit")]
+        public async Task<ActionResult<Unit>> EditPassword(EditPassword.Command command)
+        {
+            return await _mediator.Send(command);
+        }
+
+
+        [HttpPut("email/edit")]
+        public async Task<ActionResult<Unit>> EditEmail(EditEmail.Command command)
+        {
+            return await _mediator.Send(command);
         }
 
         [HttpPut("general/edit")]

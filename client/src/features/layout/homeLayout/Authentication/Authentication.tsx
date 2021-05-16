@@ -58,7 +58,7 @@ const Authentication: React.FC<Props> = ({ type = "signin", children }) => {
             <div className={styles.buttonWrapper}>
               <button className={styles.welcomeButton}>
                 <Link href={type === "signin" ? "/signup" : "/signin"}>
-                  {buttonText}
+                  <span className="link-reset">{buttonText}</span>
                 </Link>
               </button>
             </div>

@@ -50,7 +50,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ListDto>>> InviteList(int start, string filter)
         {
-            System.Console.WriteLine(filter);
             return await _mediator.Send(new List.Query { Start = start, FilterText = filter });
         }
 

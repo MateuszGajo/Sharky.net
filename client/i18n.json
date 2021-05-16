@@ -10,6 +10,6 @@
     "/notifications": ["common", "components", "notifications"],
     "/messages": ["common", "components"],
     "/friends": ["common", "components"],
-    "/settings": ["common", "components"]
+    "/settings": ["common", "components", "settings"]
   }
 }

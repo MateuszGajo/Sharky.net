@@ -68,9 +68,7 @@ export default class CommentStore {
           this.setComment(appActivityId, comment);
         });
       }
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   createCommentListener = (path: string) => {
