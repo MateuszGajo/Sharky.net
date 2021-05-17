@@ -17,7 +17,7 @@ import {
   Notification as NotificationI,
   NotificationCount,
 } from "~root/src/app/models/notification";
-import { General, EditGeneral, Security } from "../models/setting";
+import { General, EditGeneral, Security, BlockUser } from "../models/setting";
 
 axios.defaults.baseURL = "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
@@ -134,6 +134,7 @@ const User = {
       `/user?start=${start}${filterText ? `&filter=${filterText}` : ""}`
     ),
   readNotification: () => requests.put<void>("/user/notification/read", {}),
+  Unblock: (id: string) => requests.delete<void>(`/user/${id}/unblock`),
 };
 
 interface GetFriendsExtend extends GetFriends {
@@ -193,6 +194,7 @@ const Settings = {
     requests.put("/settings/email/edit", { email, newEmail }),
   editPassword: (currentPassword: string, newPassword: string) =>
     requests.put("/settings/password/edit", { currentPassword, newPassword }),
+  blockedUsersList: () => requests.get<BlockUser[]>("/settings/user/blocked"),
 };
 
 export default {

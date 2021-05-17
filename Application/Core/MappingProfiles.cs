@@ -20,6 +20,7 @@ namespace Application.Core
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
             CreateMap<User, GeneralDto>();
+            CreateMap<BlockedUser, BlockUserDto>();
 
             CreateMap<UserFriendship, OnlineFriendDto>()
                 .ForMember(d => d.Friend, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));

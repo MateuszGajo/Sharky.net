@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Settings;
 using MediatR;
@@ -41,6 +42,12 @@ namespace API.Controllers
         public async Task<ActionResult<Unit>> GeneralEdit(EditGeneral.Command command)
         {
             return await _mediator.Send(command);
+        }
+
+        [HttpGet("user/blocked")]
+        public async Task<ActionResult<List<BlockUserDto>>> usersBlocked()
+        {
+            return await _mediator.Send(new BlockedUsersList.Query());
         }
     }
 }

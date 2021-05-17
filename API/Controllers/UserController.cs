@@ -82,6 +82,13 @@ namespace API.Controllers
             command.UserId = id;
             return await _mediator.Send(command);
         }
+
+        [HttpDelete("{id}/unblock")]
+        public async Task<ActionResult<Unit>> Unblock(Guid id)
+        {
+            return await _mediator.Send(new Unblock.Command { Id = id });
+        }
+
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<Unit>> Register(Register.Command command)

@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
+import { stringifyKey } from "mobx/dist/internal";
 import agent from "../api/agent";
-import { EditGeneral } from "../models/setting";
+import { EditGeneral, BlockUser } from "../models/setting";
 import { RootStore } from "./rootStore";
 
 export default class SettingStore {
@@ -13,6 +14,7 @@ export default class SettingStore {
   firstname = "";
   lastname = "";
   edittingEl = "";
+  usersBlocked = new Map<string, BlockUser>();
 
   getGeneral = async () => {
     this.isLoading = true;
@@ -28,6 +30,30 @@ export default class SettingStore {
         this.isLoading = false;
       });
     }
+  };
+
+  getUsersBlockedList = async () => {
+    this.isLoading = true;
+    try {
+      const list = await agent.Settings.blockedUsersList();
+      runInAction(() => {
+        list.forEach((userBlocked) => {
+          this.usersBlocked.set(userBlocked.id, userBlocked);
+        });
+        this.isLoading = false;
+      });
+    } catch (error) {
+      runInAction(() => {
+        this.isLoading = false;
+      });
+    }
+  };
+
+  unblock = async (id: string) => {
+    try {
+      await agent.User.Unblock(id);
+      this.usersBlocked.delete(id);
+    } catch (error) {}
   };
 
   setEditting = (el: string) => {
