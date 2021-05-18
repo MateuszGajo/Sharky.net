@@ -1,48 +1,64 @@
+import { observer } from "mobx-react-lite";
 import React from "react";
 import { Menu } from "semantic-ui-react";
+import { useSettingStore } from "~root/src/app/providers/RootStoreProvider";
 import styles from "./SettingsMenu.module.scss";
+import useTranslation from "next-translate/useTranslation";
 
 const SettingsMenu = () => {
-  const { activeItem } = { activeItem: "enterprise" };
-  const handleItemClick = (e: any, { name }: any) => {};
+  const { t } = useTranslation("settings");
+  const { activeItem, setActiveItem, openContent } = useSettingStore();
+  const handleItemClick = (e: React.MouseEvent<HTMLElement>, { name }: any) => {
+    setActiveItem(name);
+    openContent();
+  };
+
   return (
     <Menu vertical className={styles.container}>
       <Menu.Item>
-        <Menu.Header>General</Menu.Header>
+        <Menu.Header>{t("menu.general")}</Menu.Header>
 
         <Menu.Menu>
           <Menu.Item
-            name="Account settings"
-            active={activeItem === "enterprise"}
+            name="account"
+            active={activeItem === "account"}
             onClick={handleItemClick}
-          />
+          >
+            {t("menu.account")}
+          </Menu.Item>
           <Menu.Item
             name="security"
-            active={activeItem === "consumer"}
+            active={activeItem === "security"}
             onClick={handleItemClick}
-          />
+          >
+            {t("menu.security")}
+          </Menu.Item>
         </Menu.Menu>
       </Menu.Item>
 
       <Menu.Item>
-        <Menu.Header>Privacy</Menu.Header>
+        <Menu.Header>{t("menu.privacy")}</Menu.Header>
 
         <Menu.Menu>
           <Menu.Item
             name="blocking"
-            active={activeItem === "rails"}
+            active={activeItem === "blocking"}
             onClick={handleItemClick}
-          />
+          >
+            {t("menu.blocking")}
+          </Menu.Item>
           <Menu.Item
             name="notification"
-            active={activeItem === "python"}
+            active={activeItem === "notification"}
             onClick={handleItemClick}
-          />
+          >
+            {t("menu.notification")}
+          </Menu.Item>
         </Menu.Menu>
       </Menu.Item>
 
       <Menu.Item>
-        <Menu.Header>Support</Menu.Header>
+        <Menu.Header>{t("menu.support")}</Menu.Header>
 
         <Menu.Menu>
           <Menu.Item
@@ -50,7 +66,7 @@ const SettingsMenu = () => {
             active={activeItem === "email"}
             onClick={handleItemClick}
           >
-            E-mail Support
+            {t("menu.emailSupport")}
           </Menu.Item>
 
           <Menu.Item
@@ -58,7 +74,7 @@ const SettingsMenu = () => {
             active={activeItem === "faq"}
             onClick={handleItemClick}
           >
-            FAQs
+            {t("menu.faqs")}
           </Menu.Item>
         </Menu.Menu>
       </Menu.Item>
@@ -66,4 +82,4 @@ const SettingsMenu = () => {
   );
 };
 
-export default SettingsMenu;
+export default observer(SettingsMenu);

@@ -15,6 +15,8 @@ export default class SettingStore {
   lastname = "";
   edittingEl = "";
   usersBlocked = new Map<string, BlockUser>();
+  activeItem = "account";
+  isContentOpen = false;
 
   getGeneral = async () => {
     this.isLoading = true;
@@ -49,6 +51,9 @@ export default class SettingStore {
     }
   };
 
+  openContent = () => (this.isContentOpen = true);
+  closeContent = () => (this.isContentOpen = false);
+
   unblock = async (id: string) => {
     try {
       await agent.User.Unblock(id);
@@ -58,6 +63,10 @@ export default class SettingStore {
 
   setEditting = (el: string) => {
     this.edittingEl = el;
+  };
+
+  setActiveItem = (activeItem: string) => {
+    this.activeItem = activeItem;
   };
 
   editSecurity = async (

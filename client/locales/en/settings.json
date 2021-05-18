@@ -1,8 +1,8 @@
 {
   "error": {
     "retype": {
-      "password": "Retype password incorrect",
-      "email": "Retype email incorrect"
+      "password": "Passwords don't match",
+      "email": "Emails don't match"
     },
     "validation": {
       "email": "Email incorrect",
@@ -14,5 +14,38 @@
     },
     "password": "Password incorrect",
     "email": "Email incorrect"
+  },
+  "blocking": {
+    "empty": "You don't have blocked users"
+  },
+  "general": {
+    "firstname": "firstname",
+    "lastname": "lastname",
+    "edit": "edit",
+    "button": "Save changes",
+    "title": "General"
+  },
+  "menu": {
+    "general": "General",
+    "account": "Account",
+    "security": "Security",
+    "privacy": "Privacy",
+    "blocking": "Blocking",
+    "notification": "Notification",
+    "support": "Support",
+    "emailSupport": "E-mail Support",
+    "faqs": "FAQs"
+  },
+  "security": {
+    "login": "Login",
+    "email": "Change email",
+    "password": "Change password",
+    "current-email": "current",
+    "current-password": "current",
+    "new-email": "new",
+    "new-password": "new",
+    "retypeNew-email": "retypew new",
+    "retypeNew-password": "retype new",
+    "button": "Save changes"
   }
 }

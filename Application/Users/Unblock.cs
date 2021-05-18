@@ -39,7 +39,6 @@ namespace Application.Users
 
                 _context.BlockedUsers.Remove(blockedUser);
 
-
                 bool result = await _context.SaveChangesAsync() > 0;
                 if (result) return Unit.Value;
 

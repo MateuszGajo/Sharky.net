@@ -15,7 +15,6 @@ interface Props {
 
 const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
   const { t } = useTranslation("settings");
-
   const { edittingEl, setEditting, editSecurity } = useSettingStore();
 
   const [currentValue, setCurrentValue] = useState(item.value);
@@ -56,7 +55,7 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
     <div className={styles.container}>
       <div className={styles.itemContainer}>
         <div className={styles.name}>
-          <span> Change {item.name}</span>
+          <span> {t(`security.${item.name}`)}</span>
         </div>
         <div>
           <Button positive icon="edit" onClick={() => setEditting(item.name)} />
@@ -66,7 +65,9 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
         <div className={styles.editContainer}>
           <form className={styles.form} onSubmit={handleSubmit}>
             <div className={styles.field}>
-              <span className={styles.label}>current</span>
+              <span className={styles.label}>
+                {t(`security.current-${item.name}`)}
+              </span>
               <Input
                 value={currentValue}
                 onChange={(e) => setCurrentValue(e.target.value)}
@@ -77,7 +78,10 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
               )}
             </div>
             <div className={styles.field}>
-              <span className={styles.label}>new</span>
+              <span className={styles.label}>
+                {" "}
+                {t(`security.new-${item.name}`)}
+              </span>
               <Input
                 value={newValue}
                 onChange={(e) => setNewValue(e.target.value)}
@@ -86,7 +90,10 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
               {newValueError && <p className={styles.error}>{newValueError}</p>}
             </div>
             <div className={styles.field}>
-              <span className={styles.label}>retype new</span>
+              <span className={styles.label}>
+                {" "}
+                {t(`security.retypeNew-${item.name}`)}
+              </span>
               <Input
                 value={retypeNewValue}
                 onChange={(e) => setRetypeNewValue(e.target.value)}
@@ -97,7 +104,7 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
               )}
             </div>
             <div className={styles.buttonContainer}>
-              <Button positive>Save changes</Button>
+              <Button positive>{t("security.button")}</Button>
             </div>
           </form>
         </div>

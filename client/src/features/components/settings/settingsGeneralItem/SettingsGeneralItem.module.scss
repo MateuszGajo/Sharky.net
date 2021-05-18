@@ -1,6 +1,7 @@
 :global(#app) {
   .item {
     display: flex;
+    font-size: 1rem;
   }
 
   .bigDivider {
@@ -23,8 +24,6 @@
   }
 
   .buttonContainer {
-    display: flex;
-    justify-content: center;
     margin-top: 1rem;
   }
 

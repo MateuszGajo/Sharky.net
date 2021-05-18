@@ -1,0 +1,51 @@
+{
+  "error": {
+    "retype": {
+      "password": "Hasła są rózne",
+      "email": "Emaile są różne "
+    },
+    "validation": {
+      "email": "Niepoprawny email",
+      "eightCharacters": "Hasło musi mieć minmalnie 6 znaków",
+      "uppercaseLetter": "Hasło musi zawierać 1 dużą litere",
+      "lowercaseLetter": "Hasło musi zawierać 1 małą litere",
+      "oneDigit": "Hasło musi zawierać cyfre",
+      "nonAlphanumeric": "Hasło nie może zawierać znak specjalny"
+    },
+    "password": "Nieprawidłowe hasło",
+    "email": "Nieprawidłowy email"
+  },
+  "blocking": {
+    "empty": "Nie masz zablokowanych użytkowników"
+  },
+  "general": {
+    "firstname": "imię",
+    "lastname": "nazwisko",
+    "edit": "edytuj",
+    "button": "Zapisz zmiany",
+    "title": "Ogólne"
+  },
+  "menu": {
+    "general": "Ogólne",
+    "account": "Konto",
+    "security": "Bezpieczeństwo",
+    "privacy": "Prywatność",
+    "blocking": "Blokowanie",
+    "notification": "Powiadomienia",
+    "support": "Wsparcie",
+    "emailSupport": "Wsparcie e-mail",
+    "faqs": "FAQs"
+  },
+  "security": {
+    "login": "Logowanie",
+    "email": "Zmień email",
+    "password": "Zmień hasło",
+    "current-email": "aktualny",
+    "current-password": "aktualne",
+    "new-email": "nowy",
+    "new-password": "nowe",
+    "retypeNew-email": "powtórz nowy",
+    "retypeNew-password": "powtórz nowe",
+    "button": "Zapisz zmiany"
+  }
+}

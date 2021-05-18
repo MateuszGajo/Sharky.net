@@ -11,7 +11,42 @@
     flex-grow: 1;
   }
 
+  .title {
+    display: flex;
+    align-items: center;
+  }
+
+  .titleText {
+    margin: 0 0 0 1rem;
+  }
+
+  .backIconContainer {
+    width: 2em;
+    height: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .backIcon {
+    color: $primaryColor;
+    font-size: 1.5rem;
+    height: auto;
+  }
+
   .settingsWrapper {
     width: 60%;
+  }
+
+  @media (max-width: 1023px) {
+    .settingsWrapper {
+      width: 95%;
+    }
+
+    @media (max-width: 1023px) {
+      .loading {
+        margin-top: 4em;
+      }
+    }
   }
 }
