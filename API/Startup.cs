@@ -62,13 +62,6 @@ namespace API
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
-            services.AddIdentityCore<User>(opt =>
-            {
-                opt.Password.RequireNonAlphanumeric = false;
-            })
-            .AddEntityFrameworkStores<DataBaseContext>()
-            .AddSignInManager<SignInManager<User>>();
-            // .AddDefaultTokenProviders(); 
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
             services.AddAuthentication(options =>
@@ -98,6 +91,15 @@ namespace API
                            }
                        };
                    });
+
+            services.AddIdentityCore<User>(opt =>
+            {
+                opt.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<DataBaseContext>()
+            .AddSignInManager<SignInManager<User>>()
+             .AddDefaultTokenProviders();
+
             services.AddSignalR();
 
             services.AddCors(opt =>

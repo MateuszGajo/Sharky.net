@@ -18,11 +18,11 @@ select:focus {
   color: $primaryColor;
 }
 
-#app a {
+#app .link-reset {
   color: inherit;
 }
 
-#app a:hover {
+#app .link-reset:hover {
   color: inherit;
 }
 

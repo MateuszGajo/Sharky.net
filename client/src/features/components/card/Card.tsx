@@ -6,7 +6,8 @@ interface Props {
   photo?: string;
   name: string;
   onDeleteClick?: (id: string) => void;
-  onInviteClick?: (id: string) => void;
+  onButtonClick?: (id: string) => void;
+  buttonText?: string;
   referenceId: string;
 }
 
@@ -14,8 +15,9 @@ const Card: React.FC<Props> = ({
   photo,
   name,
   onDeleteClick,
-  onInviteClick,
+  onButtonClick,
   referenceId,
+  buttonText,
 }) => {
   return (
     <div className={styles.container}>
@@ -50,13 +52,13 @@ const Card: React.FC<Props> = ({
               </Dropdown.Menu>
             </Dropdown>
           ) : (
-            onInviteClick && (
+            onButtonClick && (
               <Button
                 positive
                 size="tiny"
-                onClick={() => onInviteClick(referenceId)}
+                onClick={() => onButtonClick(referenceId)}
               >
-                invite
+                {buttonText}
               </Button>
             )
           )}

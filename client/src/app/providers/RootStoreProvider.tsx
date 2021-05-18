@@ -61,6 +61,11 @@ export const useNotificationStore = () => {
   return notificationStore;
 };
 
+export const useSettingStore = () => {
+  const { settingsStore } = useRootStore();
+  return settingsStore;
+};
+
 export function RootStoreProvider({
   children,
   hydrationData,

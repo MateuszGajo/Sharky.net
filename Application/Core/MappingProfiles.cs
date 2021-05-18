@@ -6,6 +6,7 @@ using Application.Comments;
 using Application.Conversations;
 using Application.Friends;
 using Application.Replies;
+using Application.Settings;
 using Application.Users;
 using Domain;
 
@@ -18,38 +19,42 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
+            CreateMap<User, GeneralDto>();
+            CreateMap<BlockedUser, BlockUserDto>();
+
             CreateMap<UserFriendship, OnlineFriendDto>()
                 .ForMember(d => d.Friend, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
+
             CreateMap<UserFriendship, FriendDto>()
-            .ForMember(d => d.User, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
+                .ForMember(d => d.User, o => o.MapFrom(s => s.RequestedBy.Id != userId ? s.RequestedBy : s.RequestedTo));
 
             CreateMap<Conversation, ConversationDto>()
-            .ForMember(d => d.User, o => o.MapFrom(s => s.Creator.Id != userId ? s.Creator : s.Recipient))
-            .ForMember(d => d.FriendshipId, o => o.MapFrom(s => s.Friendship.Id));
+                .ForMember(d => d.User, o => o.MapFrom(s => s.Creator.Id != userId ? s.Creator : s.Recipient))
+                .ForMember(d => d.FriendshipId, o => o.MapFrom(s => s.Friendship.Id));
 
             CreateMap<User, ListDto>()
-            .ForMember(d => d.isFriend, o => o.MapFrom(s => s.FriendsOf.Any(x => x.RequestedBy.Id == userId) || s.Friends.Any(x => x.RequestedTo.Id == userId)));
+                .ForMember(d => d.isFriend, o => o.MapFrom(s => s.FriendsOf.Any(x => x.RequestedBy.Id == userId) || s.Friends.Any(x => x.RequestedTo.Id == userId)));
 
             CreateMap<Conversation, FriendConversationDto>();
             CreateMap<Message, MessageDto>();
 
             CreateMap<AppActivity, ActivityDto>()
-            .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.Activity.Id))
-            .ForMember(d => d.User, o => o.MapFrom(s => s.Activity.User))
-            .ForMember(d => d.Content, o => o.MapFrom(s => s.Activity.Content))
-            .ForMember(d => d.Photo, o => o.MapFrom(s => s.Activity.Photo))
-            .ForMember(d => d.ModifiedAt, o => o.MapFrom(s => s.CreatedAt))
-            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.Activity.CreatedAt))
-            .ForMember(d => d.Likes, o => o.MapFrom(s => s.Activity.LikesCount))
-            .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Activity.Likes.FirstOrDefault(x => x.User.Id == userId) == null ? false : true))
-            .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Activity.CommentsCount))
-            .ForMember(d => d.SharesCount, o => o.MapFrom(s => s.Activity.SharesCount))
-            .ForMember(d => d.Share, o => o.MapFrom(s => s));
+                .ForMember(d => d.ActivityId, o => o.MapFrom(s => s.Activity.Id))
+                .ForMember(d => d.User, o => o.MapFrom(s => s.Activity.User))
+                .ForMember(d => d.Content, o => o.MapFrom(s => s.Activity.Content))
+                .ForMember(d => d.Photo, o => o.MapFrom(s => s.Activity.Photo))
+                .ForMember(d => d.ModifiedAt, o => o.MapFrom(s => s.CreatedAt))
+                .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.Activity.CreatedAt))
+                .ForMember(d => d.Likes, o => o.MapFrom(s => s.Activity.LikesCount))
+                .ForMember(d => d.IsLiked, o => o.MapFrom(s => s.Activity.Likes.FirstOrDefault(x => x.User.Id == userId) == null ? false : true))
+                .ForMember(d => d.CommentsCount, o => o.MapFrom(s => s.Activity.CommentsCount))
+                .ForMember(d => d.SharesCount, o => o.MapFrom(s => s.Activity.SharesCount))
+                .ForMember(d => d.Share, o => o.MapFrom(s => s));
 
             CreateMap<AppActivity, ShareDto>()
-            .ForMember(d => d.User, o => o.MapFrom(s => s.SharingUser))
-            .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedAt))
-            .ForMember(d => d.AppActivityId, o => o.MapFrom(s => s.AppActivityId));
+                .ForMember(d => d.User, o => o.MapFrom(s => s.SharingUser))
+                .ForMember(d => d.CreatedAt, o => o.MapFrom(s => s.CreatedAt))
+                .ForMember(d => d.AppActivityId, o => o.MapFrom(s => s.AppActivityId));
 
             CreateMap<User, UserDto>();
 

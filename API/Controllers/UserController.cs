@@ -50,7 +50,6 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ListDto>>> InviteList(int start, string filter)
         {
-            System.Console.WriteLine(filter);
             return await _mediator.Send(new List.Query { Start = start, FilterText = filter });
         }
 
@@ -83,6 +82,13 @@ namespace API.Controllers
             command.UserId = id;
             return await _mediator.Send(command);
         }
+
+        [HttpDelete("{id}/unblock")]
+        public async Task<ActionResult<Unit>> Unblock(Guid id)
+        {
+            return await _mediator.Send(new Unblock.Command { Id = id });
+        }
+
         [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult<Unit>> Register(Register.Command command)

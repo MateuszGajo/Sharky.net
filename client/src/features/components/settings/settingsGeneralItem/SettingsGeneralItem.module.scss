@@ -1,0 +1,38 @@
+:global(#app) {
+  .item {
+    display: flex;
+    font-size: 1rem;
+  }
+
+  .bigDivider {
+    border-top: 1px solid $primaryGrey;
+    border-bottom: 1px solid $primaryGrey;
+  }
+
+  .fieldName {
+    width: 40%;
+    font-weight: bold;
+  }
+
+  .fieldContent {
+    width: 40%;
+    color: $primaryGrey;
+  }
+
+  .form {
+    width: max-content;
+  }
+
+  .buttonContainer {
+    margin-top: 1rem;
+  }
+
+  .fieldEdit {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+    width: 20%;
+    color: $primaryColor;
+    cursor: pointer;
+  }
+}

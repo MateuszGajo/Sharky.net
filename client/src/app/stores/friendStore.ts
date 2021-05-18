@@ -70,7 +70,6 @@ export default class FriendStore {
   };
 
   addFriend = async (userId: string) => {
-    console.log(userId);
     try {
       this.root.commonStore.hubConnection?.invoke("AddFriend", userId);
       this.userList.delete(userId);

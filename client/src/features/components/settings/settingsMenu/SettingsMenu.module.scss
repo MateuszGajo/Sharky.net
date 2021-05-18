@@ -1,0 +1,12 @@
+:global(#app) {
+  .container {
+    height: 100vh;
+    margin: 0;
+  }
+
+  @media (max-width: 1023px) {
+    .container {
+      width: 100vw;
+    }
+  }
+}
