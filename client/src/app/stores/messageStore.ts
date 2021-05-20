@@ -3,7 +3,7 @@ import agent from "../api/agent";
 import { User } from "../models/activity";
 import { ConversationItem, Message } from "../models/conversation";
 import { Friend, OnlineFriend } from "../models/user";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class MessageStore {
   root: RootStore;
@@ -207,7 +207,7 @@ export default class MessageStore {
     );
   };
 
-  newMessage = (
+  newMessage = async (
     id: string,
     message: string,
     conversationId: string,
@@ -225,6 +225,11 @@ export default class MessageStore {
         body: message,
         author: user,
       };
+
+      try {
+        await agent.Conversation.readMessages(this.conversationId!);
+      } catch (error) {}
+
       this.root.messageStore.messagesCount += 1;
       this.root.messageStore.messages.set(newMessage.id, newMessage);
     } else {

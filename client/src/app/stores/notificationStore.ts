@@ -1,4 +1,4 @@
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 import { Notification as NotificationI } from "~models/notification";
 import agent from "../api/agent";
 import { makeAutoObservable, runInAction } from "mobx";

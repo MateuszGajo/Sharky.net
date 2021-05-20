@@ -6,7 +6,7 @@ import {
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/authentication";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class CommonStore {
   root: RootStore;

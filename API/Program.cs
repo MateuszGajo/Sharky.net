@@ -16,7 +16,7 @@ namespace API
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
             using (var serviceScope = host.Services.CreateScope())
@@ -24,7 +24,7 @@ namespace API
                 var context = serviceScope.ServiceProvider.GetRequiredService<DataBaseContext>();
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 context.Database.Migrate();
-                Seed.SeedData(context, userManager);
+                await Seed.SeedData(context, userManager);
             }
             host.Run();
         }

@@ -86,7 +86,7 @@ const Friends = () => {
                   return (
                     <Card
                       name={user.firstName + " " + user.lastName}
-                      onInviteClick={addFriend}
+                      onButtonClick={addFriend}
                       referenceId={user.id}
                     />
                   );

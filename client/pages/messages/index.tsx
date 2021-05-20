@@ -109,7 +109,7 @@ const Messages = () => {
                         openMessenger(
                           conversation.user,
                           conversation.id,
-                          conversation.FriendId!,
+                          conversation.FriendshipId!,
                           conversation.messageTo == user.id,
                           conversation.MessagesCount
                         );

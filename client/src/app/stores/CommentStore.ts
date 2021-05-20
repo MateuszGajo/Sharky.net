@@ -1,7 +1,7 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { CommentMap, Reply, User } from "../models/activity";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class CommentStore {
   root: RootStore;

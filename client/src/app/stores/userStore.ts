@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 import agent from "~api/agent";
 
 export default class UserStore {

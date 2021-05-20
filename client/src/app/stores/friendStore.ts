@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { User } from "../models/activity";
 import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class FriendStore {
   root: RootStore;
