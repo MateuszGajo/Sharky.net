@@ -36,10 +36,17 @@ namespace API
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            //dev db
+            // services.AddDbContext<DataBaseContext>(opt =>
+            // {
+            //     opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
+            //     opt.UseSqlite(Configuration.GetConnectionString("DefaultDevConnection"));
+            //     opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            // });
+
             services.AddDbContext<DataBaseContext>(options =>
             {
                 var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
@@ -72,19 +79,17 @@ namespace API
                 options.UseNpgsql(connStr);
             });
 
-
             services.AddMediatR(typeof(Details.Handler).Assembly);
             services.AddControllers(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                )
-            .AddFluentValidation(cfg =>
-            {
-                cfg.RegisterValidatorsFromAssemblyContaining<Register>();
-            });
+                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                ).AddFluentValidation(cfg =>
+                {
+                    cfg.RegisterValidatorsFromAssemblyContaining<Register>();
+                });
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
@@ -122,9 +127,9 @@ namespace API
             {
                 opt.Password.RequireNonAlphanumeric = false;
             })
-            .AddEntityFrameworkStores<DataBaseContext>()
-            .AddSignInManager<SignInManager<User>>()
-             .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<DataBaseContext>()
+                .AddSignInManager<SignInManager<User>>()
+                .AddDefaultTokenProviders();
 
             services.AddSignalR();
 
@@ -132,7 +137,7 @@ namespace API
             {
                 opt.AddPolicy("myPolicy", builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(Configuration["Url:client"]);
                 });
             });
 
@@ -146,26 +151,19 @@ namespace API
                 c.CustomSchemaIds(type => type.ToString());
             });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
-            // app.UseHttpsRedirection();
-
             app.UseRouting();
-
 
             app.UseCors("myPolicy");
             app.UseAuthentication();
-
 
             app.UseAuthorization();
 

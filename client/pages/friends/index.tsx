@@ -6,6 +6,7 @@ import Card from "~components/card/Card";
 import { useFriendStore } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PrivateRoute from "~root/src/features/routes/PrivateRoute";
 
 const Friends = () => {
   const {
@@ -100,4 +101,4 @@ const Friends = () => {
   );
 };
 
-export default observer(Friends);
+export default PrivateRoute(observer(Friends));

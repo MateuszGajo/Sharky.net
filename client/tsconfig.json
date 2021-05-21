@@ -23,7 +23,8 @@
       "~api/*": ["./src/app/api/*"],
       "~models/*": ["./src/app/models/*"],
       "~stores/*": ["./src/app/stores/*"],
-      "~utils/*": ["./src/app/utils/*"]
+      "~utils/*": ["./src/app/utils/*"],
+      "~routes/*": ["./src/features/routes/*"]
     },
     "noEmit": true
   },

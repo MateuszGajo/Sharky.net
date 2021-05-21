@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Application.DTOs;
-using Application.Errors;
 using Application.Interface;
 using Application.Users;
 using Domain;
@@ -70,10 +69,10 @@ namespace API.Controllers
             return await _mediator.Send(new ReadNotification.Command { });
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> Details(string id)
+        [HttpGet("verification")]
+        public async Task<ActionResult<Application.Activities.UserDto>> Details()
         {
-            return await _mediator.Send(new Details.Query { Id = id });
+            return await _mediator.Send(new Application.Users.Details.Query());
         }
 
         [HttpPost("{id}/report")]
@@ -122,13 +121,23 @@ namespace API.Controllers
             return Unit.Value;
         }
 
-        [AllowAnonymous]
         [HttpDelete("logout")]
         public ActionResult<Unit> Logout()
         {
-            Response.Cookies.Delete("Token");
+            var token = _jwtGenerator.CreateEmptyToken();
+
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = DateTime.Now.AddDays(-1),
+                SameSite = SameSiteMode.None,
+                Secure = true
+            };
+
+            Response.Cookies.Append("Token", token, cookieOptions);
             return Unit.Value;
         }
+
         [AllowAnonymous]
         [HttpPost("creds")]
         public ActionResult<CredsDto> GetCreds()
@@ -461,7 +470,8 @@ namespace API.Controllers
             {
                 HttpOnly = true,
                 Expires = DateTime.Now.AddDays(7),
-                SameSite = SameSiteMode.Strict
+                SameSite = SameSiteMode.None,
+                Secure = true
             };
             Response.Cookies.Append("Token", token, cookieOptions);
         }
@@ -474,7 +484,8 @@ namespace API.Controllers
             {
                 HttpOnly = true,
                 Expires = DateTime.Now.AddDays(7),
-                SameSite = SameSiteMode.Strict
+                SameSite = SameSiteMode.None,
+                Secure = true
             };
 
             Response.Cookies.Append("creds", token, cookieOptions);

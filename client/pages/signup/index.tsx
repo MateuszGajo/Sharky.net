@@ -4,6 +4,7 @@ import * as MultiStepForm from "~components/multiStepForm/MultiStepForm";
 import Loading from "~common/Loading/Loading";
 import { observer } from "mobx-react-lite";
 import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
+import PublicRoute from "~root/src/features/routes/PublicRoute";
 
 const SignUp = () => {
   const { loading, loadRegisterValues } = useAuthenticationStore();
@@ -33,10 +34,8 @@ const SignUp = () => {
   );
 };
 
-export async function getStaticProps() {
-  return {
-    props: {},
-  };
+export async function getServerSideProps() {
+  return {};
 }
 
-export default observer(SignUp);
+export default PublicRoute(observer(SignUp));

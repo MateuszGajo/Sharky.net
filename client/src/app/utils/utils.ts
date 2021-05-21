@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import cookies from "js-cookie";
 import { Token } from "../models/authentication";
 import React from "react";
+import agent from "../api/agent";
 
 export const navItems = [
   {
@@ -236,6 +237,13 @@ export const verifyJWT = (token: string) => {
 export const isLoggedIn = async (req: NextApiRequest) => {
   try {
     const resp = await verifyJWT(req.cookies["Token"]);
+    try {
+      await agent.User.verification();
+    } catch (error) {
+      // console.log(error);
+    }
+
+    // console.log(resp);
     const user = {
       id: resp.id,
       firstName: resp.firstName,

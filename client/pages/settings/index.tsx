@@ -7,6 +7,7 @@ import styles from "./settings.module.scss";
 import { useMediaQuery } from "react-responsive";
 import { useSettingStore } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
+import PrivateRoute from "~root/src/features/routes/PrivateRoute";
 
 const index = () => {
   const { isContentOpen } = useSettingStore();
@@ -34,8 +35,8 @@ const index = () => {
   );
 };
 
-export const getServerSideProps = async ({ req, ctx }: any) => {
-  return await isLoggedIn(req);
+export const getServerSideProps = async () => {
+  return {};
 };
 
-export default observer(index);
+export default PrivateRoute(observer(index));

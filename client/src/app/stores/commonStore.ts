@@ -5,7 +5,7 @@ import {
 } from "@microsoft/signalr";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { User } from "../models/authentication";
+import { User } from "../models/activity";
 import { RootStore } from "./RootStore";
 
 export default class CommonStore {
@@ -13,9 +13,7 @@ export default class CommonStore {
   user: User = {
     firstName: "",
     lastName: "",
-    phone: "",
     id: "",
-    email: "",
     photo: null,
   };
 
@@ -52,7 +50,7 @@ export default class CommonStore {
 
   createHubConnection = (path: string) => {
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl("http://localhost:5000/commonHub")
+      .withUrl(process.env.NEXT_PUBLIC_SERVER_URL + "/commonHub")
       .withAutomaticReconnect()
       .configureLogging(LogLevel.Information)
       .build();
@@ -72,12 +70,6 @@ export default class CommonStore {
       ?.stop()
       .catch((err) => console.log("Error stopping connection: ", err));
   };
-
-  hydrate(data?: any) {
-    if (data) {
-      this.user = data;
-    }
-  }
 
   getUser = () => {
     return this.user;

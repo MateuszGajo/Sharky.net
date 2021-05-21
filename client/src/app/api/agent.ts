@@ -13,13 +13,14 @@ import {
 import axios, { AxiosResponse } from "axios";
 import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
 import { ConversationItem, Message } from "../models/conversation";
+import { User as UserI } from "~models/activity";
 import {
   Notification as NotificationI,
   NotificationCount,
 } from "~root/src/app/models/notification";
 import { General, EditGeneral, Security, BlockUser } from "../models/setting";
 
-axios.defaults.baseURL = "http://localhost:5000/api";
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_URL + "/api";
 axios.defaults.withCredentials = true;
 
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
@@ -125,6 +126,7 @@ const Replies = {
 };
 
 const User = {
+  verification: () => requests.get<UserI>(`user/verification`),
   block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
   report: (id: string, reasons: string[]) =>
     requests.post(`/user/${id}/report`, { reasons }),

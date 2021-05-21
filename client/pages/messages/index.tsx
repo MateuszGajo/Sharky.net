@@ -13,6 +13,7 @@ import {
 import { formatDate, isLoggedIn } from "~utils/utils";
 import styles from "./messages.module.scss";
 import InfiniteScroll from "react-infinite-scroll-component";
+import PrivateRoute from "~root/src/features/routes/PrivateRoute";
 
 const Messages = () => {
   const {
@@ -152,8 +153,8 @@ const Messages = () => {
   );
 };
 
-export const getServerSideProps = async ({ req, ctx }: any) => {
-  return await isLoggedIn(req);
+export const getServerSideProps = async () => {
+  return {};
 };
 
-export default observer(Messages);
+export default PrivateRoute(observer(Messages));

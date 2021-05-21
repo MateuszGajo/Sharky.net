@@ -182,11 +182,8 @@ namespace Persistence
                 tom.Friends.Add(friendshipTomCharlie);
                 charlie.FriendsOf.Add(friendshipTomCharlie);
                 friends.Add(friendshipTomCharlie);
-                System.Console.WriteLine("zapis");
                 context.AddRange(friends);
-                System.Console.WriteLine("zapis1");
                 await context.SaveChangesAsync();
-                System.Console.WriteLine("zapi2");
             }
 
         }

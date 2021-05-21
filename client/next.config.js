@@ -5,5 +5,4 @@ module.exports = withPlugins([[nextTranslate]], {
   sassOptions: {
     prependData: `@import "~styles/variables.scss";`,
   },
-  distDir: "build",
 });

@@ -3,13 +3,14 @@
   "defaultLocale": "en",
   "pages": {
     "*": ["common"],
-    "/home": ["home", "common", "components"],
+    "/": ["home", "components"],
+    "/home": ["home", "components"],
     "/about": ["about"],
     "/signin": ["layout", "signin"],
     "/signup": ["signup", "layout", "common"],
-    "/notifications": ["common", "components", "notifications"],
-    "/messages": ["common", "components"],
-    "/friends": ["common", "components"],
-    "/settings": ["common", "components", "settings"]
+    "/notifications": ["components", "notifications"],
+    "/messages": ["components"],
+    "/friends": ["components"],
+    "/settings": ["components", "settings"]
   }
 }

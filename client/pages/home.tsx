@@ -3,6 +3,7 @@ import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
 import { isLoggedIn } from "~utils/utils";
 import HomeLayout from "~root/src/features/layout/homeLayout/HomeLayout";
 import ActivitiesList from "~components/activities/activitiesList/ActivitiesList";
+import PrivateRoute from "~routes/PrivateRoute";
 
 const home = () => {
   return (
@@ -15,8 +16,8 @@ const home = () => {
   );
 };
 
-export const getServerSideProps = async ({ req, ctx }: any) => {
-  return await isLoggedIn(req);
+export const getServerSideProps = (ctx: any) => {
+  return {};
 };
 
-export default home;
+export default PrivateRoute(home);

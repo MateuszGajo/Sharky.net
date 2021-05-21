@@ -9,6 +9,15 @@ export default class UserStore {
     makeAutoObservable(this);
   }
 
+  verifyUser = async () => {
+    try {
+      const resp = await agent.User.verification();
+      this.root.commonStore.user = resp;
+    } catch (error) {
+      throw error;
+    }
+  };
+
   blockUser = async (id: string) => {
     try {
       await agent.User.block(id);
