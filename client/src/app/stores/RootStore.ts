@@ -41,10 +41,4 @@ export class RootStore {
     this.notificationStore = new NotificationStore(this);
     this.settingsStore = new SettingStore(this);
   }
-
-  hydrate(data: RootStoreHydration) {
-    if (data.user) {
-      this.commonStore.hydrate(data.user);
-    }
-  }
 }

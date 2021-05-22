@@ -1,6 +1,6 @@
 import { enableStaticRendering } from "mobx-react-lite";
 import React, { createContext, ReactNode, useContext } from "react";
-import { RootStore, RootStoreHydration } from "../stores/rootStore";
+import { RootStore, RootStoreHydration } from "../stores/RootStore";
 
 enableStaticRendering(typeof window === "undefined");
 
@@ -66,26 +66,16 @@ export const useSettingStore = () => {
   return settingsStore;
 };
 
-export function RootStoreProvider({
-  children,
-  hydrationData,
-}: {
-  children: ReactNode;
-  hydrationData?: RootStoreHydration;
-}) {
-  const store = initializeStore(hydrationData);
+export function RootStoreProvider({ children }: { children: ReactNode }) {
+  const store = initializeStore();
 
   return (
     <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
   );
 }
 
-function initializeStore(initialData?: RootStoreHydration): RootStore {
+function initializeStore(): RootStore {
   const _store = store ?? new RootStore();
-
-  if (initialData) {
-    _store.hydrate(initialData);
-  }
 
   if (typeof window === "undefined") return _store;
 

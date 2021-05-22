@@ -13,7 +13,7 @@ import { observer } from "mobx-react-lite";
 import styles from "./signin.module.scss";
 import { isNotLoggedIn } from "~utils/utils";
 import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
-import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr";
+import PublicRoute from "../../src/features/routes/PublicRoute";
 
 const Signin = (props: any) => {
   const router = useRouter();
@@ -134,8 +134,8 @@ const Signin = (props: any) => {
   );
 };
 
-export const getServerSideProps = async ({ req }: any) => {
-  return await isNotLoggedIn(req);
+export const getServerSideProps = () => {
+  return {};
 };
 
-export default observer(Signin);
+export default PublicRoute(observer(Signin));

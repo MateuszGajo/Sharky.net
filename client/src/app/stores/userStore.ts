@@ -1,5 +1,5 @@
 import { makeAutoObservable, runInAction } from "mobx";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 import agent from "~api/agent";
 
 export default class UserStore {
@@ -8,6 +8,15 @@ export default class UserStore {
     this.root = root;
     makeAutoObservable(this);
   }
+
+  verifyUser = async () => {
+    try {
+      const resp = await agent.User.verification();
+      this.root.commonStore.user = resp;
+    } catch (error) {
+      throw error;
+    }
+  };
 
   blockUser = async (id: string) => {
     try {

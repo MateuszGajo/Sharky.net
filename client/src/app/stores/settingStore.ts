@@ -2,7 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { stringifyKey } from "mobx/dist/internal";
 import agent from "../api/agent";
 import { EditGeneral, BlockUser } from "../models/setting";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class SettingStore {
   root: RootStore;

@@ -7,6 +7,7 @@ namespace Application.Interface
     {
         string CreateToken(User user);
         string CreateCredsToken(CredsDto creds);
+        string CreateEmptyToken();
         CredsDto decodeToken(string token);
     }
 }

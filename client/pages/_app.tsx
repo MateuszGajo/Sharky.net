@@ -6,7 +6,7 @@ import "~styles/reset.scss";
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
-    <RootStoreProvider hydrationData={{ user: pageProps.user }}>
+    <RootStoreProvider>
       <Component {...pageProps} />
     </RootStoreProvider>
   );

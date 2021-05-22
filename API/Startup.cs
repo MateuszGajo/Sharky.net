@@ -36,15 +36,47 @@ namespace API
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataBaseContext>(opt =>
+
+            //dev db
+            // services.AddDbContext<DataBaseContext>(opt =>
+            // {
+            //     opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
+            //     opt.UseSqlite(Configuration.GetConnectionString("DefaultDevConnection"));
+            //     opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+            // });
+
+            services.AddDbContext<DataBaseContext>(options =>
             {
-                opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-                opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                options.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
+                options.UseNpgsql(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+
+                string connStr;
+
+                if (env == "Development")
+                {
+                    connStr = Configuration.GetConnectionString("DefaultConnection");
+                }
+                else
+                {
+                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+                    connUrl = connUrl.Replace("postgres://", string.Empty);
+                    var pgUserPass = connUrl.Split("@")[0];
+                    var pgHostPortDb = connUrl.Split("@")[1];
+                    var pgHostPort = pgHostPortDb.Split("/")[0];
+                    var pgDb = pgHostPortDb.Split("/")[1];
+                    var pgUser = pgUserPass.Split(":")[0];
+                    var pgPass = pgUserPass.Split(":")[1];
+                    var pgHost = pgHostPort.Split(":")[0];
+                    var pgPort = pgHostPort.Split(":")[1];
+
+                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}; SSL Mode=Require; Trust Server Certificate=true";
+                }
+                options.UseNpgsql(connStr);
             });
 
             services.AddMediatR(typeof(Details.Handler).Assembly);
@@ -53,12 +85,11 @@ namespace API
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             }).AddNewtonsoftJson(options =>
-                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-                )
-            .AddFluentValidation(cfg =>
-            {
-                cfg.RegisterValidatorsFromAssemblyContaining<Register>();
-            });
+                  options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                ).AddFluentValidation(cfg =>
+                {
+                    cfg.RegisterValidatorsFromAssemblyContaining<Register>();
+                });
 
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
 
@@ -96,9 +127,9 @@ namespace API
             {
                 opt.Password.RequireNonAlphanumeric = false;
             })
-            .AddEntityFrameworkStores<DataBaseContext>()
-            .AddSignInManager<SignInManager<User>>()
-             .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<DataBaseContext>()
+                .AddSignInManager<SignInManager<User>>()
+                .AddDefaultTokenProviders();
 
             services.AddSignalR();
 
@@ -106,7 +137,7 @@ namespace API
             {
                 opt.AddPolicy("myPolicy", builder =>
                 {
-                    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+                    builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins(Configuration["Url:client"]);
                 });
             });
 
@@ -120,25 +151,19 @@ namespace API
                 c.CustomSchemaIds(type => type.ToString());
             });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<ErrorHandlingMiddleware>();
             if (env.IsDevelopment())
             {
-                // app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
-
-            // app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseCors("myPolicy");
             app.UseAuthentication();
-
 
             app.UseAuthorization();
 

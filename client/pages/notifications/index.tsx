@@ -8,6 +8,7 @@ import {
   useNotificationStore,
 } from "~root/src/app/providers/RootStoreProvider";
 import { isLoggedIn } from "~root/src/app/utils/utils";
+import PrivateRoute from "~root/src/features/routes/PrivateRoute";
 
 const Notifications = () => {
   const { notificationCount, readNotification } = useCommonStore();
@@ -34,8 +35,8 @@ const Notifications = () => {
   );
 };
 
-export const getServerSideProps = async ({ req, ctx }: any) => {
-  return await isLoggedIn(req);
+export const getServerSideProps = async () => {
+  return {};
 };
 
-export default observer(Notifications);
+export default PrivateRoute(observer(Notifications));

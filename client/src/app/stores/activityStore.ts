@@ -7,7 +7,7 @@ import {
 } from "./../models/activity";
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "~api/agent";
-import { RootStore } from "./rootStore";
+import { RootStore } from "./RootStore";
 
 export default class AcitivtyStore {
   root: RootStore;
@@ -19,6 +19,7 @@ export default class AcitivtyStore {
   activities = new Map<string, ActivityMap>();
   activity: ActivityMap | undefined = undefined;
   isSubmitting = false;
+  isLoading = false;
 
   get activitiesByDate() {
     return Array.from(this.activities.values()).sort((a, b) => {
@@ -150,20 +151,22 @@ export default class AcitivtyStore {
   };
 
   getActivity = async (appActivityId: string) => {
+    this.isLoading = true;
     const activity = this.activities.get(appActivityId);
-    runInAction(async () => {
-      if (activity) this.activity = activity;
-      else {
-        const getActivity = await agent.Activities.get(appActivityId);
-        runInAction(() => {
-          const newActivity = {
-            ...getActivity,
-            comments: new Map<string, CommentMap>(),
-          };
-          this.activity = newActivity;
-        });
-      }
-    });
+    if (activity) {
+      this.activity = activity;
+      this.isLoading = false;
+    } else {
+      const getActivity = await agent.Activities.get(appActivityId);
+      runInAction(() => {
+        const newActivity = {
+          ...getActivity,
+          comments: new Map<string, CommentMap>(),
+        };
+        this.activity = newActivity;
+        this.isLoading = false;
+      });
+    }
   };
 
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {

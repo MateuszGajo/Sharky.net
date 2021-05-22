@@ -1,13 +1,9 @@
 import React from "react";
-import Link from "next/link";
+import PrivateRoute from "~root/src/features/routes/PrivateRoute";
+import Home from "./home";
 
-const Home = () => {
-  return (
-    <div>
-      <Link href="/home">Home</Link>
-      <Link href="/signup">Home</Link>
-    </div>
-  );
+const Index = () => {
+  return <Home />;
 };
 
-export default Home;
+export default PrivateRoute(Index);
