@@ -199,7 +199,7 @@ export default class MessageStore {
             lastMessage: {
               id: id,
               createdAt: createdAt as Date,
-              body: message as string,
+              body: messageContext,
               author: user as User,
             },
           };
