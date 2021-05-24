@@ -1,6 +1,5 @@
 import React from "react";
 import MessageBoxItem from "~common/messageBox/messageBox/MessageBox";
-import { isLoggedIn } from "~utils/utils";
 import HomeLayout from "~root/src/features/layout/homeLayout/HomeLayout";
 import ActivitiesList from "~components/activities/activitiesList/ActivitiesList";
 import PrivateRoute from "~routes/PrivateRoute";

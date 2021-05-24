@@ -33,5 +33,12 @@
         "report": "Report user"
       }
     }
+  },
+  "messageBox": {
+    "placeholder": "what's up?",
+    "createPost": "Create post",
+    "editPost": "Edit post",
+    "sendButton": "Send",
+    "saveButton": "Save"
   }
 }

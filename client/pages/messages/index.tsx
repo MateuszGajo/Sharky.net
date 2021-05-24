@@ -14,8 +14,10 @@ import { formatDate, isLoggedIn } from "~utils/utils";
 import styles from "./messages.module.scss";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PrivateRoute from "~root/src/features/routes/PrivateRoute";
+import useTranslation from "next-translate/useTranslation";
 
 const Messages = () => {
+  const { t } = useTranslation("messages");
   const {
     getConversationsByDate,
     getConversation,
@@ -52,10 +54,11 @@ const Messages = () => {
     getConversation().then(() => {
       if (conversations.size > 0 && !isTabletOrMobileDevice) {
         const conversation = conversations.entries().next().value[1];
+        console.log(conversation);
         openMessenger(
           conversation.user,
           conversation.id,
-          conversation.FriendId!,
+          conversation.friendshipId!,
           conversation.messageTo == user.id,
           conversation.MessagesCount
         );
@@ -76,10 +79,14 @@ const Messages = () => {
   const fetchData = () => {
     getConversation();
   };
+
+  const startNewConversationText = t("startNewConversation");
   return (
     <HomeLayout>
       {isLoading ? (
         <Loading />
+      ) : conversations.size == 0 ? (
+        <p>any</p>
       ) : (
         <div className={styles.container}>
           <div
@@ -128,11 +135,20 @@ const Messages = () => {
                             " " +
                             conversation.user.lastName}
                           <Feed.Date>
-                            {formatDate(conversation.lastMessage.createdAt)}
+                            {conversation?.lastMessage?.createdAt &&
+                              formatDate(conversation?.lastMessage?.createdAt)}
                           </Feed.Date>
                         </Feed.Summary>
 
-                        <Feed.Extra>{conversation.lastMessage.body}</Feed.Extra>
+                        <Feed.Extra>
+                          {conversation?.lastMessage?.body ? (
+                            conversation?.lastMessage?.body
+                          ) : (
+                            <p className={styles.newConversation}>
+                              {startNewConversationText}
+                            </p>
+                          )}
+                        </Feed.Extra>
                       </Feed.Content>
                     </Feed.Event>
                   );

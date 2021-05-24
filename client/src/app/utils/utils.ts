@@ -239,11 +239,8 @@ export const isLoggedIn = async (req: NextApiRequest) => {
     const resp = await verifyJWT(req.cookies["Token"]);
     try {
       await agent.User.verification();
-    } catch (error) {
-      // console.log(error);
-    }
+    } catch (error) {}
 
-    // console.log(resp);
     const user = {
       id: resp.id,
       firstName: resp.firstName,

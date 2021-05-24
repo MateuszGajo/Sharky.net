@@ -56,6 +56,7 @@ const SettingsUsersBlocked = () => {
           referenceId={userBlocked.id}
           buttonText="Unblock"
           onButtonClick={unblockUser}
+          key={userBlocked.id}
         />
       ))}
     </div>

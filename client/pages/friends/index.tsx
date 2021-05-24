@@ -77,6 +77,7 @@ const Friends = () => {
                       name={friend.user.firstName + " " + friend.user.lastName}
                       onDeleteClick={unfriend}
                       referenceId={friend.id}
+                      key={friend.id}
                     />
                   );
                 })}
@@ -89,6 +90,8 @@ const Friends = () => {
                       name={user.firstName + " " + user.lastName}
                       onButtonClick={addFriend}
                       referenceId={user.id}
+                      key={user.id}
+                      buttonText="add"
                     />
                   );
                 })}

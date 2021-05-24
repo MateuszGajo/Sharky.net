@@ -4,5 +4,6 @@
     "email": "Incorrect email",
     "phone": "Incorrect phone number",
     "confirmPassword": "Password must match"
-  }
+  },
+  "pageInDevelopment": "We are working on it"
 }

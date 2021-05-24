@@ -1,7 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
-import { Container, Feed, Icon, Loader, Segment } from "semantic-ui-react";
-import { useRouter } from "next/router";
+import { Container, Feed, Icon, Segment } from "semantic-ui-react";
 import {
   useCommonStore,
   useFriendStore,
@@ -12,19 +11,13 @@ import styles from "./Sidebar.module.scss";
 const Sidebar = () => {
   const { openMessenger } = useMessagesStore();
   const { user } = useCommonStore();
-  const router = useRouter();
 
   const { getOnlineFriends, onlineFriends } = useFriendStore();
-  const { createHubConnection, stopHubConnection } = useCommonStore();
 
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     getOnlineFriends().then(() => setLoading(false));
-    createHubConnection(router.pathname);
-    return () => {
-      stopHubConnection();
-    };
   }, []);
 
   return (
@@ -67,7 +60,7 @@ const Sidebar = () => {
           </Feed.Event>
         </Feed>
       ))}
-      {isLoading ? (
+      {isLoading && onlineFriends.size == 0 ? (
         <Segment basic loading className={styles.loader} />
       ) : (
         onlineFriends.size == 0 && <p>There are no active friends</p>

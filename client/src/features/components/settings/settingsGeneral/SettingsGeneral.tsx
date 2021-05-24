@@ -46,7 +46,7 @@ const SettingsContent = () => {
         <Divider className={styles.bigDivider} />
         <div className={styles.itemWrapper}>
           {generalSettings.map((item) => {
-            return <SettingsGeneralItem item={item} />;
+            return <SettingsGeneralItem item={item} key={item.name} />;
           })}
         </div>
       </div>

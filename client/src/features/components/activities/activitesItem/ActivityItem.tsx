@@ -176,12 +176,8 @@ const ActivityItem: React.FC<{
   const { firstName, lastName } = item.user;
   const { user: sharingUser } = item.share || {};
 
-  const {
-    deleteActivity,
-    hideActivity,
-    unshareActivity,
-    getActivity,
-  } = useActivityStore();
+  const { deleteActivity, hideActivity, unshareActivity, getActivity } =
+    useActivityStore();
   const { blockUser } = useUserStore();
 
   const date = formatDate(new Date(item.createdAt));

@@ -26,15 +26,17 @@ export default class MessageStore {
 
   get getMesangesByDate() {
     return Array.from(this.messages.values()).sort((a, b) => {
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return (
+        new Date(b?.createdAt).getTime() - new Date(a?.createdAt).getTime()
+      );
     });
   }
 
   get getConversationsByDate() {
     return Array.from(this.conversations.values()).sort((a, b) => {
       return (
-        new Date(b.lastMessage.createdAt).getTime() -
-        new Date(a.lastMessage.createdAt).getTime()
+        new Date(b?.lastMessage?.createdAt).getTime() -
+        new Date(a?.lastMessage?.createdAt).getTime()
       );
     });
   }
@@ -55,6 +57,7 @@ export default class MessageStore {
     isWindowMessenger: boolean = false
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
+    console.log(conversationId, friendshipId, user);
     if (this.conversationId !== conversationId || conversationId == null) {
       this.conversationId = conversationId;
       this.friendshipId = friendshipId;
@@ -62,7 +65,6 @@ export default class MessageStore {
       this.messagesCount = messagesCount;
       this.isWindowMessenger = isWindowMessenger;
       this.messages = new Map<string, Message>();
-
       if (isMessage === true) {
         try {
           await agent.Conversation.readMessages(this.conversationId!);
@@ -171,6 +173,8 @@ export default class MessageStore {
 
   addMessage = async (messageContext: string) => {
     try {
+      console.log(this.conversationId, this.friendshipId, messageContext);
+      console.log(this.root.commonStore.hubConnection);
       const {
         value: { id, createdAt, user },
       } = await this.root.commonStore.hubConnection?.invoke("AddMessage", {
@@ -188,8 +192,23 @@ export default class MessageStore {
       runInAction(() => {
         this.messagesCount += 1;
         this.messages.set(message.id, message);
+        const conversation = this.conversations.get(this.conversationId!);
+        if (conversation) {
+          const newConversation = {
+            ...conversation,
+            lastMessage: {
+              id: id,
+              createdAt: createdAt as Date,
+              body: message as string,
+              author: user as User,
+            },
+          };
+          this.conversations.set(newConversation.id!, newConversation);
+        }
       });
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   messageListener = () => {
@@ -202,8 +221,22 @@ export default class MessageStore {
         createdAt: Date,
         user: User,
         friendId: string
-      ) =>
-        this.newMessage(id, message, conversationId, createdAt, user, friendId)
+      ) => {
+        this.newMessage(id, message, conversationId, createdAt, user, friendId);
+        const conversation = this.conversations.get(this.conversationId!);
+        if (conversation) {
+          const newConversation = {
+            ...conversation,
+            lastMessage: {
+              id,
+              createdAt,
+              body: message,
+              author: user,
+            },
+          };
+          this.conversations.set(newConversation.id!, newConversation);
+        }
+      }
     );
   };
 

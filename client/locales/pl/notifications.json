@@ -5,5 +5,11 @@
   },
   "comment": {
     "added": "Skomentował twój post"
+  },
+  "request": {
+    "info": "Chce cie dodać jako ",
+    "friend": "przyjciela",
+    "approve": "Przyjmnij",
+    "decline": "Odrzuć"
   }
 }

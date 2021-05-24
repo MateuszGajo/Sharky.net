@@ -169,6 +169,10 @@ export default class AcitivtyStore {
     }
   };
 
+  clearActivity = () => {
+    this.activity = undefined;
+  };
+
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {
     try {
       if (!isLiked) {

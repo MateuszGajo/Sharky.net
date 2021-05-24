@@ -5,5 +5,11 @@
   },
   "comment": {
     "added": "Replied to your post"
+  },
+  "request": {
+    "info": " wants to add you as a ",
+    "friend": "friend",
+    "approve": "Approve",
+    "decline": "Decline"
   }
 }

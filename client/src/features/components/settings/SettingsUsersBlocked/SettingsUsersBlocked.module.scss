@@ -9,6 +9,10 @@
     margin-top: 2em;
   }
 
+  .loading::before {
+    background: transparent;
+  }
+
   .information {
     display: inline-block;
     font-size: 1.3rem;

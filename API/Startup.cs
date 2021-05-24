@@ -39,45 +39,45 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-            //dev db
-            // services.AddDbContext<DataBaseContext>(opt =>
-            // {
-            //     opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
-            //     opt.UseSqlite(Configuration.GetConnectionString("DefaultDevConnection"));
-            //     opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-            // });
-
-            services.AddDbContext<DataBaseContext>(options =>
+            // dev db
+            services.AddDbContext<DataBaseContext>(opt =>
             {
-                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-
-                options.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
-                options.UseNpgsql(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
-
-                string connStr;
-
-                if (env == "Development")
-                {
-                    connStr = Configuration.GetConnectionString("DefaultConnection");
-                }
-                else
-                {
-                    var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-                    connUrl = connUrl.Replace("postgres://", string.Empty);
-                    var pgUserPass = connUrl.Split("@")[0];
-                    var pgHostPortDb = connUrl.Split("@")[1];
-                    var pgHostPort = pgHostPortDb.Split("/")[0];
-                    var pgDb = pgHostPortDb.Split("/")[1];
-                    var pgUser = pgUserPass.Split(":")[0];
-                    var pgPass = pgUserPass.Split(":")[1];
-                    var pgHost = pgHostPort.Split(":")[0];
-                    var pgPort = pgHostPort.Split(":")[1];
-
-                    connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}; SSL Mode=Require; Trust Server Certificate=true";
-                }
-                options.UseNpgsql(connStr);
+                opt.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultDevConnection"));
+                opt.UseSqlite(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
             });
+
+            // services.AddDbContext<DataBaseContext>(options =>
+            // {
+            //     var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            //     options.ConfigureWarnings(x => x.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
+            //     options.UseNpgsql(c => c.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery));
+
+            //     string connStr;
+
+            //     if (env == "Development")
+            //     {
+            //         connStr = Configuration.GetConnectionString("DefaultConnection");
+            //     }
+            //     else
+            //     {
+            //         var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            //         connUrl = connUrl.Replace("postgres://", string.Empty);
+            //         var pgUserPass = connUrl.Split("@")[0];
+            //         var pgHostPortDb = connUrl.Split("@")[1];
+            //         var pgHostPort = pgHostPortDb.Split("/")[0];
+            //         var pgDb = pgHostPortDb.Split("/")[1];
+            //         var pgUser = pgUserPass.Split(":")[0];
+            //         var pgPass = pgUserPass.Split(":")[1];
+            //         var pgHost = pgHostPort.Split(":")[0];
+            //         var pgPort = pgHostPort.Split(":")[1];
+
+            //         connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}; SSL Mode=Require; Trust Server Certificate=true";
+            //     }
+            //     options.UseNpgsql(connStr);
+            // });
 
             services.AddMediatR(typeof(Details.Handler).Assembly);
             services.AddControllers(opt =>

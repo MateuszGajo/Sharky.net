@@ -42,7 +42,7 @@ namespace Application.Conversations
 
                 List<ConversationDto> conversation = await _context
                 .Conversations
-                .Where(x => (x.Creator.Id == userId || x.Recipient.Id == userId) && x.LastMessage != null)
+                .Where(x => (x.Creator.Id == userId || x.Recipient.Id == userId))
                 .Skip(request.From)
                 .Take(10)
                 .ProjectTo<ConversationDto>(_mapper.ConfigurationProvider, new { userId = userId })

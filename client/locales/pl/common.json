@@ -4,5 +4,6 @@
     "email": "Niepoprawny e-mail",
     "phone": "Niepoprawny numer telefonu",
     "confirmPassword": "Hasła musza być takie same"
-  }
+  },
+  "pageInDevelopment": "Pracujemy nad tym"
 }
