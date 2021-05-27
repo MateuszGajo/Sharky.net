@@ -4,7 +4,7 @@ import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "~root/src/app/utils/utils";
 import { Notification } from "~models/notification";
 import styles from "./ActivityNotification.module.scss";
-import ActivitiesItemModal from "~components/activities/activitiesItemModal/activitiesItemModal";
+import ActivitiesItemModal from "~components/activities/activitiesItemModal/ActivitiesItemModal";
 
 interface Props {
   item: Notification;

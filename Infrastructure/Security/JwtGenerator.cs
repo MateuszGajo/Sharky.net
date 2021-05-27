@@ -45,11 +45,16 @@ namespace Infrastructure.Security
 
         public string CreateToken(User user)
         {
+            var email = user.Email;
+            if (string.IsNullOrEmpty(email))
+            {
+                email = "";
+            }
             var claims = new List<Claim>{
                new Claim("id", user.Id.ToString()),
                new Claim("firstName", user.FirstName),
                new Claim("lastName", user.LastName),
-               new Claim("email", user.Email),
+               new Claim("email", email),
            };
 
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

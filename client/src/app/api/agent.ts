@@ -50,6 +50,8 @@ const Account = {
     requests.post<void>("/user/register", user),
   creds: () => requests.post<SigninFormValues>("user/creds", {}),
   logout: () => requests.delete<void>("/user/logout"),
+  google: (token: string) => requests.post<void>(`user/google`, { token }),
+  facebook: (token: string) => requests.post<void>(`user/facebook`, { token }),
 };
 
 const Activities = {

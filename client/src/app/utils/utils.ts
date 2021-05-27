@@ -173,8 +173,14 @@ const polishMonthNames = [
 ];
 
 export const formatDate = (date: Date) => {
+  // console.log(new Date().getTimezoneOffset());
+  // console.log(new Date().getTime());
+  //fix zone time in producation
   const time = new Date(date).getTime();
-  const currentTime = new Date().getTime();
+  const timeObj = new Date();
+  const timezoneDiffrences = timeObj.getTimezoneOffset() * 60000;
+  const currentTime = timeObj.getTime() - timezoneDiffrences;
+
   const timeDifference = currentTime - time;
 
   const language = cookies.get("NEXT_LOCALE");

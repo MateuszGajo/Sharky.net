@@ -3,7 +3,6 @@ import { Checkbox, Icon, Message } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import { Form, Formik } from "formik";
 import cx from "classnames";
-import axios from "axios";
 import { useRouter } from "next/router";
 import { signinValidationSchema as validationSchema } from "~utils/utils";
 import Loading from "~common/Loading/Loading";
@@ -11,9 +10,10 @@ import SecondaryInput from "~common/secondaryInput/SecondaryInput";
 import Authentication from "~layout/homeLayout/Authentication/Authentication";
 import { observer } from "mobx-react-lite";
 import styles from "./signin.module.scss";
-import { isNotLoggedIn } from "~utils/utils";
 import { useAuthenticationStore } from "~root/src/app/providers/RootStoreProvider";
 import PublicRoute from "../../src/features/routes/PublicRoute";
+import GoogleLogin from "react-google-login";
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
 
 const Signin = (props: any) => {
   const router = useRouter();
@@ -24,7 +24,12 @@ const Signin = (props: any) => {
     loading: isLoading,
     creds,
     getCreds,
+    loginByGoogle,
+    loginByFacebook,
   } = useAuthenticationStore();
+
+  const [socialError, setSocialError] = useState(false);
+  const [isGoogleUnavailable, setGoogleUnavailable] = useState(false);
 
   const { t } = useTranslation("signin");
 
@@ -34,59 +39,71 @@ const Signin = (props: any) => {
   const alternativeText = t("alternativeText");
   const PasswordText = t("password");
   const credsError = t("credsError");
-  const errorText = t("error");
-
-  const [error, setError] = useState(false);
+  const socialErrorText = t("socialError");
 
   useEffect(() => {
     getCreds();
-    if (router.query["error"]) {
-      setError(true);
-      router.replace("/signin?error", "/signin", { shallow: true });
-    }
   }, []);
 
-  const serverUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+  const handleLogin = async (googleData: any) => {
+    loginByGoogle(googleData.tokenId)
+      .then(() => {
+        router.push("/home");
+      })
+      .catch(() => setSocialError(true));
+  };
+
+  const handleError = async () => {
+    setGoogleUnavailable(true);
+  };
+
+  const responseFacebook = async (response: any) => {
+    const token = response.accessToken;
+    loginByFacebook(token)
+      .then(() => {
+        router.push("/home");
+      })
+      .catch(() => setSocialError(true));
+  };
+
   return (
     <Authentication>
       <div className={styles.container}>
         <div className={styles.iconContainer}>
-          <Icon
-            name="facebook f"
-            size="large"
-            circular
-            className={cx(styles.icon, styles.facebookIcon)}
-            onClick={() => {
-              router.push(
-                `https://www.facebook.com/v10.0/dialog/oauth?client_id=487050989139304&redirect_uri=${serverUrl}/api/user/facebook/callback`
-              );
-            }}
-          />
-          <Icon
-            name="google"
-            size="large"
-            circular
-            className={cx(styles.icon, styles.googleIcon)}
-            onClick={() => {
-              router.push(
-                `https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile&response_type=code&redirect_uri=${serverUrl}/api/user/google/callback&client_id=24467567497-5u280n3sol5ihd15u09en4nn7567l93d.apps.googleusercontent.com`
-              );
-            }}
-          />
+          {!isGoogleUnavailable && (
+            <GoogleLogin
+              clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+              onSuccess={handleLogin}
+              onFailure={handleError}
+              render={(renderProps) => (
+                <Icon
+                  name="google"
+                  size="large"
+                  circular
+                  className={cx(styles.icon, styles.googleIcon)}
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                />
+              )}
+              cookiePolicy={"single_host_origin"}
+            />
+          )}
 
-          <Icon
-            name="twitter"
-            size="large"
-            circular
-            className={cx(styles.icon, styles.twitterIcon)}
-            onClick={() => {
-              axios
-                .post(`${serverUrl}/api/user/twitter`)
-                .then((resp) => router.push(resp.data));
-            }}
+          <FacebookLogin
+            appId="487050989139304"
+            callback={responseFacebook}
+            render={(renderProps: any) => (
+              <Icon
+                name="facebook f"
+                size="large"
+                circular
+                onClick={renderProps.onClick}
+                className={cx(styles.icon, styles.facebookIcon)}
+              />
+            )}
           />
         </div>
-        {error && <p className={styles.error}>{errorText}</p>}
+        {socialError && <p className={styles.socialError}>{socialErrorText}</p>}
         <p className={styles.alternativeText}>{alternativeText}</p>
         <Formik
           initialValues={creds}

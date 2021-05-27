@@ -118,6 +118,22 @@ export default class AuthenticationStore {
       });
   };
 
+  loginByGoogle = async (token: string) => {
+    try {
+      await agent.Account.google(token);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  loginByFacebook = async (token: string) => {
+    try {
+      await agent.Account.facebook(token);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   getCreds = () => {
     if (localStorage.getItem("creds")) {
       agent.Account.creds()

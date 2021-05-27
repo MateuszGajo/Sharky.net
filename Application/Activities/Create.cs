@@ -72,6 +72,7 @@ namespace Application.Activities
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
                 DateTime date = DateTime.Now;
+                System.Console.WriteLine(date);
                 Guid activityId = Guid.NewGuid();
                 Guid appActivityId = Guid.NewGuid();
                 var activity = new Domain.Activity

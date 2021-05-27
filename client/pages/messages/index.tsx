@@ -54,7 +54,6 @@ const Messages = () => {
     getConversation().then(() => {
       if (conversations.size > 0 && !isTabletOrMobileDevice) {
         const conversation = conversations.entries().next().value[1];
-        console.log(conversation);
         openMessenger(
           conversation.user,
           conversation.id,
