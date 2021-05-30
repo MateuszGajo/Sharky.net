@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { Card, Image, Container, Icon, Segment, Item } from "semantic-ui-react";
+import { Card, Image, Icon, Segment } from "semantic-ui-react";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import { ActivityMap } from "~root/src/app/models/activity";
 import ActivityDownbar from "../activitesDownbar/ActivityDownbar";
 import styles from "./ActivityItem.module.scss";
@@ -175,12 +176,13 @@ const ActivityItem: React.FC<{
 }> = ({ item, setOpen, isShared, isModal = false }) => {
   const { firstName, lastName } = item.user;
   const { user: sharingUser } = item.share || {};
+  const router = useRouter();
 
   const { deleteActivity, hideActivity, unshareActivity, getActivity } =
     useActivityStore();
   const { blockUser } = useUserStore();
 
-  const date = formatDate(new Date(item.createdAt));
+  const date = formatDate(new Date(item.createdAt), router.locale!);
 
   const [isEditting, setStatusOfEdit] = useState(false);
   const [isOpen, setReportOpen] = useState(false);

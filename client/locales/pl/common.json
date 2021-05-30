@@ -5,5 +5,12 @@
     "phone": "Niepoprawny numer telefonu",
     "confirmPassword": "Hasła musza być takie same"
   },
-  "pageInDevelopment": "Pracujemy nad tym"
+  "card": {
+    "unfriend": "Usuń znajomego"
+  },
+  "sidebar": {
+    "noActiveFriends": "Żaden znajomy nie jest online"
+  },
+  "pageInDevelopment": "Pracujemy nad tym",
+  "loading": "Ładowanie..."
 }

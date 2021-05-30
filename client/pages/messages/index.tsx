@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Feed, Loader } from "semantic-ui-react";
 import cx from "classnames";
 import { useMediaQuery } from "react-responsive";
+import { useRouter } from "next/router";
 import Loading from "~common/Loading/Loading";
 import Messenger from "~components/messenger/Messenger";
 import HomeLayout from "~layout/homeLayout/HomeLayout";
@@ -27,6 +28,8 @@ const Messages = () => {
     isMessengerOpen,
   } = useMessagesStore();
   const { user } = useCommonStore();
+
+  const router = useRouter();
 
   const isTabletOrMobileDevice = useMediaQuery({
     query: "(max-device-width: 1023px)",
@@ -76,6 +79,7 @@ const Messages = () => {
     }
   }, [isLoading]);
   const fetchData = () => {
+    console.log("fetch");
     getConversation();
   };
 
@@ -135,7 +139,10 @@ const Messages = () => {
                             conversation.user.lastName}
                           <Feed.Date>
                             {conversation?.lastMessage?.createdAt &&
-                              formatDate(conversation?.lastMessage?.createdAt)}
+                              formatDate(
+                                conversation?.lastMessage?.createdAt,
+                                router.locale!
+                              )}
                           </Feed.Date>
                         </Feed.Summary>
 

@@ -44,7 +44,7 @@ namespace Application.Conversations
                 .Conversations
                 .Where(x => (x.Creator.Id == userId || x.Recipient.Id == userId))
                 .Skip(request.From)
-                .Take(10)
+                .Take(20)
                 .ProjectTo<ConversationDto>(_mapper.ConfigurationProvider, new { userId = userId })
                 .ToListAsync();
 

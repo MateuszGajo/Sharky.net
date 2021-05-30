@@ -98,7 +98,7 @@ export default class MessageStore {
       const conversations = await agent.Conversation.get(
         this.conversations.size
       );
-      if (conversations.length < 10) {
+      if (conversations.length < 20) {
         this.isMoreConversation = false;
       }
       runInAction(() => {

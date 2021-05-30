@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Feed } from "semantic-ui-react";
+import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import { formatDate } from "~root/src/app/utils/utils";
 import { Notification } from "~models/notification";
@@ -12,6 +13,7 @@ interface Props {
 
 const ActivityNotification: React.FC<Props> = ({ item }) => {
   const { t } = useTranslation("notifications");
+  const router = useRouter();
   const [click, setClick] = useState(0);
   return (
     <>
@@ -33,7 +35,9 @@ const ActivityNotification: React.FC<Props> = ({ item }) => {
               <Feed.User>
                 {item.user.firstName + " " + item.user.lastName}
               </Feed.User>{" "}
-              <Feed.Date>{formatDate(item.createdAt)}</Feed.Date>
+              <Feed.Date>
+                {formatDate(item.createdAt, router.locale!)}
+              </Feed.Date>
             </Feed.Summary>
             <Feed.Extra text>{t(`${item.type}.${item.action}`)}</Feed.Extra>
           </Feed.Content>

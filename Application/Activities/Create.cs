@@ -71,8 +71,7 @@ namespace Application.Activities
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
-                DateTime date = DateTime.Now;
-                System.Console.WriteLine(date);
+                DateTime date = DateTime.UtcNow;
                 Guid activityId = Guid.NewGuid();
                 Guid appActivityId = Guid.NewGuid();
                 var activity = new Domain.Activity
@@ -96,7 +95,7 @@ namespace Application.Activities
                     User = user,
                     Type = "post",
                     Action = "added",
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = date,
                     RefId = appActivityId
                 };
 

@@ -10,7 +10,7 @@
     "/signup": ["signup", "layout", "common"],
     "/notifications": ["components", "notifications"],
     "/messages": ["components", "messages"],
-    "/friends": ["components"],
+    "/friends": ["components", "friends"],
     "/settings": ["components", "settings"],
     "/world": ["components"],
     "/groups": ["components"],

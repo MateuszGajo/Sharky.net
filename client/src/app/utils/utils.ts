@@ -172,18 +172,22 @@ const polishMonthNames = [
   "Grudzień",
 ];
 
-export const formatDate = (date: Date) => {
-  // console.log(new Date().getTimezoneOffset());
-  // console.log(new Date().getTime());
-  //fix zone time in producation
-  const time = new Date(date).getTime();
-  const timeObj = new Date();
-  const timezoneDiffrences = timeObj.getTimezoneOffset() * 60000;
-  const currentTime = timeObj.getTime() - timezoneDiffrences;
+const acceptedLanguages = { pl: true, en: true };
 
-  const timeDifference = currentTime - time;
+export const formatDate = (date: Date, currentPagelng: string) => {
+  const serverTime = new Date(date).getTime();
+  const currentTime = new Date().getTime();
 
-  const language = cookies.get("NEXT_LOCALE");
+  const timeDifference = currentTime - serverTime;
+
+  let language = cookies.get("NEXT_LOCALE");
+  if (
+    acceptedLanguages[currentPagelng as keyof typeof acceptedLanguages] &&
+    language !== currentPagelng
+  ) {
+    language = currentPagelng;
+  }
+
   if (timeDifference < 86400000) {
     if (timeDifference < 60000) {
       const secondsAgo = Math.floor(timeDifference / 1000);

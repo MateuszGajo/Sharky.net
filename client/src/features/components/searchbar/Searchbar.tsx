@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Button, Icon } from "semantic-ui-react";
 import styles from "./Searchbar.module.scss";
 import SearchbarItem from "./SearchbarItem";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   value: string;
@@ -24,6 +25,7 @@ const Searchbar: React.FC<Props> = ({
   onSubmit,
 }) => {
   const myFormRef = useRef<HTMLFormElement>(null);
+  const { t } = useTranslation("friends");
 
   const handleKeyDown = (e: any) => {
     if (e.onKeyDownCode === 13) {
@@ -33,6 +35,8 @@ const Searchbar: React.FC<Props> = ({
     }
   };
   const [activeElement, setActiveElement] = useState("left");
+
+  const searchPlaceholder = t("searchPlaceholder");
   return (
     <div className={styles.container}>
       <div
@@ -50,7 +54,7 @@ const Searchbar: React.FC<Props> = ({
             className={styles.input}
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="find a friend"
+            placeholder={searchPlaceholder}
             onKeyDown={handleKeyDown}
           />
           <Button

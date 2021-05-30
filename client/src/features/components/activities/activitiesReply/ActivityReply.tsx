@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Comment, Icon } from "semantic-ui-react";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import styles from "./ActivityReply.module.scss";
 import { Reply } from "~root/src/app/models/activity";
 import ActivityDropdown from "../activitiesDropdown/ActivityDropdown";
@@ -17,13 +18,11 @@ const ActivityReply: React.FC<Props> = ({ item, activityId, commentId }) => {
   const { author, createdAt, content } = item;
   const { firstName, lastName } = author;
 
-  const date = formatDate(new Date(createdAt));
-  const {
-    deleteReply,
-    hideReply,
-    unhideReply,
-    replyLikeHandle,
-  } = useReplyStore();
+  const router = useRouter();
+
+  const date = formatDate(new Date(createdAt), router.locale!);
+  const { deleteReply, hideReply, unhideReply, replyLikeHandle } =
+    useReplyStore();
 
   const [isHidden, setStatusOfHidden] = useState(item.isHidden);
   const [isSubmitting, setStatusOfSubmitting] = useState(false);

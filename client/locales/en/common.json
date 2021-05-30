@@ -5,5 +5,12 @@
     "phone": "Incorrect phone number",
     "confirmPassword": "Password must match"
   },
-  "pageInDevelopment": "We are working on it"
+  "card": {
+    "unfriend": "unfriend"
+  },
+  "sidebar": {
+    "noActiveFriends": "There are no active friends"
+  },
+  "pageInDevelopment": "We are working on it",
+  "loading": "Loading..."
 }

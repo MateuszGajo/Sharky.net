@@ -1,6 +1,7 @@
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { Container, Feed, Icon, Segment } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 import {
   useCommonStore,
   useFriendStore,
@@ -11,6 +12,7 @@ import styles from "./Sidebar.module.scss";
 const Sidebar = () => {
   const { openMessenger } = useMessagesStore();
   const { user } = useCommonStore();
+  const { t } = useTranslation("common");
 
   const { getOnlineFriends, onlineFriends } = useFriendStore();
 
@@ -19,6 +21,8 @@ const Sidebar = () => {
   useEffect(() => {
     getOnlineFriends().then(() => setLoading(false));
   }, []);
+
+  const noActiveFriends = t("sidebar.noActiveFriends");
 
   return (
     <Container className={styles.container}>
@@ -63,7 +67,7 @@ const Sidebar = () => {
       {isLoading && onlineFriends.size == 0 ? (
         <Segment basic loading className={styles.loader} />
       ) : (
-        onlineFriends.size == 0 && <p>There are no active friends</p>
+        onlineFriends.size == 0 && <p>{noActiveFriends}</p>
       )}
     </Container>
   );

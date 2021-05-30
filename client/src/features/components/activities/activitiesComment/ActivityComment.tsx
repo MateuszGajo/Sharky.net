@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Comment, Input, Item } from "semantic-ui-react";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import { CommentMap } from "~root/src/app/models/activity";
 import styles from "./ActivityComment.module.scss";
 import { useCommentStore } from "~root/src/app/providers/RootStoreProvider";
@@ -32,7 +33,8 @@ const CommentContent: React.FC<CommentContentI> = ({
   setStatusOfEdit,
 }) => {
   const { editComment } = useCommentStore();
-  const date = formatDate(new Date(item.createdAt));
+  const router = useRouter();
+  const date = formatDate(new Date(item.createdAt), router.locale!);
   const handleEditSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (item.content == content) {
