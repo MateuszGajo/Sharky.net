@@ -7,6 +7,7 @@ import { useFriendStore } from "~root/src/app/providers/RootStoreProvider";
 import { observer } from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PrivateRoute from "~root/src/features/routes/PrivateRoute";
+import useTranslation from "next-translate/useTranslation";
 
 const Friends = () => {
   const {
@@ -19,6 +20,8 @@ const Friends = () => {
     userList,
     addFriend,
   } = useFriendStore();
+  const { t } = useTranslation("friends");
+
   const [value, setValue] = useState("");
   const [view, setView] = useState("friends");
 
@@ -49,6 +52,11 @@ const Friends = () => {
     else getUser(value);
   };
 
+  const loadingText = t("common:loading");
+  const friendsText = t("friends");
+  const addFriendsText = t("addFriends");
+  const buttonText = t("addButton");
+
   return (
     <HomeLayout sidebar>
       <div className={styles.content}>
@@ -58,15 +66,15 @@ const Friends = () => {
           onLeftItemClick={handleFriendClick}
           onRightItemClick={handleAddFriendClick}
           onSubmit={handleSubmit}
-          leftText="Friends"
-          rightText="Add friends"
+          leftText={friendsText}
+          rightText={addFriendsText}
         />
 
         <InfiniteScroll
           dataLength={view === "friends" ? friends.size : userList.size}
           next={() => fetchData(view)}
           hasMore={view === "friends" ? isMoreFriends : isMoreUsers}
-          loader={<h4>Loading...</h4>}
+          loader={<h4>{loadingText}</h4>}
         >
           <div className={styles.cardContainer}>
             {view === "friends" ? (
@@ -77,6 +85,7 @@ const Friends = () => {
                       name={friend.user.firstName + " " + friend.user.lastName}
                       onDeleteClick={unfriend}
                       referenceId={friend.id}
+                      key={friend.id}
                     />
                   );
                 })}
@@ -89,6 +98,8 @@ const Friends = () => {
                       name={user.firstName + " " + user.lastName}
                       onButtonClick={addFriend}
                       referenceId={user.id}
+                      key={user.id}
+                      buttonText={buttonText}
                     />
                   );
                 })}
@@ -99,6 +110,10 @@ const Friends = () => {
       </div>
     </HomeLayout>
   );
+};
+
+export const getServerSideProps = async () => {
+  return {};
 };
 
 export default PrivateRoute(observer(Friends));

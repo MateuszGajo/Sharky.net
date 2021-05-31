@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Feed, Loader } from "semantic-ui-react";
 import cx from "classnames";
 import { useMediaQuery } from "react-responsive";
+import { useRouter } from "next/router";
 import Loading from "~common/Loading/Loading";
 import Messenger from "~components/messenger/Messenger";
 import HomeLayout from "~layout/homeLayout/HomeLayout";
@@ -14,8 +15,10 @@ import { formatDate, isLoggedIn } from "~utils/utils";
 import styles from "./messages.module.scss";
 import InfiniteScroll from "react-infinite-scroll-component";
 import PrivateRoute from "~root/src/features/routes/PrivateRoute";
+import useTranslation from "next-translate/useTranslation";
 
 const Messages = () => {
+  const { t } = useTranslation("messages");
   const {
     getConversationsByDate,
     getConversation,
@@ -25,6 +28,8 @@ const Messages = () => {
     isMessengerOpen,
   } = useMessagesStore();
   const { user } = useCommonStore();
+
+  const router = useRouter();
 
   const isTabletOrMobileDevice = useMediaQuery({
     query: "(max-device-width: 1023px)",
@@ -55,7 +60,7 @@ const Messages = () => {
         openMessenger(
           conversation.user,
           conversation.id,
-          conversation.FriendId!,
+          conversation.friendshipId!,
           conversation.messageTo == user.id,
           conversation.MessagesCount
         );
@@ -74,12 +79,17 @@ const Messages = () => {
     }
   }, [isLoading]);
   const fetchData = () => {
+    console.log("fetch");
     getConversation();
   };
+
+  const startNewConversationText = t("startNewConversation");
   return (
     <HomeLayout>
       {isLoading ? (
         <Loading />
+      ) : conversations.size == 0 ? (
+        <p>any</p>
       ) : (
         <div className={styles.container}>
           <div
@@ -128,11 +138,23 @@ const Messages = () => {
                             " " +
                             conversation.user.lastName}
                           <Feed.Date>
-                            {formatDate(conversation.lastMessage.createdAt)}
+                            {conversation?.lastMessage?.createdAt &&
+                              formatDate(
+                                conversation?.lastMessage?.createdAt,
+                                router.locale!
+                              )}
                           </Feed.Date>
                         </Feed.Summary>
 
-                        <Feed.Extra>{conversation.lastMessage.body}</Feed.Extra>
+                        <Feed.Extra>
+                          {conversation?.lastMessage?.body ? (
+                            conversation?.lastMessage?.body
+                          ) : (
+                            <p className={styles.newConversation}>
+                              {startNewConversationText}
+                            </p>
+                          )}
+                        </Feed.Extra>
                       </Feed.Content>
                     </Feed.Event>
                   );

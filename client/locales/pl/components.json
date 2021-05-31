@@ -13,13 +13,32 @@
   },
   "activities": {
     "commentPlaceholder": "Napisz komentarz...",
+    "replyPlaceholder": "Napisz odpowiedź...",
     "header": {
       "settings": {
-        "edit": "Edytuj post",
-        "remove": "Usuń post",
-        "hide": "Ukryj post",
-        "block": "Zablokuj użytkownika"
+        "activity": {
+          "edit": "Edytuj post",
+          "remove": "Usuń post",
+          "unshare": "Usuń udostępnienie",
+          "hide": "Ukryj Post",
+          "unhide": "Uwidocznij post"
+        },
+        "comment": {
+          "edit": "Edytuj komentarz",
+          "remove": "Usuń komentarz",
+          "hide": "Ukryj komentarz",
+          "unhide": "Uwidocznij komentarz"
+        },
+        "block": "Zablokuj użytkownika",
+        "report": "Zreportuj użytkownika"
       }
     }
+  },
+  "messageBox": {
+    "placeholder": "Co tam u Ciebie?",
+    "createPost": "Dodaj post",
+    "editPost": "Edytuj post",
+    "sendButton": "Opublikuj",
+    "saveButton": "Zapisz"
   }
 }

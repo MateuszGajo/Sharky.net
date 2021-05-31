@@ -13,10 +13,14 @@ import {
 } from "semantic-ui-react";
 import { observer } from "mobx-react-lite";
 import { useDropzone } from "react-dropzone";
-import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
+import {
+  useActivityStore,
+  useCommonStore,
+} from "~root/src/app/providers/RootStoreProvider";
 import MessageBoxContext from "../messageBoxContent/MessageBoxContext";
 import styles from "./MessageBox.module.scss";
 import { verifyPhoto } from "~root/src/app/utils/utils";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
   content?: string;
@@ -33,7 +37,9 @@ const MessageBoxItem: React.FC<Props> = ({
   activityId,
   appActivityId,
 }) => {
+  const { t } = useTranslation("components");
   const { createActivity, isSubmitting, editActivity } = useActivityStore();
+  const { user } = useCommonStore();
 
   const initialFileState = photoUrl ? [{ preview: photoUrl }] : [];
   const [file, setFile] = useState<any[]>(initialFileState);
@@ -74,6 +80,12 @@ const MessageBoxItem: React.FC<Props> = ({
       isEdit(false);
     }
   };
+
+  const placeholderText = t("messageBox.placeholder");
+  const createPostText = t("messageBox.createPost");
+  const editPostText = t("messageBox.editPost");
+  const sendButtonText = t("messageBox.sendButton");
+  const saveButtontext = "messageBox.saveButton";
   return (
     <Modal
       onClose={closeModal}
@@ -86,13 +98,13 @@ const MessageBoxItem: React.FC<Props> = ({
             <div className={styles.photoContainer}>
               <img
                 className={styles.photo}
-                src="https://react.semantic-ui.com/images/avatar/large/stevie.jpg"
+                src={user.photo?.url || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
                 alt=""
               />
             </div>
             <div className={styles.creatorContent}>
               <Input
-                placeholder="What's up?"
+                placeholder={placeholderText}
                 fluid
                 className={styles.creatorInput}
               />
@@ -104,8 +116,8 @@ const MessageBoxItem: React.FC<Props> = ({
       <Form onSubmit={handleSubmit}>
         <Segment>
           <Modal.Header>
-            <Container textAlign="center" className={styles.title}>
-              <h1>{isEdit ? "Edit Post" : "Create Post"}</h1>
+            <Container className={styles.title}>
+              <h1>{isEdit ? editPostText : createPostText}</h1>
             </Container>
             <Divider className={styles.divider} />
           </Modal.Header>
@@ -138,7 +150,7 @@ const MessageBoxItem: React.FC<Props> = ({
               <input {...getInputProps()} accept="image/*" />
             </span>
             <Button
-              content={isEdit ? "save" : "send"}
+              content={isEdit ? saveButtontext : sendButtonText}
               positive
               loading={isSubmitting}
               disabled={!text.trim() && !file.length}

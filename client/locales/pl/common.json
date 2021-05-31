@@ -4,5 +4,13 @@
     "email": "Niepoprawny e-mail",
     "phone": "Niepoprawny numer telefonu",
     "confirmPassword": "Hasła musza być takie same"
-  }
+  },
+  "card": {
+    "unfriend": "Usuń znajomego"
+  },
+  "sidebar": {
+    "noActiveFriends": "Żaden znajomy nie jest online"
+  },
+  "pageInDevelopment": "Pracujemy nad tym",
+  "loading": "Ładowanie..."
 }

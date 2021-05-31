@@ -16,7 +16,9 @@
     "email": "Nieprawidłowy email"
   },
   "blocking": {
-    "empty": "Nie masz zablokowanych użytkowników"
+    "empty": "Nie masz zablokowanych użytkowników",
+    "unblock": "Odblokuj",
+    "title": "Zablokowani"
   },
   "general": {
     "firstname": "imię",

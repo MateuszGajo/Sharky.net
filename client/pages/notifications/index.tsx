@@ -7,7 +7,6 @@ import {
   useCommonStore,
   useNotificationStore,
 } from "~root/src/app/providers/RootStoreProvider";
-import { isLoggedIn } from "~root/src/app/utils/utils";
 import PrivateRoute from "~root/src/features/routes/PrivateRoute";
 
 const Notifications = () => {
@@ -25,10 +24,12 @@ const Notifications = () => {
     <HomeLayout sidebar>
       <div>
         {Array.from(notifications.values()).map((item) => (
-          <>
-            {item.type === "post" && <Activity item={item} />}
-            {item.type === "friend" && <FriendRequest item={item} />}
-          </>
+          <div key={item.id}>
+            {item.type === "post" && <Activity item={item} key={item.id} />}
+            {item.type === "friend" && (
+              <FriendRequest item={item} key={item.id} />
+            )}
+          </div>
         ))}
       </div>
     </HomeLayout>

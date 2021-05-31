@@ -104,6 +104,14 @@
     padding: 1em 0 0 0;
   }
 
+  .content + .downbar {
+    margin-top: 1rem;
+  }
+
+  .content:last-child {
+    margin-bottom: 0.5em;
+  }
+
   .description {
     margin-left: 1em;
     color: black;

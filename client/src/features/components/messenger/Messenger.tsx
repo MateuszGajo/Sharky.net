@@ -197,6 +197,7 @@ const Messenger: React.FC<Props> = ({ isWindow = false }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     textRef.current?.addEventListener("mscontrolselect", controlSelectHandler);
+    console.log(conversationId);
     if (conversationId) {
       addMessage(text).then(() => {
         if (textRef.current) textRef.current.innerHTML = "";

@@ -79,7 +79,6 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
             </div>
             <div className={styles.field}>
               <span className={styles.label}>
-                {" "}
                 {t(`security.new-${item.name}`)}
               </span>
               <Input
@@ -91,7 +90,6 @@ const SettingsSecurityItem: React.FC<Props> = ({ item }) => {
             </div>
             <div className={styles.field}>
               <span className={styles.label}>
-                {" "}
                 {t(`security.retypeNew-${item.name}`)}
               </span>
               <Input

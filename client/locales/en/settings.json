@@ -16,7 +16,9 @@
     "email": "Email incorrect"
   },
   "blocking": {
-    "empty": "You don't have blocked users"
+    "empty": "You don't have blocked users",
+    "unblock": "Unblock",
+    "title": "Blocked"
   },
   "general": {
     "firstname": "firstname",

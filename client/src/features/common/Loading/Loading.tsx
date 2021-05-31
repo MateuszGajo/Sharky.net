@@ -1,4 +1,5 @@
 import React from "react";
+import useTranslation from "next-translate/useTranslation";
 import { Dimmer, Loader, SemanticSIZES } from "semantic-ui-react";
 
 interface Props {
@@ -12,9 +13,11 @@ const Loading: React.FC<Props> = ({
   inverted = true,
   size = "medium",
 }) => {
+  const { t } = useTranslation("common");
+  const loadingText = t("loading");
   return (
     <Dimmer active inverted={inverted}>
-      <Loader content={content || "loading..."} size={size} />
+      <Loader content={content || loadingText} size={size} />
     </Dimmer>
   );
 };

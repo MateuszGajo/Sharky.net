@@ -71,9 +71,9 @@ namespace Application.Activities
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
-                DateTime date = DateTime.Now;
+                DateTime date = DateTime.UtcNow;
                 Guid activityId = Guid.NewGuid();
-
+                Guid appActivityId = Guid.NewGuid();
                 var activity = new Domain.Activity
                 {
                     Id = activityId,
@@ -85,6 +85,7 @@ namespace Application.Activities
 
                 AppActivity appActivity = new AppActivity
                 {
+                    Id = appActivityId,
                     Activity = activity,
                     CreatedAt = date
                 };
@@ -94,8 +95,8 @@ namespace Application.Activities
                     User = user,
                     Type = "post",
                     Action = "added",
-                    CreatedAt = DateTime.Now,
-                    RefId = activityId
+                    CreatedAt = date,
+                    RefId = appActivityId
                 };
 
                 _context.AppActivity.Add(appActivity);
@@ -107,7 +108,7 @@ namespace Application.Activities
                     ActivityId = activity.Id,
                     Id = appActivity.Id,
                     CreatedAt = date,
-                    Photo = photo,
+                    Photo = activity.Photo,
                     NotifyId = notification.Id
                 };
                 if (success) return response;
@@ -115,7 +116,5 @@ namespace Application.Activities
                 throw new RestException(HttpStatusCode.BadRequest, new { Error = "Problem creating post" });
             }
         }
-
-
     }
 }

@@ -33,6 +33,7 @@ export default class AcitivtyStore {
     this.isSubmitting = true;
     try {
       const resp = await agent.Activities.create(activity);
+      console.log(resp);
       runInAction(() => {
         this.setActivity(activity, resp);
 
@@ -115,6 +116,7 @@ export default class AcitivtyStore {
   };
 
   setActivity = (formValues: ActivityFormValues, resp: CreateActResp) => {
+    console.log(resp.createdAt);
     const user = this.root.commonStore.user;
     const activity: ActivityMap = {
       ...formValues,
@@ -167,6 +169,10 @@ export default class AcitivtyStore {
         this.isLoading = false;
       });
     }
+  };
+
+  clearActivity = () => {
+    this.activity = undefined;
   };
 
   activityLikeHandle = async (isLiked: boolean, activityId: string) => {

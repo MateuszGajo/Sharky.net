@@ -42,7 +42,12 @@ namespace Application.Activities
                         .ThenInclude(x => x.Activities)
                 .Include(x => x.HiddenActivities)
                     .ThenInclude(x => x.Activity)
+                .Include(x => x.Friends)
+                    .ThenInclude(x => x.RequestedTo)
+                .Include(x => x.FriendsOf)
+                       .ThenInclude(x => x.RequestedBy)
                 .FirstOrDefaultAsync(x => x.Id == userId);
+
 
                 if (user == null)
                     throw new RestException(HttpStatusCode.Unauthorized, new { Error = "User doesn't exist" });
@@ -53,9 +58,13 @@ namespace Application.Activities
                 var hiddenActivity = user.HiddenActivities.Count != 0 ? user.HiddenActivities.Select(x => x.Activity.Id).ToList() : Enumerable.Empty<Guid>();
                 excludedActivities.AddRange(hiddenActivity);
 
+                List<string> friends = user.Friends.Count != 0 ? user.Friends.Select(x => x.RequestedTo.Id).ToList() : new List<string>();
+                IEnumerable<string> friendOf = user.Friends.Count != 0 ? user.Friends.Select(x => x.RequestedBy.Id).ToList() : Enumerable.Empty<string>();
+                friends.AddRange(friendOf);
+                friends.Add(user.Id);
                 var activities = _context.AppActivity
                     .AsSingleQuery()
-                    .Where(p => !excludedActivities.Contains(p.ActivityId))
+                    .Where(p => !excludedActivities.Contains(p.ActivityId) && friends.Contains(p.Activity.User.Id))
                     .OrderByDescending(x => x.CreatedAt)
                     .Take(10)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider, new { userId = userId })

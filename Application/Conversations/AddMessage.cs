@@ -51,6 +51,7 @@ namespace Application.Conversations
 
             public async Task<Response> Handle(Command request, CancellationToken cancellationToken)
             {
+                System.Console.WriteLine("nowa wiadomość");
                 string userId = _userAccessor.GetCurrentId();
                 User user = await _context.Users.FindAsync(userId);
                 if (user == null)

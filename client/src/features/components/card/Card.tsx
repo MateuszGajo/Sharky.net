@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Dropdown, Icon } from "semantic-ui-react";
+import { Button, Dropdown } from "semantic-ui-react";
+import useTranslation from "next-translate/useTranslation";
 import styles from "./Card.module.scss";
 
 interface Props {
@@ -19,6 +20,8 @@ const Card: React.FC<Props> = ({
   referenceId,
   buttonText,
 }) => {
+  const { t } = useTranslation("common");
+  const unfriendText = t("card.unfriend");
   return (
     <div className={styles.container}>
       <div className={styles.cardContainer}>
@@ -46,7 +49,7 @@ const Card: React.FC<Props> = ({
                 <Dropdown.Item
                   className={styles.optionItem}
                   icon="remove user"
-                  text="Unfriend"
+                  text={unfriendText}
                   onClick={() => onDeleteClick(referenceId)}
                 />
               </Dropdown.Menu>

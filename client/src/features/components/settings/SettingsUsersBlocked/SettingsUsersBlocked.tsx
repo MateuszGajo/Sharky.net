@@ -29,6 +29,9 @@ const SettingsUsersBlocked = () => {
     query: "(max-device-width: 1023px)",
   });
 
+  const unblockUserText = t("blocking.unblock");
+  const title = t("blocking.title");
+
   return (
     <div className={styles.container}>
       {isLoading ? (
@@ -41,7 +44,7 @@ const SettingsUsersBlocked = () => {
                 <Icon name="arrow left" className={styles.backIcon} />
               </div>
             )}
-            <h1 className={styles.titleText}> Blocked</h1>
+            <h1 className={styles.titleText}>{title}</h1>
           </div>
           <Divider />
 
@@ -54,8 +57,9 @@ const SettingsUsersBlocked = () => {
         <Card
           name={userBlocked.user.firstName + " " + userBlocked.user.lastName}
           referenceId={userBlocked.id}
-          buttonText="Unblock"
+          buttonText={unblockUserText}
           onButtonClick={unblockUser}
+          key={userBlocked.id}
         />
       ))}
     </div>

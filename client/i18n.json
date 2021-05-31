@@ -9,8 +9,12 @@
     "/signin": ["layout", "signin"],
     "/signup": ["signup", "layout", "common"],
     "/notifications": ["components", "notifications"],
-    "/messages": ["components"],
-    "/friends": ["components"],
-    "/settings": ["components", "settings"]
+    "/messages": ["components", "messages"],
+    "/friends": ["components", "friends"],
+    "/settings": ["components", "settings"],
+    "/world": ["components"],
+    "/groups": ["components"],
+    "/fanpages": ["components"],
+    "/profile": ["components"]
   }
 }

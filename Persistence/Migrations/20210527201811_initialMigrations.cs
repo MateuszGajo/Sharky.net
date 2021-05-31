@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Persistence.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class initialMigrations : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,8 +11,8 @@ namespace Persistence.Migrations
                 name: "Photos",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    Url = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -23,31 +23,31 @@ namespace Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "text", nullable: false),
-                    TwitterId = table.Column<string>(type: "text", nullable: true),
-                    FacebookId = table.Column<string>(type: "text", nullable: true),
-                    GoogleId = table.Column<string>(type: "text", nullable: true),
-                    FirstName = table.Column<string>(type: "text", nullable: true),
-                    LastName = table.Column<string>(type: "text", nullable: true),
-                    FullName = table.Column<string>(type: "text", nullable: true),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    MessagesCount = table.Column<int>(type: "integer", nullable: false),
-                    FriendRequestCount = table.Column<int>(type: "integer", nullable: false),
-                    NotificationsCount = table.Column<int>(type: "integer", nullable: false),
-                    UserName = table.Column<string>(type: "text", nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "text", nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "text", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    TwitterId = table.Column<string>(type: "TEXT", nullable: true),
+                    FacebookId = table.Column<string>(type: "TEXT", nullable: true),
+                    GoogleId = table.Column<string>(type: "TEXT", nullable: true),
+                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
+                    LastName = table.Column<string>(type: "TEXT", nullable: true),
+                    FullName = table.Column<string>(type: "TEXT", nullable: true),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    FriendRequestCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    NotificationsCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
+                    Email = table.Column<string>(type: "TEXT", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,14 +58,14 @@ namespace Persistence.Migrations
                 name: "Activities",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    Content = table.Column<string>(type: "text", nullable: true),
-                    PhotoId = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    LikesCount = table.Column<int>(type: "integer", nullable: false),
-                    CommentsCount = table.Column<int>(type: "integer", nullable: false),
-                    SharesCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    PhotoId = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    CommentsCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    SharesCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -88,9 +88,9 @@ namespace Persistence.Migrations
                 name: "BlockedUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    BlockedId = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    BlockedId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -113,13 +113,13 @@ namespace Persistence.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<string>(type: "text", nullable: true),
-                    Action = table.Column<string>(type: "text", nullable: true),
-                    RecipientId = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    RefId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    Action = table.Column<string>(type: "TEXT", nullable: true),
+                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    RefId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -136,10 +136,10 @@ namespace Persistence.Migrations
                 name: "Reports",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    ReportedUserId = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    ReportedUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -162,11 +162,11 @@ namespace Persistence.Migrations
                 name: "AppActivity",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    SharingUserId = table.Column<string>(type: "text", nullable: true),
-                    AppActivityId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SharingUserId = table.Column<string>(type: "TEXT", nullable: true),
+                    AppActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -189,13 +189,13 @@ namespace Persistence.Migrations
                 name: "Comments",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    AuthorId = table.Column<string>(type: "text", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "uuid", nullable: true),
-                    LikesCount = table.Column<int>(type: "integer", nullable: false),
-                    RepliesCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    RepliesCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -218,9 +218,9 @@ namespace Persistence.Migrations
                 name: "HiddenActivites",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -243,9 +243,9 @@ namespace Persistence.Migrations
                 name: "Reason",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    ReportId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    ReportId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -262,9 +262,9 @@ namespace Persistence.Migrations
                 name: "HiddenComments",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    CommentId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    CommentId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,12 +287,12 @@ namespace Persistence.Migrations
                 name: "Replies",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Content = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CommentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    AuthorId = table.Column<string>(type: "text", nullable: true),
-                    LikesCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Content = table.Column<string>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CommentId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    LikesCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -315,9 +315,9 @@ namespace Persistence.Migrations
                 name: "HiddenReplies",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    ReplyId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    ReplyId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -340,11 +340,11 @@ namespace Persistence.Migrations
                 name: "Likes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserId = table.Column<string>(type: "text", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CommentId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ReplyId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserId = table.Column<string>(type: "TEXT", nullable: true),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    CommentId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    ReplyId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -379,11 +379,11 @@ namespace Persistence.Migrations
                 name: "Messages",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Body = table.Column<string>(type: "text", nullable: true),
-                    AuthorId = table.Column<string>(type: "text", nullable: true),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    Body = table.Column<string>(type: "TEXT", nullable: true),
+                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
+                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -400,12 +400,12 @@ namespace Persistence.Migrations
                 name: "Conversations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatorId = table.Column<string>(type: "text", nullable: true),
-                    RecipientId = table.Column<string>(type: "text", nullable: true),
-                    MessagesCount = table.Column<int>(type: "integer", nullable: false),
-                    LastMessageId = table.Column<Guid>(type: "uuid", nullable: true),
-                    MessageTo = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatorId = table.Column<string>(type: "TEXT", nullable: true),
+                    RecipientId = table.Column<string>(type: "TEXT", nullable: true),
+                    MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    LastMessageId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MessageTo = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -434,13 +434,13 @@ namespace Persistence.Migrations
                 name: "UserFriendships",
                 columns: table => new
                 {
-                    RequestedById = table.Column<string>(type: "text", nullable: false),
-                    RequestedToId = table.Column<string>(type: "text", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RequestTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    FriendRequestFlag = table.Column<int>(type: "integer", nullable: false),
-                    MessageToUser = table.Column<Guid>(type: "uuid", nullable: true)
+                    RequestedById = table.Column<string>(type: "TEXT", nullable: false),
+                    RequestedToId = table.Column<string>(type: "TEXT", nullable: false),
+                    ConversationId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RequestTime = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    FriendRequestFlag = table.Column<int>(type: "INTEGER", nullable: false),
+                    MessageToUser = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {

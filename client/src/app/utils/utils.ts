@@ -172,12 +172,22 @@ const polishMonthNames = [
   "Grudzień",
 ];
 
-export const formatDate = (date: Date) => {
-  const time = new Date(date).getTime();
-  const currentTime = new Date().getTime();
-  const timeDifference = currentTime - time;
+const acceptedLanguages = { pl: true, en: true };
 
-  const language = cookies.get("NEXT_LOCALE");
+export const formatDate = (date: Date, currentPagelng: string) => {
+  const serverTime = new Date(date).getTime();
+  const currentTime = new Date().getTime();
+
+  const timeDifference = currentTime - serverTime;
+
+  let language = cookies.get("NEXT_LOCALE");
+  if (
+    acceptedLanguages[currentPagelng as keyof typeof acceptedLanguages] &&
+    language !== currentPagelng
+  ) {
+    language = currentPagelng;
+  }
+
   if (timeDifference < 86400000) {
     if (timeDifference < 60000) {
       const secondsAgo = Math.floor(timeDifference / 1000);
@@ -239,11 +249,8 @@ export const isLoggedIn = async (req: NextApiRequest) => {
     const resp = await verifyJWT(req.cookies["Token"]);
     try {
       await agent.User.verification();
-    } catch (error) {
-      // console.log(error);
-    }
+    } catch (error) {}
 
-    // console.log(resp);
     const user = {
       id: resp.id,
       firstName: resp.firstName,

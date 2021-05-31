@@ -33,7 +33,7 @@ const SettingsSecurity = () => {
         </div>
         <div className={styles.itemWrapper}>
           {generalSettings.map((item) => {
-            return <SettingsSecurityItem item={item} />;
+            return <SettingsSecurityItem item={item} key={item.name} />;
           })}
         </div>
       </Segment>
