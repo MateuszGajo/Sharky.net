@@ -411,6 +411,9 @@ namespace Persistence.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
 
+                    b.Property<long>("ActivitiesCount")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("TEXT");
 
@@ -427,6 +430,9 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<int>("FriendRequestCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<long>("FriendsCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("FullName")
@@ -468,6 +474,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PhotoId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -481,6 +490,8 @@ namespace Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("Users");
                 });
@@ -742,6 +753,15 @@ namespace Persistence.Migrations
                     b.Navigation("ReportedUser");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Domain.User", b =>
+                {
+                    b.HasOne("Domain.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("Domain.UserFriendship", b =>

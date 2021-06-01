@@ -34,7 +34,7 @@ namespace Application.Friends
             {
                 string userId = _userAccessor.GetCurrentId();
 
-                UserFriendship friendship = await _context.UserFriendships.Include(x => x.RequestedTo).FirstOrDefaultAsync(x => x.Id == request.FriendshipId);
+                UserFriendship friendship = await _context.UserFriendships.Include(x => x.RequestedTo).Include(x => x.RequestedBy).FirstOrDefaultAsync(x => x.Id == request.FriendshipId);
                 if (friendship.RequestedTo.Id != userId)
                     throw new RestException(HttpStatusCode.Forbidden, new { friendship = "You aren't part of this relation" });
 
@@ -42,7 +42,20 @@ namespace Application.Friends
                 if (notification == null)
                     throw new RestException(HttpStatusCode.NotFound, new { notification = "Notification doesn't exist" });
 
+                User user = await _context.Users.FindAsync(userId);
+                User newFriend = await _context.Users.FindAsync(friendship.RequestedBy.Id);
+
+                if (user == null || newFriend == null)
+                    throw new RestException(HttpStatusCode.NotFound, new { user = "User doesn't exist" });
+
                 friendship.FriendRequestFlag = FriendRequestFlag.Approved;
+
+                user.FriendsOf.Add(friendship);
+                user.FriendsCount += 1;
+
+                newFriend.Friends.Add(friendship);
+                newFriend.FriendsCount += 1;
+
                 _context.Notifications.Remove(notification);
 
                 bool result = await _context.SaveChangesAsync() > 0;

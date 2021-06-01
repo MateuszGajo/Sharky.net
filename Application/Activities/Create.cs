@@ -71,6 +71,8 @@ namespace Application.Activities
                 var userId = _userAccessor.GetCurrentId();
                 var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
+                user.ActivitiesCount += 1;
+
                 DateTime date = DateTime.UtcNow;
                 Guid activityId = Guid.NewGuid();
                 Guid appActivityId = Guid.NewGuid();

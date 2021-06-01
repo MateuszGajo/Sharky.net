@@ -45,6 +45,19 @@ namespace API.Controllers
             return await _mediator.Send(new List.Query { Start = start, FilterText = filter });
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<UserDetailsDto>> Details(string id)
+        {
+            return await _mediator.Send(new MoreDetails.Query { Id = id });
+        }
+
+        [HttpPut("change/photo")]
+        public async Task<ActionResult<ChangeProfile.Response>> ChangePhoto([FromForm] ChangeProfile.Command command)
+        {
+            return await _mediator.Send(command);
+        }
+
+
         [HttpPut("{id}/block")]
         public async Task<ActionResult<Unit>> Block(string id)
         {
@@ -163,7 +176,6 @@ namespace API.Controllers
             }
             catch (HttpRequestException e)
             {
-                System.Console.WriteLine(e);
                 return Unauthorized("invalid token");
             }
             var data = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());

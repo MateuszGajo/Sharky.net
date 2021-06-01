@@ -1,0 +1,12 @@
+:global(#app) {
+  .cardContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding-bottom: 1em;
+  }
+
+  .loading {
+    text-align: center;
+  }
+}

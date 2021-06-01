@@ -8,6 +8,7 @@ import MessageStore from "./messageStore";
 import FriendStore from "./friendStore";
 import NotificationStore from "./notificationStore";
 import SettingStore from "./settingStore";
+import ProfileStore from "./profileStore";
 
 export type RootStoreHydration = {
   user?: {
@@ -28,6 +29,7 @@ export class RootStore {
   friendStore: FriendStore;
   notificationStore: NotificationStore;
   settingsStore: SettingStore;
+  profileStore: ProfileStore;
 
   constructor() {
     this.commonStore = new CommonStore(this);
@@ -40,5 +42,6 @@ export class RootStore {
     this.friendStore = new FriendStore(this);
     this.notificationStore = new NotificationStore(this);
     this.settingsStore = new SettingStore(this);
+    this.profileStore = new ProfileStore(this);
   }
 }

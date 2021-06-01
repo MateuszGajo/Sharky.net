@@ -82,6 +82,7 @@ const Friends = () => {
                 {Array.from(friends.values()).map((friend) => {
                   return (
                     <Card
+                      id={friend.id}
                       name={friend.user.firstName + " " + friend.user.lastName}
                       onDeleteClick={unfriend}
                       referenceId={friend.id}
@@ -95,6 +96,7 @@ const Friends = () => {
                 {Array.from(userList.values()).map((user) => {
                   return (
                     <Card
+                      id={user.id}
                       name={user.firstName + " " + user.lastName}
                       onButtonClick={addFriend}
                       referenceId={user.id}

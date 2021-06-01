@@ -79,7 +79,6 @@ const Messages = () => {
     }
   }, [isLoading]);
   const fetchData = () => {
-    console.log("fetch");
     getConversation();
   };
 

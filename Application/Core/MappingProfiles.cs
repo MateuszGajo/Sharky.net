@@ -19,6 +19,8 @@ namespace Application.Core
             string userId = null;
             IEnumerable<Guid> hiddenElements = new List<Guid>();
 
+            CreateMap<User, UserDetailsDto>();
+
             CreateMap<User, GeneralDto>();
             CreateMap<BlockedUser, BlockUserDto>();
 

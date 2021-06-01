@@ -2,21 +2,26 @@ import React from "react";
 import { Button, Dropdown } from "semantic-ui-react";
 import useTranslation from "next-translate/useTranslation";
 import styles from "./Card.module.scss";
+import { Photo } from "~root/src/app/models/authentication";
 
 interface Props {
-  photo?: string;
+  photo?: Photo | null;
+  id: string;
   name: string;
   onDeleteClick?: (id: string) => void;
   onButtonClick?: (id: string) => void;
+  profileButton?: boolean;
   buttonText?: string;
   referenceId: string;
 }
 
 const Card: React.FC<Props> = ({
+  id,
   photo,
   name,
   onDeleteClick,
   onButtonClick,
+  profileButton,
   referenceId,
   buttonText,
 }) => {
@@ -28,7 +33,7 @@ const Card: React.FC<Props> = ({
         <div className={styles.user}>
           <div className={styles.photoContainer}>
             <img
-              src={photo || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
+              src={photo?.url || process.env.NEXT_PUBLIC_DEFAULT_AVATAR}
               alt=""
               className={styles.photo}
             />
@@ -54,12 +59,21 @@ const Card: React.FC<Props> = ({
                 />
               </Dropdown.Menu>
             </Dropdown>
+          ) : onButtonClick != undefined ? (
+            <Button
+              positive
+              size="tiny"
+              onClick={() => onButtonClick(referenceId)}
+            >
+              {buttonText}
+            </Button>
           ) : (
-            onButtonClick && (
+            profileButton && (
               <Button
                 positive
                 size="tiny"
-                onClick={() => onButtonClick(referenceId)}
+                as="a"
+                href={`/profile${id ? "?userId=" + id : ""}`}
               >
                 {buttonText}
               </Button>

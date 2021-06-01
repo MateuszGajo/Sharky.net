@@ -18,7 +18,10 @@ namespace Application.Activities
 {
     public class List
     {
-        public class Query : IRequest<List<ActivityDto>> { }
+        public class Query : IRequest<List<ActivityDto>>
+        {
+            public string UserId { get; set; }
+        }
 
         public class Handler : IRequestHandler<Query, List<ActivityDto>>
         {
@@ -34,7 +37,7 @@ namespace Application.Activities
 
             public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                string userId = _userAccessor.GetCurrentId();
+                string userId = request.UserId ?? _userAccessor.GetCurrentId();
 
                 User user = await _context.Users.AsNoTracking()
                 .Include(x => x.BlockedUsers)

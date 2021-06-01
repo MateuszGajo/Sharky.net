@@ -18,6 +18,14 @@ export default class UserStore {
     }
   };
 
+  userDetails = async (id: string) => {
+    try {
+      return await agent.User.details(id);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   blockUser = async (id: string) => {
     try {
       await agent.User.block(id);
