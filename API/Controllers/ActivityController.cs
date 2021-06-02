@@ -22,9 +22,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ActivityDto>>> List()
+        public async Task<ActionResult<List<ActivityDto>>> List(string userId)
         {
-            return await _mediator.Send(new List.Query());
+            return await _mediator.Send(new List.Query { UserId = userId });
         }
 
         [HttpGet("{id}")]

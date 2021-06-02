@@ -1,0 +1,55 @@
+:global(#app) {
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1em;
+  }
+  .username {
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .photoContainer {
+    position: relative;
+    box-shadow: 0 0 5px 2px grey;
+    &:hover .profileUpload {
+      display: flex;
+    }
+  }
+
+  .uploadPhotoInput {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+  }
+
+  .profileUpload {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+
+  .profileUploadLabel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 85%;
+    height: 30%;
+    border: 1px solid white;
+    color: White;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.3s;
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}

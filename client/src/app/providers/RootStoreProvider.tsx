@@ -66,6 +66,11 @@ export const useSettingStore = () => {
   return settingsStore;
 };
 
+export const useProfileStore = () => {
+  const { profileStore } = useRootStore();
+  return profileStore;
+};
+
 export function RootStoreProvider({ children }: { children: ReactNode }) {
   const store = initializeStore();
 

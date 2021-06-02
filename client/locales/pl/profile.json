@@ -1,0 +1,20 @@
+{
+  "notFound": "Nie ma takiego użytkownika",
+  "inProgress": "Funkcjonalność jest w procesie tworzenia",
+  "about": {
+    "firstname": "Imię",
+    "lastname": "Nazwisko",
+    "activities": "Posty",
+    "friends": "Znajomi"
+  },
+  "navbar": {
+    "posts": "Posty",
+    "friends": "Znajomi",
+    "groups": "Grupy",
+    "fanpages": "Fanpage",
+    "about": "O mnie"
+  },
+  "friendsList": {
+    "viewButton": "Wyświetl"
+  }
+}

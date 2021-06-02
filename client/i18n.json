@@ -15,6 +15,6 @@
     "/world": ["components"],
     "/groups": ["components"],
     "/fanpages": ["components"],
-    "/profile": ["components"]
+    "/profile": ["components", "profile"]
   }
 }

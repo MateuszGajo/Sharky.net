@@ -57,7 +57,6 @@ export default class MessageStore {
     isWindowMessenger: boolean = false
   ) => {
     if (!this.isMessengerOpen) this.isMessengerOpen = true;
-    console.log(conversationId, friendshipId, user);
     if (this.conversationId !== conversationId || conversationId == null) {
       this.conversationId = conversationId;
       this.friendshipId = friendshipId;
@@ -173,8 +172,6 @@ export default class MessageStore {
 
   addMessage = async (messageContext: string) => {
     try {
-      console.log(this.conversationId, this.friendshipId, messageContext);
-      console.log(this.root.commonStore.hubConnection);
       const {
         value: { id, createdAt, user },
       } = await this.root.commonStore.hubConnection?.invoke("AddMessage", {
@@ -206,9 +203,7 @@ export default class MessageStore {
           this.conversations.set(newConversation.id!, newConversation);
         }
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   messageListener = () => {

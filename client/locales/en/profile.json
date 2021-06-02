@@ -1,0 +1,20 @@
+{
+  "notFound": "User doesn't exist",
+  "inProgress": "Feature in progress",
+  "about": {
+    "firstname": "Firstname",
+    "lastname": "Lastname",
+    "activities": "Activities",
+    "friends": "Friends"
+  },
+  "navbar": {
+    "posts": "Posts",
+    "friends": "Friends",
+    "groups": "Groups",
+    "fanpages": "Fanpages",
+    "about": "About"
+  },
+  "friendsList": {
+    "viewButton": "view"
+  }
+}

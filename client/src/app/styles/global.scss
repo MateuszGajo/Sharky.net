@@ -54,6 +54,16 @@ body {
   border-radius: 20px;
 }
 
+.ui.secondary.pointing.menu .active.item {
+  border-color: $primaryColor;
+  color: $primaryColor;
+}
+
+.ui.secondary.pointing.menu .active.item:hover {
+  border-color: $primaryColor;
+  color: $primaryColor;
+}
+
 @media (max-width: 3839px) {
   html {
     font-size: 35px;

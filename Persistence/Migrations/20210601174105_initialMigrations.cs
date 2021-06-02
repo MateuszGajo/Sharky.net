@@ -34,6 +34,9 @@ namespace Persistence.Migrations
                     MessagesCount = table.Column<int>(type: "INTEGER", nullable: false),
                     FriendRequestCount = table.Column<int>(type: "INTEGER", nullable: false),
                     NotificationsCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    PhotoId = table.Column<string>(type: "TEXT", nullable: true),
+                    FriendsCount = table.Column<long>(type: "INTEGER", nullable: false),
+                    ActivitiesCount = table.Column<long>(type: "INTEGER", nullable: false),
                     UserName = table.Column<string>(type: "TEXT", nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
@@ -52,6 +55,12 @@ namespace Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Users_Photos_PhotoId",
+                        column: x => x.PhotoId,
+                        principalTable: "Photos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -621,6 +630,11 @@ namespace Persistence.Migrations
                 table: "UserFriendships",
                 column: "RequestedToId");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_PhotoId",
+                table: "Users",
+                column: "PhotoId");
+
             migrationBuilder.AddForeignKey(
                 name: "FK_Messages_Conversations_ConversationId",
                 table: "Messages",
@@ -632,6 +646,10 @@ namespace Persistence.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Users_Photos_PhotoId",
+                table: "Users");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Conversations_Users_CreatorId",
                 table: "Conversations");

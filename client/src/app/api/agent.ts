@@ -7,11 +7,18 @@ import {
   Reply,
 } from "./../models/activity";
 import {
+  Photo,
   SigninFormValues,
   SignupFormValues,
 } from "~root/src/app/models/authentication";
 import axios, { AxiosResponse } from "axios";
-import { Friend, GetFriends, OnlineFriend, UserList } from "../models/user";
+import {
+  Friend,
+  GetFriends,
+  OnlineFriend,
+  UserDetails,
+  UserList,
+} from "../models/user";
 import { ConversationItem, Message } from "../models/conversation";
 import { User as UserI } from "~models/activity";
 import {
@@ -80,7 +87,8 @@ const Activities = {
       .then(responseBody);
   },
   delete: (id: string) => requests.delete<void>(`/activity/${id}`),
-  list: () => requests.get<Activity[]>("/activity"),
+  list: (userId?: string) =>
+    requests.get<Activity[]>(`/activity${userId ? "?userId=" + userId : ""}`),
   get: (id: string) => requests.get<Activity>(`/activity/${id}`),
   hide: (id: string) => requests.put(`activity/${id}/hide`, {}),
   like: (id: string) => requests.put<void>(`/activity/${id}/like`, {}),
@@ -129,6 +137,7 @@ const Replies = {
 
 const User = {
   verification: () => requests.get<UserI>(`user/verification`),
+  details: (id: string) => requests.get<UserDetails>(`/user/${id}`),
   block: (id: string) => requests.put<void>(`user/${id}/block`, {}),
   report: (id: string, reasons: string[]) =>
     requests.post(`/user/${id}/report`, { reasons }),
@@ -139,6 +148,15 @@ const User = {
     ),
   readNotification: () => requests.put<void>("/user/notification/read", {}),
   Unblock: (id: string) => requests.delete<void>(`/user/${id}/unblock`),
+  changePhoto: (photo: Blob) => {
+    const formData = new FormData();
+    formData.append("File", photo);
+    return axios
+      .put<{ photo: Photo }>("user/change/photo", formData, {
+        headers: { "Content-type": "multipart/form-data" },
+      })
+      .then(responseBody);
+  },
 };
 
 interface GetFriendsExtend extends GetFriends {

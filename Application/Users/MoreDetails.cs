@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Activities;
 using Application.Errors;
 using Application.Interface;
 using AutoMapper;
@@ -15,14 +14,14 @@ using Persistence;
 
 namespace Application.Users
 {
-    public class Details
+    public class MoreDetails
     {
-        public class Query : IRequest<UserDto>
+        public class Query : IRequest<UserDetailsDto>
         {
             public string Id { get; set; }
         }
 
-        public class Handler : IRequestHandler<Query, UserDto>
+        public class Handler : IRequestHandler<Query, UserDetailsDto>
         {
             private readonly DataBaseContext _context;
             private readonly IMapper _mapper;
@@ -34,12 +33,11 @@ namespace Application.Users
                 _context = context;
             }
 
-            public async Task<UserDto> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<UserDetailsDto> Handle(Query request, CancellationToken cancellationToken)
             {
                 string userId = request.Id ?? _userAccessor.GetCurrentId();
-                User user = await _context.Users.FindAsync(userId);
 
-                return await _context.Users.Where(x => x.Id == userId).ProjectTo<UserDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
+                return await _context.Users.Where(x => x.Id == userId).ProjectTo<UserDetailsDto>(_mapper.ConfigurationProvider).FirstOrDefaultAsync();
             }
         }
     }

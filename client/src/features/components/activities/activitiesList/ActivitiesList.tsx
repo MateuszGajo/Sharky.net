@@ -5,12 +5,16 @@ import ActivityItem from "../activitesItem/ActivityItem";
 import { observer } from "mobx-react-lite";
 import { useActivityStore } from "~root/src/app/providers/RootStoreProvider";
 
-const ActivitiesList = () => {
+interface Props {
+  userId?: string;
+}
+
+const ActivitiesList: React.FC<Props> = ({ userId }) => {
   const { getActivities, activitiesByDate, activity } = useActivityStore();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    getActivities();
+    getActivities(userId);
   }, []);
   return (
     <div>

@@ -37,14 +37,7 @@ namespace API.SignalR
         }
         public async Task<ActionResult<AddMessage.Response>> AddMessage(AddMessage.Command command)
         {
-            System.Console.WriteLine("wchodzimy");
             var resp = await _mediator.Send(command);
-            System.Console.WriteLine(resp.Id);
-            System.Console.WriteLine(command.Message);
-            System.Console.WriteLine(command.ConversationId);
-            System.Console.WriteLine(resp.CreatedAt);
-            System.Console.WriteLine(resp.User);
-            System.Console.WriteLine(command.FriendshipId);
 
             foreach (var connectionId in _connections.GetConnections(resp.FriendId))
             {

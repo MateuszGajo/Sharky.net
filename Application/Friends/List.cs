@@ -13,6 +13,7 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Friends
@@ -43,31 +44,30 @@ namespace Application.Friends
                 string userId = request.Id ?? _userAccessor.GetCurrentId();
                 var user = await _context.Users.FindAsync(userId);
                 if (user == null)
-                    throw new RestException(HttpStatusCode.Unauthorized, new { User = "User doesn't exist" });
-
-                IQueryable<UserFriendship> friends = null;
+                    throw new RestException(HttpStatusCode.NotFound, new { User = "User doesn't exist" });
+                System.Console.WriteLine("hmm?");
                 if (request.FilterText != null)
-                {
-                    friends = _context
-                            .UserFriendships
-                            .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.FullName.Contains(request.FilterText) ||
-                            x.RequestedTo.Id == userId && x.RequestedBy.FullName.Contains(request.FilterText)) &&
-                            x.FriendRequestFlag == FriendRequestFlag.Approved)
-                            .OrderBy(x => x.RequestTime)
-                            .Skip(request.From)
-                            .Take(30);
-                }
+                    return _context
+                                .UserFriendships
+                                .Include(x => x.RequestedBy.Photo)
+                                .Include(x => x.RequestedTo.Photo)
+                                .Where(x => (x.RequestedBy.Id == userId && x.RequestedTo.FullName.Contains(request.FilterText) ||
+                                x.RequestedTo.Id == userId && x.RequestedBy.FullName.Contains(request.FilterText)) &&
+                                x.FriendRequestFlag == FriendRequestFlag.Approved)
+                                .OrderBy(x => x.RequestTime)
+                                .Skip(request.From)
+                                .Take(30)
+                                .ProjectTo<FriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();
                 else
-                {
-                    friends = _context
-                        .UserFriendships
-                        .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved)
-                        .OrderBy(x => x.RequestTime)
-                        .Skip(request.From)
-                        .Take(30);
-                }
+                    return _context
+                                .UserFriendships
+                                .Include(x => x.RequestedBy.Photo)
+                                .Include(x => x.RequestedTo.Photo)
+                                .Where(x => (x.RequestedBy.Id == userId || x.RequestedTo.Id == userId) && x.FriendRequestFlag == FriendRequestFlag.Approved)
+                                .OrderBy(x => x.RequestTime)
+                                .Skip(request.From)
+                                .Take(30).ProjectTo<FriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();
 
-                return friends.ProjectTo<FriendDto>(_mapper.ConfigurationProvider, new { userId = userId }).ToList();
             }
         }
     }

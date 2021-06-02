@@ -1,5 +1,15 @@
 import { User } from "./activity";
+import { Photo } from "./authentication";
 import { Conversation } from "./conversation";
+
+export interface UserDetails {
+  id: string;
+  firstName: string;
+  lastName: String;
+  photo: Photo | null;
+  activitiesCount: number;
+  friendsCount: number;
+}
 
 export interface Friend {
   id: string;
